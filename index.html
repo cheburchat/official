@@ -12,7 +12,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f2f5; height: 100vh; overflow: hidden; }
         
-        /* Auth */
         .auth-container { height: 100vh; display: flex; align-items: center; justify-content: center; background: #f0f2f5; }
         .auth-card { background: white; padding: 40px; border-radius: 24px; width: 400px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .auth-card h1 { color: #ff7b2c; margin-bottom: 24px; }
@@ -22,7 +21,6 @@
         .verify-msg { background: #fff3cd; color: #856404; padding: 12px; border-radius: 12px; margin: 12px 0; font-size: 13px; }
         .hidden { display: none !important; }
         
-        /* Main App */
         .app { display: flex; height: 100vh; max-width: 1400px; margin: 0 auto; }
         .sidebar { width: 280px; background: white; border-right: 1px solid #e4e6eb; display: flex; flex-direction: column; padding: 20px 0; }
         .logo { padding: 0 20px 20px; font-size: 24px; font-weight: 800; color: #ff7b2c; border-bottom: 1px solid #e4e6eb; margin-bottom: 20px; }
@@ -61,7 +59,6 @@
         .pending-badge { font-size: 11px; color: #65676b; }
         .empty-state { text-align: center; padding: 40px; color: #65676b; }
         
-        /* Модальное окно */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
         .modal-overlay.active { display: flex; }
         .modal { background: white; border-radius: 20px; width: 320px; max-width: 90%; text-align: center; overflow: hidden; animation: fadeIn 0.2s ease; }
@@ -79,7 +76,6 @@
 <body>
 <div id="app"></div>
 
-<!-- Модальное окно -->
 <div id="modal" class="modal-overlay">
     <div class="modal">
         <div class="modal-header" id="modalTitle">Уведомление</div>
@@ -111,7 +107,6 @@
     let friends = [];
     let unsubscribeMessages = null;
 
-    // Модальное окно вместо alert
     function showModal(title, message, onConfirm = null, showCancel = false) {
         const modal = document.getElementById('modal');
         document.getElementById('modalTitle').textContent = title;
@@ -208,7 +203,6 @@
         if(window.innerWidth <= 768) document.getElementById('rightPanel').classList.add('hidden');
     }
 
-    // Поиск с ручным фильтром (работает без индексов)
     async function searchUsers(query) {
         if(!query || query.length < 2) return;
         const results = [];
@@ -241,7 +235,7 @@
                 div.innerHTML = `
                     <div class="friend-info">
                         <div class="small-avatar">${getInitials(u.firstName, u.lastName)}</div>
-                        <div><strong>${u.firstName} ${u.lastName}</strong><br><span style="font-size:11px;color:#65676b">${u.email}</span></div>
+                        <div><strong>${u.firstName} ${u.lastName}</strong></div>
                     </div>
                     ${!isFriend && !isSent && !isReceived ? `<button class="add-friend-btn" data-id="${u.id}">➕ Добавить</button>` :
                       isSent ? '<span class="pending-badge">⏳ Запрос отправлен</span>' :
@@ -259,24 +253,61 @@
     }
 
     async function sendFriendRequest(toId) {
-        await db.collection('users').doc(toId).update({ 'friendRequests.received': firebase.firestore.FieldValue.arrayUnion(currentUser.uid) });
-        await db.collection('users').doc(currentUser.uid).update({ 'friendRequests.sent': firebase.firestore.FieldValue.arrayUnion(toId) });
-        showModal('Успех', 'Запрос дружбы отправлен!');
-        loadFriendsList();
+        try {
+            // Проверяем и инициализируем структуру если нужно
+            const targetRef = db.collection('users').doc(toId);
+            const targetDoc = await targetRef.get();
+            const targetData = targetDoc.data();
+            
+            // Инициализируем friendRequests если нет
+            if (!targetData.friendRequests) {
+                await targetRef.update({ friendRequests: { sent: [], received: [] } });
+            }
+            if (!userData.friendRequests) {
+                await db.collection('users').doc(currentUser.uid).update({ friendRequests: { sent: [], received: [] } });
+                userData.friendRequests = { sent: [], received: [] };
+            }
+            
+            await targetRef.update({ 
+                'friendRequests.received': firebase.firestore.FieldValue.arrayUnion(currentUser.uid) 
+            });
+            await db.collection('users').doc(currentUser.uid).update({ 
+                'friendRequests.sent': firebase.firestore.FieldValue.arrayUnion(toId) 
+            });
+            
+            showModal('Успех', 'Запрос дружбы отправлен!');
+            loadFriendsList();
+            
+            // Обновляем userData
+            const updated = await db.collection('users').doc(currentUser.uid).get();
+            userData = updated.data();
+        } catch(e) {
+            console.error(e);
+            showModal('Ошибка', e.message);
+        }
     }
 
     async function acceptFriend(fromId) {
-        await db.collection('users').doc(currentUser.uid).update({
-            friends: firebase.firestore.FieldValue.arrayUnion(fromId),
-            'friendRequests.received': firebase.firestore.FieldValue.arrayRemove(fromId)
-        });
-        await db.collection('users').doc(fromId).update({
-            friends: firebase.firestore.FieldValue.arrayUnion(currentUser.uid),
-            'friendRequests.sent': firebase.firestore.FieldValue.arrayRemove(currentUser.uid)
-        });
-        showModal('Успех', 'Теперь вы друзья!');
-        loadFriendsList();
-        showChats();
+        try {
+            await db.collection('users').doc(currentUser.uid).update({
+                friends: firebase.firestore.FieldValue.arrayUnion(fromId),
+                'friendRequests.received': firebase.firestore.FieldValue.arrayRemove(fromId)
+            });
+            await db.collection('users').doc(fromId).update({
+                friends: firebase.firestore.FieldValue.arrayUnion(currentUser.uid),
+                'friendRequests.sent': firebase.firestore.FieldValue.arrayRemove(currentUser.uid)
+            });
+            showModal('Успех', 'Теперь вы друзья!');
+            
+            // Обновляем userData
+            const updated = await db.collection('users').doc(currentUser.uid).get();
+            userData = updated.data();
+            
+            loadFriendsList();
+            showChats();
+        } catch(e) {
+            showModal('Ошибка', e.message);
+        }
     }
 
     async function loadFriendsList() {
@@ -308,7 +339,8 @@
     }
 
     function showChats() {
-        document.getElementById('rightPanel').classList.remove('hidden');
+        const rightPanel = document.getElementById('rightPanel');
+        if(rightPanel) rightPanel.classList.remove('hidden');
         if(!currentChatId) {
             document.getElementById('mainContent').innerHTML = `
                 <div style="display:flex;align-items:center;justify-content:center;height:100%">
@@ -320,7 +352,8 @@
     }
 
     function showFriendsPanel() {
-        document.getElementById('rightPanel').classList.add('hidden');
+        const rightPanel = document.getElementById('rightPanel');
+        if(rightPanel) rightPanel.classList.add('hidden');
         document.getElementById('mainContent').innerHTML = `
             <div style="padding:20px; overflow-y:auto; height:100%">
                 <h2>Мои друзья</h2>
@@ -372,13 +405,9 @@
         }
     }
 
-    // Проверка email подтверждения
     async function checkEmailVerified() {
         await currentUser.reload();
-        if(currentUser.emailVerified) {
-            return true;
-        }
-        return false;
+        return currentUser.emailVerified;
     }
 
     function renderEmailVerifyScreen() {
@@ -414,7 +443,6 @@
     function renderApp() {
         if(!currentUser || !userData) return;
         
-        // Проверяем подтверждение email
         if(!currentUser.emailVerified) {
             renderEmailVerifyScreen();
             return;
@@ -428,7 +456,7 @@
                     <div class="nav-item" data-nav="friends"><i class="fas fa-user-friends"></i> Друзья</div>
                     <div class="user-info-sidebar" id="profileBtn">
                         <div class="avatar">${getInitials(userData.firstName, userData.lastName)}</div>
-                        <div><strong>${userData.firstName} ${userData.lastName}</strong><br><span style="font-size:12px">${userData.email}</span></div>
+                        <div><strong>${userData.firstName} ${userData.lastName}</strong></div>
                     </div>
                     <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</button>
                 </div>
@@ -451,7 +479,7 @@
                 else showChats();
             };
         });
-        document.getElementById('profileBtn').onclick = () => showModal('Профиль', `${userData.firstName} ${userData.lastName}\n${userData.email}\n✅ Email подтверждён`);
+        document.getElementById('profileBtn').onclick = () => showModal('Профиль', `${userData.firstName} ${userData.lastName}\n✅ Email подтверждён`);
         document.getElementById('logoutBtn').onclick = logout;
         
         let timer;
@@ -462,7 +490,6 @@
         showChats();
     }
 
-    // Аутентификация
     async function handleRegister() {
         const firstName = document.getElementById('regFirstName').value.trim();
         const lastName = document.getElementById('regLastName').value.trim();
@@ -536,6 +563,11 @@
                 userData = { firstName: user.email.split('@')[0], lastName: 'User', email: user.email, friends: [], friendRequests: { sent: [], received: [] } };
             } else {
                 userData = doc.data();
+                // Инициализируем friendRequests если нет
+                if (!userData.friendRequests) {
+                    await db.collection('users').doc(user.uid).update({ friendRequests: { sent: [], received: [] } });
+                    userData.friendRequests = { sent: [], received: [] };
+                }
             }
             renderApp();
         } else {
