@@ -406,16 +406,17 @@
 <div id="app"></div>
 
 <script>
-    // FIREBASE CONFIG
+    // FIREBASE CONFIG - ТВОИ ДАННЫЕ
     const firebaseConfig = {
-        apiKey: "AIzaSyA-dQ8-cqE7y9VfNA3fPLF6hDO-s1OfQ4Q",
-        authDomain: "neznakomka.firebaseapp.com",
-        projectId: "neznakomka",
-        storageBucket: "neznakomka.firebasestorage.app",
-        messagingSenderId: "245961594712",
-        appId: "1:245961594712:web:e1c8ba71af1289b1bc372d"
+        apiKey: "AIzaSyBx_koHusbH0CwiGvVj132nZ0rUpuPyqQw",
+        authDomain: "msend-92718.firebaseapp.com",
+        projectId: "msend-92718",
+        storageBucket: "msend-92718.firebasestorage.app",
+        messagingSenderId: "672219125451",
+        appId: "1:672219125451:web:84871d4e136d0168076d4e"
     };
 
+    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
@@ -427,7 +428,7 @@
     let friendsList = [];
     let messagesUnsubscribe = null;
 
-    // Helper: generate avatar color based on name
+    // Helper: get initials
     function getInitials(firstName, lastName) {
         return (firstName?.[0] || '?') + (lastName?.[0] || '');
     }
@@ -583,7 +584,6 @@
         const fromUser = (await db.collection('users').doc(fromUserId).get()).data();
         if (!fromUser) return;
         
-        // Add to friends lists
         await db.collection('users').doc(currentUser.uid).update({
             friends: firebase.firestore.FieldValue.arrayUnion(fromUserId),
             [`friendRequests.received`]: firebase.firestore.FieldValue.arrayRemove(fromUserId)
@@ -632,8 +632,7 @@
     }
 
     async function loadChatsList() {
-        // For sidebar we already have friends list, but we need to show recent chats
-        // Just use friends list as chat list
+        // Just using friends list
     }
 
     function showChatsPanel() {
@@ -726,6 +725,17 @@
     }
 
     function openChat(userId, firstName, lastName) {
+        if (!firstName || !lastName) {
+            // If called without name, fetch it
+            db.collection('users').doc(userId).get().then(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    openChat(userId, data.firstName, data.lastName);
+                }
+            });
+            return;
+        }
+        
         if (messagesUnsubscribe) messagesUnsubscribe();
         currentChatUserId = userId;
         const mainEl = document.getElementById('mainContent');
@@ -906,7 +916,6 @@
             currentUser = user;
             const doc = await db.collection('users').doc(user.uid).get();
             if (!doc.exists) {
-                // Should not happen, but just in case
                 await db.collection('users').doc(user.uid).set({
                     firstName: 'User', lastName: user.email.split('@')[0],
                     firstNameLower: 'user', lastNameLower: user.email.split('@')[0],
