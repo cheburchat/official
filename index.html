@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ЧЕБУРЧАТ — Социальная сеть</title>
-    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB7SURBVFhH7dexDYAgFEDRfyM2DmELNqChYgK2oLF0BAsnsMABbEHjELaAJTRE+SQvJfHgjV/yzQD8pZQSqUu1gPqWuogABNQnE0igbqUOIkCgLqW6iAD1LyLAuUsJsHcpAfYuxd27lADjUoJxKcG4lGBcSjAuJRiXEoxLCcZdCw/fsU9rOyMk4gAAAABJRU5ErkJggg==">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -19,28 +18,12 @@
         :root {
             --bg: #f0f2f5;
             --surface: #ffffff;
-            --card: #ffffff;
             --text: #1a1a1a;
             --text-secondary: #65676b;
             --accent: #ff7b2c;
-            --accent-hover: #e6691a;
             --border: #e4e6eb;
             --my-msg: #ff7b2c;
             --other-msg: #e4e6eb;
-            --online: #31a24c;
-            --radius: 16px;
-            --shadow: 0 1px 3px rgba(0,0,0,0.08);
-        }
-
-        .dark {
-            --bg: #18191a;
-            --surface: #242526;
-            --card: #3a3b3c;
-            --text: #e4e6eb;
-            --text-secondary: #b0b3b8;
-            --border: #3e4042;
-            --my-msg: #ff7b2c;
-            --other-msg: #3e4042;
         }
 
         body {
@@ -56,7 +39,6 @@
             height: 100vh;
             max-width: 1400px;
             margin: 0 auto;
-            background: var(--bg);
         }
 
         /* Sidebar */
@@ -105,7 +87,6 @@
 
         .nav-item i {
             width: 24px;
-            font-size: 20px;
         }
 
         .user-info-sidebar {
@@ -128,10 +109,9 @@
             justify-content: center;
             font-weight: bold;
             color: white;
-            flex-shrink: 0;
         }
 
-        /* Main content */
+        /* Main */
         .main {
             flex: 1;
             display: flex;
@@ -139,7 +119,6 @@
             overflow: hidden;
         }
 
-        /* Chat area */
         .chat-header {
             padding: 16px 20px;
             background: var(--surface);
@@ -149,13 +128,12 @@
             gap: 12px;
         }
 
-        .chat-header .back-btn {
+        .back-btn {
             display: none;
             background: none;
             border: none;
             font-size: 20px;
             cursor: pointer;
-            color: var(--text);
         }
 
         .friend-avatar {
@@ -169,15 +147,6 @@
             font-weight: bold;
             color: white;
             font-size: 20px;
-        }
-
-        .friend-info h3 {
-            font-size: 18px;
-        }
-
-        .friend-info p {
-            font-size: 12px;
-            color: var(--online);
         }
 
         .messages-area {
@@ -241,7 +210,6 @@
             border: none;
             background: var(--bg);
             border-radius: 28px;
-            color: var(--text);
             font-size: 15px;
         }
 
@@ -253,10 +221,9 @@
             border-radius: 50%;
             color: white;
             cursor: pointer;
-            font-size: 18px;
         }
 
-        /* Search & Friends panel */
+        /* Right panel */
         .right-panel {
             width: 320px;
             background: var(--surface);
@@ -264,7 +231,6 @@
             display: flex;
             flex-direction: column;
             overflow-y: auto;
-            flex-shrink: 0;
         }
 
         .search-box {
@@ -278,7 +244,6 @@
             border: none;
             background: var(--bg);
             border-radius: 24px;
-            color: var(--text);
         }
 
         .friends-list, .search-results {
@@ -334,7 +299,7 @@
             color: var(--text-secondary);
         }
 
-        /* Auth screens */
+        /* Auth */
         .auth-container {
             height: 100vh;
             display: flex;
@@ -363,7 +328,7 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             background: var(--bg);
-            color: var(--text);
+            font-size: 14px;
         }
 
         .auth-card button {
@@ -395,9 +360,8 @@
         }
 
         @media (max-width: 768px) {
-            .sidebar { display: none; }
-            .right-panel { display: none; }
-            .chat-header .back-btn { display: block; }
+            .sidebar, .right-panel { display: none; }
+            .back-btn { display: block; }
             .message { max-width: 85%; }
         }
     </style>
@@ -406,7 +370,7 @@
 <div id="app"></div>
 
 <script>
-    // FIREBASE CONFIG - ТВОИ ДАННЫЕ
+    // ТВОИ ДАННЫЕ FIREBASE
     const firebaseConfig = {
         apiKey: "AIzaSyBx_koHusbH0CwiGvVj132nZ0rUpuPyqQw",
         authDomain: "msend-92718.firebaseapp.com",
@@ -416,189 +380,206 @@
         appId: "1:672219125451:web:84871d4e136d0168076d4e"
     };
 
-    // Initialize Firebase
+    // Инициализация
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // Global state
     let currentUser = null;
     let userDoc = null;
     let currentChatUserId = null;
     let friendsList = [];
     let messagesUnsubscribe = null;
 
-    // Helper: get initials
     function getInitials(firstName, lastName) {
         return (firstName?.[0] || '?') + (lastName?.[0] || '');
     }
 
-    async function updateUserStatus(online) {
-        if (!currentUser) return;
-        await db.collection('users').doc(currentUser.uid).update({ online, lastSeen: new Date() });
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/\n/g, '<br>');
     }
 
-    // Render main app
-    function renderApp() {
-        const container = document.getElementById('app');
-        if (!currentUser) {
-            renderAuth();
-            return;
-        }
-        if (!userDoc) {
-            container.innerHTML = '<div style="text-align:center; margin-top:50px;">Загрузка...</div>';
-            return;
-        }
+    function scrollMessages() {
+        const area = document.getElementById('messagesArea');
+        if (area) setTimeout(() => area.scrollTop = area.scrollHeight, 100);
+    }
 
-        container.innerHTML = `
-            <div class="app">
-                <div class="sidebar">
-                    <div class="logo">🐻 <span>ЧЕБУРЧАТ</span></div>
-                    <div class="nav-item active" data-nav="chats">
-                        <i class="fas fa-comments"></i> Чаты
-                    </div>
-                    <div class="nav-item" data-nav="friends">
-                        <i class="fas fa-user-friends"></i> Друзья
-                    </div>
-                    <div class="user-info-sidebar" id="sidebarProfileBtn">
-                        <div class="avatar">${getInitials(userDoc.firstName, userDoc.lastName)}</div>
-                        <div><strong>${userDoc.firstName} ${userDoc.lastName}</strong><br><span style="font-size:12px">${userDoc.email}</span></div>
-                    </div>
-                </div>
-                <div class="main" id="mainContent">
-                    <!-- Chat view will be injected here -->
-                </div>
-                <div class="right-panel" id="rightPanel">
-                    <div class="search-box">
-                        <input type="text" id="searchInput" placeholder="Поиск людей по имени...">
-                    </div>
-                    <div class="friends-list">
-                        <div class="section-title">👥 Мои друзья</div>
-                        <div id="friendsListContainer">Загрузка...</div>
-                    </div>
-                    <div id="searchResultsContainer" class="search-results hidden">
-                        <div class="section-title">🔍 Результаты</div>
-                        <div id="searchResults"></div>
-                    </div>
+    // Отправка сообщения
+    async function sendMessage(toUserId) {
+        const input = document.getElementById('messageInput');
+        if (!input) return;
+        const text = input.value.trim();
+        if (!text) return;
+        input.value = '';
+
+        const chatId = [currentUser.uid, toUserId].sort().join('_');
+        try {
+            await db.collection('messages').add({
+                chatId,
+                from: currentUser.uid,
+                to: toUserId,
+                text,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                read: false
+            });
+        } catch(e) { console.error(e); alert('Ошибка: ' + e.message); }
+        scrollMessages();
+    }
+
+    // Загрузка сообщений
+    async function loadMessages(friendId) {
+        if (messagesUnsubscribe) messagesUnsubscribe();
+        const chatId = [currentUser.uid, friendId].sort().join('_');
+        
+        messagesUnsubscribe = db.collection('messages')
+            .where('chatId', '==', chatId)
+            .orderBy('timestamp', 'asc')
+            .onSnapshot(snapshot => {
+                const container = document.getElementById('messagesArea');
+                if (!container) return;
+                container.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const msg = doc.data();
+                    const isMy = msg.from === currentUser.uid;
+                    const div = document.createElement('div');
+                    div.className = `message ${isMy ? 'my' : 'other'}`;
+                    const time = msg.timestamp?.toDate?.() ? 
+                        new Date(msg.timestamp.toDate()).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
+                    div.innerHTML = `
+                        <div class="bubble">${escapeHtml(msg.text)}</div>
+                        <div class="message-time">${time}</div>
+                    `;
+                    container.appendChild(div);
+                });
+                scrollMessages();
+            }, error => {
+                console.error("Ошибка загрузки сообщений:", error);
+            });
+    }
+
+    // Открыть чат
+    function openChat(userId, firstName, lastName) {
+        if (messagesUnsubscribe) messagesUnsubscribe();
+        currentChatUserId = userId;
+        
+        const mainEl = document.getElementById('mainContent');
+        mainEl.innerHTML = `
+            <div class="chat-header">
+                <button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i></button>
+                <div class="friend-avatar">${getInitials(firstName, lastName)}</div>
+                <div class="friend-info">
+                    <h3>${firstName} ${lastName}</h3>
                 </div>
             </div>
+            <div class="messages-area" id="messagesArea"></div>
+            <div class="input-area">
+                <input type="text" id="messageInput" placeholder="Сообщение...">
+                <button id="sendMsgBtn"><i class="fas fa-paper-plane"></i></button>
+            </div>
         `;
-
-        // Load friends list
-        loadFriendsList();
-        loadChatsList();
-
-        // Event listeners
-        document.querySelectorAll('.nav-item').forEach(el => {
-            el.addEventListener('click', (e) => {
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                el.classList.add('active');
-                if (el.dataset.nav === 'friends') {
-                    showFriendsPanel();
-                } else {
-                    showChatsPanel();
-                }
-            });
-        });
-
-        document.getElementById('sidebarProfileBtn').addEventListener('click', () => {
-            alert(`Профиль:\n${userDoc.firstName} ${userDoc.lastName}\n${userDoc.email}`);
-        });
-
-        const searchInput = document.getElementById('searchInput');
-        searchInput.addEventListener('input', debounce(async (e) => {
-            const query = e.target.value.trim();
-            if (query.length < 2) {
-                document.getElementById('searchResultsContainer').classList.add('hidden');
-                return;
-            }
-            await searchUsers(query);
-        }, 300));
-
-        // Start with chats view
-        showChatsPanel();
-    }
-
-    function debounce(fn, delay) {
-        let timer;
-        return (...args) => {
-            clearTimeout(timer);
-            timer = setTimeout(() => fn(...args), delay);
+        
+        document.getElementById('backBtn').onclick = () => {
+            currentChatUserId = null;
+            showChatsPanel();
         };
-    }
-
-    async function searchUsers(query) {
-        if (!query) return;
-        const usersRef = db.collection('users');
-        const firstNameQuery = await usersRef.where('firstNameLower', '>=', query.toLowerCase()).where('firstNameLower', '<=', query.toLowerCase() + '\uf8ff').limit(10).get();
-        const lastNameQuery = await usersRef.where('lastNameLower', '>=', query.toLowerCase()).where('lastNameLower', '<=', query.toLowerCase() + '\uf8ff').limit(10).get();
+        document.getElementById('sendMsgBtn').onclick = () => sendMessage(userId);
+        document.getElementById('messageInput').onkeypress = (e) => {
+            if (e.key === 'Enter') sendMessage(userId);
+        };
         
-        const results = new Map();
-        firstNameQuery.forEach(doc => { if (doc.id !== currentUser.uid) results.set(doc.id, doc.data()); });
-        lastNameQuery.forEach(doc => { if (doc.id !== currentUser.uid) results.set(doc.id, doc.data()); });
+        loadMessages(userId);
         
-        const container = document.getElementById('searchResults');
-        const searchContainer = document.getElementById('searchResultsContainer');
-        if (results.size === 0) {
-            container.innerHTML = '<div class="empty-state">Никого не найдено</div>';
-        } else {
-            container.innerHTML = '';
-            for (const [id, data] of results) {
-                const isFriend = friendsList.some(f => f.id === id);
-                const isPending = userDoc.friendRequests?.sent?.includes(id) || userDoc.friendRequests?.received?.includes(id);
-                const div = document.createElement('div');
-                div.className = 'user-item';
-                div.innerHTML = `
-                    <div class="friend-info">
-                        <div class="small-avatar">${getInitials(data.firstName, data.lastName)}</div>
-                        <div><strong>${data.firstName} ${data.lastName}</strong></div>
-                    </div>
-                    ${!isFriend && !isPending ? `<button class="add-friend-btn" data-id="${id}">➕ Добавить</button>` : 
-                      isPending ? '<span class="pending-badge">⏳ Запрос отправлен</span>' : '<span class="pending-badge">✅ Друг</span>'}
-                `;
-                const btn = div.querySelector('.add-friend-btn');
-                if (btn) btn.addEventListener('click', (e) => { e.stopPropagation(); sendFriendRequest(id); });
-                container.appendChild(div);
-            }
+        if (window.innerWidth <= 768) {
+            document.getElementById('rightPanel').classList.add('hidden');
         }
-        searchContainer.classList.remove('hidden');
     }
 
+    // Поиск пользователей
+    async function searchUsers(query) {
+        if (!query || query.length < 2) return;
+        
+        const results = [];
+        const usersRef = db.collection('users');
+        
+        try {
+            const firstNameSnap = await usersRef.where('firstNameLower', '>=', query.toLowerCase())
+                .where('firstNameLower', '<=', query.toLowerCase() + '\uf8ff').limit(10).get();
+            const lastNameSnap = await usersRef.where('lastNameLower', '>=', query.toLowerCase())
+                .where('lastNameLower', '<=', query.toLowerCase() + '\uf8ff').limit(10).get();
+            
+            const ids = new Set();
+            firstNameSnap.forEach(doc => { if (doc.id !== currentUser.uid) { ids.add(doc.id); results.push({id: doc.id, ...doc.data()}); } });
+            lastNameSnap.forEach(doc => { if (doc.id !== currentUser.uid && !ids.has(doc.id)) { results.push({id: doc.id, ...doc.data()}); } });
+            
+            const container = document.getElementById('searchResults');
+            const searchContainer = document.getElementById('searchResultsContainer');
+            
+            if (results.length === 0) {
+                container.innerHTML = '<div class="empty-state">Никого не найдено</div>';
+            } else {
+                container.innerHTML = '';
+                for (const user of results) {
+                    const isFriend = friendsList.some(f => f.id === user.id);
+                    const isPending = userDoc.friendRequests?.sent?.includes(user.id);
+                    const div = document.createElement('div');
+                    div.className = 'user-item';
+                    div.innerHTML = `
+                        <div class="friend-info">
+                            <div class="small-avatar">${getInitials(user.firstName, user.lastName)}</div>
+                            <div><strong>${user.firstName} ${user.lastName}</strong></div>
+                        </div>
+                        ${!isFriend && !isPending ? `<button class="add-friend-btn" data-id="${user.id}">➕ Добавить</button>` : 
+                          isPending ? '<span class="pending-badge">⏳ Запрос отправлен</span>' : '<span class="pending-badge">✅ Друг</span>'}
+                    `;
+                    const btn = div.querySelector('.add-friend-btn');
+                    if (btn) btn.onclick = (e) => { e.stopPropagation(); sendFriendRequest(user.id); };
+                    container.appendChild(div);
+                }
+            }
+            searchContainer.classList.remove('hidden');
+        } catch(e) { console.error(e); }
+    }
+
+    // Отправить заявку в друзья
     async function sendFriendRequest(toUserId) {
-        if (!currentUser) return;
-        const toUserRef = db.collection('users').doc(toUserId);
-        const toUser = (await toUserRef.get()).data();
-        if (!toUser) return;
-        
-        await toUserRef.update({
-            [`friendRequests.received`]: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
-        });
-        await db.collection('users').doc(currentUser.uid).update({
-            [`friendRequests.sent`]: firebase.firestore.FieldValue.arrayUnion(toUserId)
-        });
-        alert(`Запрос дружбы отправлен пользователю ${toUser.firstName} ${toUser.lastName}`);
-        loadFriendsList();
+        try {
+            await db.collection('users').doc(toUserId).update({
+                [`friendRequests.received`]: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+            });
+            await db.collection('users').doc(currentUser.uid).update({
+                [`friendRequests.sent`]: firebase.firestore.FieldValue.arrayUnion(toUserId)
+            });
+            alert('Запрос отправлен!');
+            loadFriendsList();
+        } catch(e) { console.error(e); alert('Ошибка: ' + e.message); }
     }
 
+    // Принять заявку
     async function acceptFriendRequest(fromUserId) {
-        const fromUser = (await db.collection('users').doc(fromUserId).get()).data();
-        if (!fromUser) return;
-        
-        await db.collection('users').doc(currentUser.uid).update({
-            friends: firebase.firestore.FieldValue.arrayUnion(fromUserId),
-            [`friendRequests.received`]: firebase.firestore.FieldValue.arrayRemove(fromUserId)
-        });
-        await db.collection('users').doc(fromUserId).update({
-            friends: firebase.firestore.FieldValue.arrayUnion(currentUser.uid),
-            [`friendRequests.sent`]: firebase.firestore.FieldValue.arrayRemove(currentUser.uid)
-        });
-        alert(`Вы теперь друзья с ${fromUser.firstName} ${fromUser.lastName}`);
-        loadFriendsList();
-        showChatsPanel();
+        try {
+            await db.collection('users').doc(currentUser.uid).update({
+                friends: firebase.firestore.FieldValue.arrayUnion(fromUserId),
+                [`friendRequests.received`]: firebase.firestore.FieldValue.arrayRemove(fromUserId)
+            });
+            await db.collection('users').doc(fromUserId).update({
+                friends: firebase.firestore.FieldValue.arrayUnion(currentUser.uid),
+                [`friendRequests.sent`]: firebase.firestore.FieldValue.arrayRemove(currentUser.uid)
+            });
+            alert('Вы теперь друзья!');
+            loadFriendsList();
+            showChatsPanel();
+        } catch(e) { console.error(e); }
     }
 
+    // Загрузить список друзей
     async function loadFriendsList() {
-        if (!currentUser || !userDoc) return;
+        if (!userDoc) return;
         const friendsIds = userDoc.friends || [];
         const friends = [];
         for (const id of friendsIds) {
@@ -606,10 +587,11 @@
             if (doc.exists) friends.push({ id, ...doc.data() });
         }
         friendsList = friends;
+        
         const container = document.getElementById('friendsListContainer');
         if (!container) return;
         if (friends.length === 0) {
-            container.innerHTML = '<div class="empty-state">Нет друзей. Добавьте кого-нибудь через поиск!</div>';
+            container.innerHTML = '<div class="empty-state">Нет друзей. Добавьте через поиск!</div>';
             return;
         }
         container.innerHTML = '';
@@ -623,39 +605,41 @@
                 </div>
                 <button class="add-friend-btn" style="background:#65676b" data-chat="${f.id}">💬</button>
             `;
-            div.querySelector('button').addEventListener('click', (e) => {
+            div.querySelector('button').onclick = (e) => {
                 e.stopPropagation();
                 openChat(f.id, f.firstName, f.lastName);
-            });
+            };
             container.appendChild(div);
         }
     }
 
-    async function loadChatsList() {
-        // Just using friends list
-    }
-
+    // Показать чаты
     function showChatsPanel() {
-        document.getElementById('rightPanel').classList.remove('hidden');
+        const rightPanel = document.getElementById('rightPanel');
+        if (rightPanel) rightPanel.classList.remove('hidden');
+        
         if (currentChatUserId) {
-            openChat(currentChatUserId, null, null);
+            // уже в чате
         } else {
             document.getElementById('mainContent').innerHTML = `
                 <div style="display:flex;align-items:center;justify-content:center;height:100%">
                     <div style="text-align:center;color:var(--text-secondary)">
                         <i class="fas fa-comments" style="font-size:48px;margin-bottom:16px"></i>
                         <h3>Выберите чат</h3>
-                        <p>Нажмите на друга справа, чтобы начать общение</p>
+                        <p>Нажмите на друга справа</p>
                     </div>
                 </div>
             `;
         }
     }
 
+    // Показать друзей
     function showFriendsPanel() {
-        document.getElementById('rightPanel').classList.add('hidden');
+        const rightPanel = document.getElementById('rightPanel');
+        if (rightPanel) rightPanel.classList.add('hidden');
+        
         document.getElementById('mainContent').innerHTML = `
-            <div style="padding:20px">
+            <div style="padding:20px; overflow-y:auto; height:100%">
                 <h2>Мои друзья</h2>
                 <div id="friendsFullList"></div>
                 <div style="margin-top:30px">
@@ -664,6 +648,7 @@
                 </div>
             </div>
         `;
+        
         renderFriendsFullList();
         renderFriendRequests();
     }
@@ -673,7 +658,7 @@
         if (!container) return;
         const friendsIds = userDoc.friends || [];
         if (friendsIds.length === 0) {
-            container.innerHTML = '<div class="empty-state">У вас пока нет друзей</div>';
+            container.innerHTML = '<div class="empty-state">Нет друзей</div>';
             return;
         }
         container.innerHTML = '';
@@ -690,7 +675,7 @@
                     </div>
                     <button class="add-friend-btn" data-chat="${id}">💬 Написать</button>
                 `;
-                div.querySelector('button').addEventListener('click', () => openChat(id, f.firstName, f.lastName));
+                div.querySelector('button').onclick = () => openChat(id, f.firstName, f.lastName);
                 container.appendChild(div);
             }
         }
@@ -718,122 +703,111 @@
                     </div>
                     <button class="add-friend-btn" data-accept="${id}" style="background:#31a24c">✅ Принять</button>
                 `;
-                div.querySelector('button').addEventListener('click', () => acceptFriendRequest(id));
+                div.querySelector('button').onclick = () => acceptFriendRequest(id);
                 container.appendChild(div);
             }
         }
     }
 
-    function openChat(userId, firstName, lastName) {
-        if (!firstName || !lastName) {
-            // If called without name, fetch it
-            db.collection('users').doc(userId).get().then(doc => {
-                if (doc.exists) {
-                    const data = doc.data();
-                    openChat(userId, data.firstName, data.lastName);
-                }
-            });
-            return;
-        }
+    // Рендер главного приложения
+    function renderApp() {
+        const container = document.getElementById('app');
+        if (!currentUser || !userDoc) return;
         
-        if (messagesUnsubscribe) messagesUnsubscribe();
-        currentChatUserId = userId;
-        const mainEl = document.getElementById('mainContent');
-        mainEl.innerHTML = `
-            <div class="chat-header">
-                <button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i></button>
-                <div class="friend-avatar">${getInitials(firstName, lastName)}</div>
-                <div class="friend-info">
-                    <h3>${firstName} ${lastName}</h3>
-                    <p><i class="fas fa-circle" style="font-size:10px"></i> Друг</p>
+        container.innerHTML = `
+            <div class="app">
+                <div class="sidebar">
+                    <div class="logo">🐻 <span>ЧЕБУРЧАТ</span></div>
+                    <div class="nav-item active" data-nav="chats">
+                        <i class="fas fa-comments"></i> Чаты
+                    </div>
+                    <div class="nav-item" data-nav="friends">
+                        <i class="fas fa-user-friends"></i> Друзья
+                    </div>
+                    <div class="user-info-sidebar" id="sidebarProfileBtn">
+                        <div class="avatar">${getInitials(userDoc.firstName, userDoc.lastName)}</div>
+                        <div><strong>${userDoc.firstName} ${userDoc.lastName}</strong><br><span style="font-size:12px">${userDoc.email}</span></div>
+                    </div>
                 </div>
-            </div>
-            <div class="messages-area" id="messagesArea"></div>
-            <div class="input-area">
-                <input type="text" id="messageInput" placeholder="Сообщение..." autocomplete="off">
-                <button id="sendMsgBtn"><i class="fas fa-paper-plane"></i></button>
+                <div class="main" id="mainContent"></div>
+                <div class="right-panel" id="rightPanel">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Поиск по имени...">
+                    </div>
+                    <div class="friends-list">
+                        <div class="section-title">👥 Мои друзья</div>
+                        <div id="friendsListContainer">Загрузка...</div>
+                    </div>
+                    <div id="searchResultsContainer" class="search-results hidden">
+                        <div class="section-title">🔍 Результаты</div>
+                        <div id="searchResults"></div>
+                    </div>
+                </div>
             </div>
         `;
         
-        document.getElementById('backBtn').addEventListener('click', () => {
-            currentChatUserId = null;
-            showChatsPanel();
+        loadFriendsList();
+        
+        document.querySelectorAll('.nav-item').forEach(el => {
+            el.onclick = () => {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                el.classList.add('active');
+                if (el.dataset.nav === 'friends') showFriendsPanel();
+                else showChatsPanel();
+            };
         });
         
-        document.getElementById('sendMsgBtn').addEventListener('click', () => sendMessage(userId));
-        document.getElementById('messageInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage(userId);
-        });
+        document.getElementById('sidebarProfileBtn').onclick = () => {
+            alert(`Профиль:\n${userDoc.firstName} ${userDoc.lastName}\n${userDoc.email}`);
+        };
         
-        loadMessages(userId);
+        const searchInput = document.getElementById('searchInput');
+        let debounceTimer;
+        searchInput.oninput = (e) => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => searchUsers(e.target.value.trim()), 300);
+        };
         
-        // On mobile, hide right panel
-        if (window.innerWidth <= 768) {
-            document.getElementById('rightPanel').classList.add('hidden');
-        }
+        showChatsPanel();
     }
-    
-    async function sendMessage(toUserId) {
-        const input = document.getElementById('messageInput');
-        const text = input.value.trim();
-        if (!text) return;
-        input.value = '';
+
+    // Регистрация
+    async function handleRegister() {
+        const firstName = document.getElementById('regFirstName').value.trim();
+        const lastName = document.getElementById('regLastName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const password = document.getElementById('regPassword').value;
         
-        const chatId = [currentUser.uid, toUserId].sort().join('_');
-        await db.collection('messages').add({
-            chatId,
-            from: currentUser.uid,
-            to: toUserId,
-            text,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            read: false
-        });
-        scrollMessages();
-    }
-    
-    async function loadMessages(friendId) {
-        const chatId = [currentUser.uid, friendId].sort().join('_');
-        const messagesRef = db.collection('messages').where('chatId', '==', chatId).orderBy('timestamp', 'asc');
+        if (!firstName || !lastName) { alert('Введите имя и фамилию'); return; }
+        if (password.length < 6) { alert('Пароль минимум 6 символов'); return; }
         
-        messagesUnsubscribe = messagesRef.onSnapshot(snapshot => {
-            const container = document.getElementById('messagesArea');
-            if (!container) return;
-            container.innerHTML = '';
-            snapshot.forEach(doc => {
-                const msg = doc.data();
-                const isMy = msg.from === currentUser.uid;
-                const div = document.createElement('div');
-                div.className = `message ${isMy ? 'my' : 'other'}`;
-                const time = msg.timestamp?.toDate?.() ? new Date(msg.timestamp.toDate()).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
-                div.innerHTML = `
-                    <div class="bubble">${escapeHtml(msg.text)}</div>
-                    <div class="message-time">${time}</div>
-                `;
-                container.appendChild(div);
+        try {
+            const cred = await auth.createUserWithEmailAndPassword(email, password);
+            await db.collection('users').doc(cred.user.uid).set({
+                firstName, lastName,
+                firstNameLower: firstName.toLowerCase(),
+                lastNameLower: lastName.toLowerCase(),
+                email,
+                friends: [],
+                friendRequests: { sent: [], received: [] },
+                online: true,
+                createdAt: new Date()
             });
-            scrollMessages();
-        });
+        } catch(e) { alert('Ошибка: ' + e.message); }
     }
-    
-    function scrollMessages() {
-        const area = document.getElementById('messagesArea');
-        if (area) area.scrollTop = area.scrollHeight;
+
+    // Вход
+    async function handleLogin() {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        try {
+            await auth.signInWithEmailAndPassword(email, password);
+        } catch(e) { alert('Ошибка: ' + e.message); }
     }
-    
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        }).replace(/\n/g, '<br>');
-    }
-    
-    // AUTH
+
+    // Экран авторизации
     function renderAuth() {
-        const container = document.getElementById('app');
-        container.innerHTML = `
+        document.getElementById('app').innerHTML = `
             <div class="auth-container">
                 <div class="auth-card">
                     <h1>🐻 ЧЕБУРЧАТ</h1>
@@ -855,79 +829,44 @@
             </div>
         `;
         
-        document.getElementById('doLoginBtn').addEventListener('click', () => handleLogin());
-        document.getElementById('showRegisterBtn').addEventListener('click', () => {
+        document.getElementById('doLoginBtn').onclick = handleLogin;
+        document.getElementById('showRegisterBtn').onclick = () => {
             document.getElementById('loginView').classList.add('hidden');
             document.getElementById('registerView').classList.remove('hidden');
-        });
-        document.getElementById('showLoginBtn').addEventListener('click', () => {
+        };
+        document.getElementById('showLoginBtn').onclick = () => {
             document.getElementById('registerView').classList.add('hidden');
             document.getElementById('loginView').classList.remove('hidden');
-        });
-        document.getElementById('doRegisterBtn').addEventListener('click', () => handleRegister());
+        };
+        document.getElementById('doRegisterBtn').onclick = handleRegister;
         
-        // Enter key handlers
-        const inputs = ['loginEmail','loginPassword','regFirstName','regLastName','regEmail','regPassword'];
-        inputs.forEach(id => {
+        // Enter key
+        ['loginEmail','loginPassword','regFirstName','regLastName','regEmail','regPassword'].forEach(id => {
             const el = document.getElementById(id);
-            if (el) el.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    if (id.includes('login')) handleLogin();
-                    else handleRegister();
-                }
-            });
+            if (el) el.onkeypress = (e) => { if (e.key === 'Enter') {
+                if (id.includes('login')) handleLogin();
+                else handleRegister();
+            }};
         });
     }
-    
-    async function handleLogin() {
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
-        try {
-            await auth.signInWithEmailAndPassword(email, password);
-        } catch(e) { alert('Ошибка: ' + e.message); }
-    }
-    
-    async function handleRegister() {
-        const firstName = document.getElementById('regFirstName').value.trim();
-        const lastName = document.getElementById('regLastName').value.trim();
-        const email = document.getElementById('regEmail').value.trim();
-        const password = document.getElementById('regPassword').value;
-        if (!firstName || !lastName) { alert('Введите имя и фамилию'); return; }
-        if (password.length < 6) { alert('Пароль минимум 6 символов'); return; }
-        try {
-            const cred = await auth.createUserWithEmailAndPassword(email, password);
-            const user = cred.user;
-            await db.collection('users').doc(user.uid).set({
-                firstName, lastName,
-                firstNameLower: firstName.toLowerCase(),
-                lastNameLower: lastName.toLowerCase(),
-                email,
-                friends: [],
-                friendRequests: { sent: [], received: [] },
-                online: true,
-                createdAt: new Date()
-            });
-        } catch(e) { alert('Ошибка: ' + e.message); }
-    }
-    
-    // Auth state listener
+
+    // Слушатель авторизации
     auth.onAuthStateChanged(async (user) => {
         if (user) {
             currentUser = user;
             const doc = await db.collection('users').doc(user.uid).get();
             if (!doc.exists) {
+                // fallback
                 await db.collection('users').doc(user.uid).set({
-                    firstName: 'User', lastName: user.email.split('@')[0],
-                    firstNameLower: 'user', lastNameLower: user.email.split('@')[0],
+                    firstName: user.email.split('@')[0], lastName: 'User',
+                    firstNameLower: user.email.split('@')[0].toLowerCase(), lastNameLower: 'user',
                     email: user.email, friends: [], friendRequests: { sent: [], received: [] }, online: true
                 });
-                userDoc = { firstName: 'User', lastName: user.email.split('@')[0], email: user.email, friends: [], friendRequests: { sent: [], received: [] } };
+                userDoc = { firstName: user.email.split('@')[0], lastName: 'User', email: user.email, friends: [], friendRequests: { sent: [], received: [] } };
             } else {
                 userDoc = doc.data();
             }
-            await updateUserStatus(true);
             renderApp();
-            window.addEventListener('beforeunload', () => updateUserStatus(false));
         } else {
             currentUser = null;
             userDoc = null;
