@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ЧЕБУРЧАТ — Социальная сеть</title>
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB7SURBVFhH7dexDYAgFEDRfyM2DmELNqChYgK2oLF0BAsnsMABbEHjELaAJTRE+SQvJfHgjV/yzQD8pZQSqUu1gPqWuogABNQnE0igbqUOIkCgLqW6iAD1LyLAuUsJsHcpAfYuxd27lADjUoJxKcG4lGBcSjAuJRiXEoxLCcZdCw/fsU9rOyMk4gAAAABJRU5ErkJggg==">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f0f2f5;
+            --surface: #ffffff;
+            --card: #ffffff;
+            --text: #1a1a1a;
+            --text-secondary: #65676b;
+            --accent: #ff7b2c;
+            --accent-hover: #e6691a;
+            --border: #e4e6eb;
+            --my-msg: #ff7b2c;
+            --other-msg: #e4e6eb;
+            --online: #31a24c;
+            --radius: 16px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .dark {
+            --bg: #18191a;
+            --surface: #242526;
+            --card: #3a3b3c;
+            --text: #e4e6eb;
+            --text-secondary: #b0b3b8;
+            --border: #3e4042;
+            --my-msg: #ff7b2c;
+            --other-msg: #3e4042;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app {
+            display: flex;
+            height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--bg);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            padding: 0 20px 20px;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--accent);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .logo span {
+            background: var(--accent);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 18px;
+        }
+
+        .nav-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--bg);
+            border-left: 3px solid var(--accent);
+        }
+
+        .nav-item i {
+            width: 24px;
+            font-size: 20px;
+        }
+
+        .user-info-sidebar {
+            margin-top: auto;
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        /* Main content */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Chat area */
+        .chat-header {
+            padding: 16px 20px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-header .back-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .friend-avatar {
+            width: 48px;
+            height: 48px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 20px;
+        }
+
+        .friend-info h3 {
+            font-size: 18px;
+        }
+
+        .friend-info p {
+            font-size: 12px;
+            color: var(--online);
+        }
+
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            max-width: 70%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message.my {
+            align-self: flex-end;
+        }
+
+        .message.other {
+            align-self: flex-start;
+        }
+
+        .bubble {
+            padding: 10px 14px;
+            border-radius: 18px;
+            word-wrap: break-word;
+        }
+
+        .my .bubble {
+            background: var(--my-msg);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .other .bubble {
+            background: var(--other-msg);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            margin-left: 8px;
+        }
+
+        .input-area {
+            padding: 16px;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+        }
+
+        .input-area input {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            background: var(--bg);
+            border-radius: 28px;
+            color: var(--text);
+            font-size: 15px;
+        }
+
+        .input-area button {
+            background: var(--accent);
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        /* Search & Friends panel */
+        .right-panel {
+            width: 320px;
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .search-box {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px;
+            border: none;
+            background: var(--bg);
+            border-radius: 24px;
+            color: var(--text);
+        }
+
+        .friends-list, .search-results {
+            padding: 16px;
+        }
+
+        .section-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .friend-item, .user-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .friend-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .small-avatar {
+            width: 36px;
+            height: 36px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .add-friend-btn {
+            background: var(--accent);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .pending-badge {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* Auth screens */
+        .auth-container {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+        }
+
+        .auth-card {
+            background: var(--surface);
+            padding: 40px;
+            border-radius: 24px;
+            width: 400px;
+            text-align: center;
+        }
+
+        .auth-card h1 {
+            color: var(--accent);
+            margin-bottom: 24px;
+        }
+
+        .auth-card input {
+            width: 100%;
+            padding: 14px;
+            margin: 8px 0;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .auth-card button {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+            margin-top: 16px;
+            cursor: pointer;
+        }
+
+        .toggle-auth {
+            margin-top: 16px;
+            color: var(--accent);
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .right-panel { display: none; }
+            .chat-header .back-btn { display: block; }
+            .message { max-width: 85%; }
+        }
+    </style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+    // FIREBASE CONFIG
+    const firebaseConfig = {
+        apiKey: "AIzaSyA-dQ8-cqE7y9VfNA3fPLF6hDO-s1OfQ4Q",
+        authDomain: "neznakomka.firebaseapp.com",
+        projectId: "neznakomka",
+        storageBucket: "neznakomka.firebasestorage.app",
+        messagingSenderId: "245961594712",
+        appId: "1:245961594712:web:e1c8ba71af1289b1bc372d"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Global state
+    let currentUser = null;
+    let userDoc = null;
+    let currentChatUserId = null;
+    let friendsList = [];
+    let messagesUnsubscribe = null;
+
+    // Helper: generate avatar color based on name
+    function getInitials(firstName, lastName) {
+        return (firstName?.[0] || '?') + (lastName?.[0] || '');
+    }
+
+    async function updateUserStatus(online) {
+        if (!currentUser) return;
+        await db.collection('users').doc(currentUser.uid).update({ online, lastSeen: new Date() });
+    }
+
+    // Render main app
+    function renderApp() {
+        const container = document.getElementById('app');
+        if (!currentUser) {
+            renderAuth();
+            return;
+        }
+        if (!userDoc) {
+            container.innerHTML = '<div style="text-align:center; margin-top:50px;">Загрузка...</div>';
+            return;
+        }
+
+        container.innerHTML = `
+            <div class="app">
+                <div class="sidebar">
+                    <div class="logo">🐻 <span>ЧЕБУРЧАТ</span></div>
+                    <div class="nav-item active" data-nav="chats">
+                        <i class="fas fa-comments"></i> Чаты
+                    </div>
+                    <div class="nav-item" data-nav="friends">
+                        <i class="fas fa-user-friends"></i> Друзья
+                    </div>
+                    <div class="user-info-sidebar" id="sidebarProfileBtn">
+                        <div class="avatar">${getInitials(userDoc.firstName, userDoc.lastName)}</div>
+                        <div><strong>${userDoc.firstName} ${userDoc.lastName}</strong><br><span style="font-size:12px">${userDoc.email}</span></div>
+                    </div>
+                </div>
+                <div class="main" id="mainContent">
+                    <!-- Chat view will be injected here -->
+                </div>
+                <div class="right-panel" id="rightPanel">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Поиск людей по имени...">
+                    </div>
+                    <div class="friends-list">
+                        <div class="section-title">👥 Мои друзья</div>
+                        <div id="friendsListContainer">Загрузка...</div>
+                    </div>
+                    <div id="searchResultsContainer" class="search-results hidden">
+                        <div class="section-title">🔍 Результаты</div>
+                        <div id="searchResults"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Load friends list
+        loadFriendsList();
+        loadChatsList();
+
+        // Event listeners
+        document.querySelectorAll('.nav-item').forEach(el => {
+            el.addEventListener('click', (e) => {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                el.classList.add('active');
+                if (el.dataset.nav === 'friends') {
+                    showFriendsPanel();
+                } else {
+                    showChatsPanel();
+                }
+            });
+        });
+
+        document.getElementById('sidebarProfileBtn').addEventListener('click', () => {
+            alert(`Профиль:\n${userDoc.firstName} ${userDoc.lastName}\n${userDoc.email}`);
+        });
+
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', debounce(async (e) => {
+            const query = e.target.value.trim();
+            if (query.length < 2) {
+                document.getElementById('searchResultsContainer').classList.add('hidden');
+                return;
+            }
+            await searchUsers(query);
+        }, 300));
+
+        // Start with chats view
+        showChatsPanel();
+    }
+
+    function debounce(fn, delay) {
+        let timer;
+        return (...args) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => fn(...args), delay);
+        };
+    }
+
+    async function searchUsers(query) {
+        if (!query) return;
+        const usersRef = db.collection('users');
+        const firstNameQuery = await usersRef.where('firstNameLower', '>=', query.toLowerCase()).where('firstNameLower', '<=', query.toLowerCase() + '\uf8ff').limit(10).get();
+        const lastNameQuery = await usersRef.where('lastNameLower', '>=', query.toLowerCase()).where('lastNameLower', '<=', query.toLowerCase() + '\uf8ff').limit(10).get();
+        
+        const results = new Map();
+        firstNameQuery.forEach(doc => { if (doc.id !== currentUser.uid) results.set(doc.id, doc.data()); });
+        lastNameQuery.forEach(doc => { if (doc.id !== currentUser.uid) results.set(doc.id, doc.data()); });
+        
+        const container = document.getElementById('searchResults');
+        const searchContainer = document.getElementById('searchResultsContainer');
+        if (results.size === 0) {
+            container.innerHTML = '<div class="empty-state">Никого не найдено</div>';
+        } else {
+            container.innerHTML = '';
+            for (const [id, data] of results) {
+                const isFriend = friendsList.some(f => f.id === id);
+                const isPending = userDoc.friendRequests?.sent?.includes(id) || userDoc.friendRequests?.received?.includes(id);
+                const div = document.createElement('div');
+                div.className = 'user-item';
+                div.innerHTML = `
+                    <div class="friend-info">
+                        <div class="small-avatar">${getInitials(data.firstName, data.lastName)}</div>
+                        <div><strong>${data.firstName} ${data.lastName}</strong></div>
+                    </div>
+                    ${!isFriend && !isPending ? `<button class="add-friend-btn" data-id="${id}">➕ Добавить</button>` : 
+                      isPending ? '<span class="pending-badge">⏳ Запрос отправлен</span>' : '<span class="pending-badge">✅ Друг</span>'}
+                `;
+                const btn = div.querySelector('.add-friend-btn');
+                if (btn) btn.addEventListener('click', (e) => { e.stopPropagation(); sendFriendRequest(id); });
+                container.appendChild(div);
+            }
+        }
+        searchContainer.classList.remove('hidden');
+    }
+
+    async function sendFriendRequest(toUserId) {
+        if (!currentUser) return;
+        const toUserRef = db.collection('users').doc(toUserId);
+        const toUser = (await toUserRef.get()).data();
+        if (!toUser) return;
+        
+        await toUserRef.update({
+            [`friendRequests.received`]: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+        });
+        await db.collection('users').doc(currentUser.uid).update({
+            [`friendRequests.sent`]: firebase.firestore.FieldValue.arrayUnion(toUserId)
+        });
+        alert(`Запрос дружбы отправлен пользователю ${toUser.firstName} ${toUser.lastName}`);
+        loadFriendsList();
+    }
+
+    async function acceptFriendRequest(fromUserId) {
+        const fromUser = (await db.collection('users').doc(fromUserId).get()).data();
+        if (!fromUser) return;
+        
+        // Add to friends lists
+        await db.collection('users').doc(currentUser.uid).update({
+            friends: firebase.firestore.FieldValue.arrayUnion(fromUserId),
+            [`friendRequests.received`]: firebase.firestore.FieldValue.arrayRemove(fromUserId)
+        });
+        await db.collection('users').doc(fromUserId).update({
+            friends: firebase.firestore.FieldValue.arrayUnion(currentUser.uid),
+            [`friendRequests.sent`]: firebase.firestore.FieldValue.arrayRemove(currentUser.uid)
+        });
+        alert(`Вы теперь друзья с ${fromUser.firstName} ${fromUser.lastName}`);
+        loadFriendsList();
+        showChatsPanel();
+    }
+
+    async function loadFriendsList() {
+        if (!currentUser || !userDoc) return;
+        const friendsIds = userDoc.friends || [];
+        const friends = [];
+        for (const id of friendsIds) {
+            const doc = await db.collection('users').doc(id).get();
+            if (doc.exists) friends.push({ id, ...doc.data() });
+        }
+        friendsList = friends;
+        const container = document.getElementById('friendsListContainer');
+        if (!container) return;
+        if (friends.length === 0) {
+            container.innerHTML = '<div class="empty-state">Нет друзей. Добавьте кого-нибудь через поиск!</div>';
+            return;
+        }
+        container.innerHTML = '';
+        for (const f of friends) {
+            const div = document.createElement('div');
+            div.className = 'friend-item';
+            div.innerHTML = `
+                <div class="friend-info">
+                    <div class="small-avatar">${getInitials(f.firstName, f.lastName)}</div>
+                    <div><strong>${f.firstName} ${f.lastName}</strong></div>
+                </div>
+                <button class="add-friend-btn" style="background:#65676b" data-chat="${f.id}">💬</button>
+            `;
+            div.querySelector('button').addEventListener('click', (e) => {
+                e.stopPropagation();
+                openChat(f.id, f.firstName, f.lastName);
+            });
+            container.appendChild(div);
+        }
+    }
+
+    async function loadChatsList() {
+        // For sidebar we already have friends list, but we need to show recent chats
+        // Just use friends list as chat list
+    }
+
+    function showChatsPanel() {
+        document.getElementById('rightPanel').classList.remove('hidden');
+        if (currentChatUserId) {
+            openChat(currentChatUserId, null, null);
+        } else {
+            document.getElementById('mainContent').innerHTML = `
+                <div style="display:flex;align-items:center;justify-content:center;height:100%">
+                    <div style="text-align:center;color:var(--text-secondary)">
+                        <i class="fas fa-comments" style="font-size:48px;margin-bottom:16px"></i>
+                        <h3>Выберите чат</h3>
+                        <p>Нажмите на друга справа, чтобы начать общение</p>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    function showFriendsPanel() {
+        document.getElementById('rightPanel').classList.add('hidden');
+        document.getElementById('mainContent').innerHTML = `
+            <div style="padding:20px">
+                <h2>Мои друзья</h2>
+                <div id="friendsFullList"></div>
+                <div style="margin-top:30px">
+                    <h3>Заявки в друзья</h3>
+                    <div id="friendRequestsList"></div>
+                </div>
+            </div>
+        `;
+        renderFriendsFullList();
+        renderFriendRequests();
+    }
+
+    async function renderFriendsFullList() {
+        const container = document.getElementById('friendsFullList');
+        if (!container) return;
+        const friendsIds = userDoc.friends || [];
+        if (friendsIds.length === 0) {
+            container.innerHTML = '<div class="empty-state">У вас пока нет друзей</div>';
+            return;
+        }
+        container.innerHTML = '';
+        for (const id of friendsIds) {
+            const doc = await db.collection('users').doc(id).get();
+            if (doc.exists) {
+                const f = doc.data();
+                const div = document.createElement('div');
+                div.className = 'friend-item';
+                div.innerHTML = `
+                    <div class="friend-info">
+                        <div class="small-avatar">${getInitials(f.firstName, f.lastName)}</div>
+                        <div><strong>${f.firstName} ${f.lastName}</strong></div>
+                    </div>
+                    <button class="add-friend-btn" data-chat="${id}">💬 Написать</button>
+                `;
+                div.querySelector('button').addEventListener('click', () => openChat(id, f.firstName, f.lastName));
+                container.appendChild(div);
+            }
+        }
+    }
+
+    async function renderFriendRequests() {
+        const container = document.getElementById('friendRequestsList');
+        if (!container) return;
+        const received = userDoc.friendRequests?.received || [];
+        if (received.length === 0) {
+            container.innerHTML = '<div class="empty-state">Нет входящих заявок</div>';
+            return;
+        }
+        container.innerHTML = '';
+        for (const id of received) {
+            const doc = await db.collection('users').doc(id).get();
+            if (doc.exists) {
+                const u = doc.data();
+                const div = document.createElement('div');
+                div.className = 'friend-item';
+                div.innerHTML = `
+                    <div class="friend-info">
+                        <div class="small-avatar">${getInitials(u.firstName, u.lastName)}</div>
+                        <div><strong>${u.firstName} ${u.lastName}</strong></div>
+                    </div>
+                    <button class="add-friend-btn" data-accept="${id}" style="background:#31a24c">✅ Принять</button>
+                `;
+                div.querySelector('button').addEventListener('click', () => acceptFriendRequest(id));
+                container.appendChild(div);
+            }
+        }
+    }
+
+    function openChat(userId, firstName, lastName) {
+        if (messagesUnsubscribe) messagesUnsubscribe();
+        currentChatUserId = userId;
+        const mainEl = document.getElementById('mainContent');
+        mainEl.innerHTML = `
+            <div class="chat-header">
+                <button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i></button>
+                <div class="friend-avatar">${getInitials(firstName, lastName)}</div>
+                <div class="friend-info">
+                    <h3>${firstName} ${lastName}</h3>
+                    <p><i class="fas fa-circle" style="font-size:10px"></i> Друг</p>
+                </div>
+            </div>
+            <div class="messages-area" id="messagesArea"></div>
+            <div class="input-area">
+                <input type="text" id="messageInput" placeholder="Сообщение..." autocomplete="off">
+                <button id="sendMsgBtn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        `;
+        
+        document.getElementById('backBtn').addEventListener('click', () => {
+            currentChatUserId = null;
+            showChatsPanel();
+        });
+        
+        document.getElementById('sendMsgBtn').addEventListener('click', () => sendMessage(userId));
+        document.getElementById('messageInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage(userId);
+        });
+        
+        loadMessages(userId);
+        
+        // On mobile, hide right panel
+        if (window.innerWidth <= 768) {
+            document.getElementById('rightPanel').classList.add('hidden');
+        }
+    }
+    
+    async function sendMessage(toUserId) {
+        const input = document.getElementById('messageInput');
+        const text = input.value.trim();
+        if (!text) return;
+        input.value = '';
+        
+        const chatId = [currentUser.uid, toUserId].sort().join('_');
+        await db.collection('messages').add({
+            chatId,
+            from: currentUser.uid,
+            to: toUserId,
+            text,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            read: false
+        });
+        scrollMessages();
+    }
+    
+    async function loadMessages(friendId) {
+        const chatId = [currentUser.uid, friendId].sort().join('_');
+        const messagesRef = db.collection('messages').where('chatId', '==', chatId).orderBy('timestamp', 'asc');
+        
+        messagesUnsubscribe = messagesRef.onSnapshot(snapshot => {
+            const container = document.getElementById('messagesArea');
+            if (!container) return;
+            container.innerHTML = '';
+            snapshot.forEach(doc => {
+                const msg = doc.data();
+                const isMy = msg.from === currentUser.uid;
+                const div = document.createElement('div');
+                div.className = `message ${isMy ? 'my' : 'other'}`;
+                const time = msg.timestamp?.toDate?.() ? new Date(msg.timestamp.toDate()).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
+                div.innerHTML = `
+                    <div class="bubble">${escapeHtml(msg.text)}</div>
+                    <div class="message-time">${time}</div>
+                `;
+                container.appendChild(div);
+            });
+            scrollMessages();
+        });
+    }
+    
+    function scrollMessages() {
+        const area = document.getElementById('messagesArea');
+        if (area) area.scrollTop = area.scrollHeight;
+    }
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/\n/g, '<br>');
+    }
+    
+    // AUTH
+    function renderAuth() {
+        const container = document.getElementById('app');
+        container.innerHTML = `
+            <div class="auth-container">
+                <div class="auth-card">
+                    <h1>🐻 ЧЕБУРЧАТ</h1>
+                    <div id="loginView">
+                        <input type="email" id="loginEmail" placeholder="Email">
+                        <input type="password" id="loginPassword" placeholder="Пароль">
+                        <button id="doLoginBtn">Войти</button>
+                        <div class="toggle-auth" id="showRegisterBtn">Нет аккаунта? Регистрация</div>
+                    </div>
+                    <div id="registerView" class="hidden">
+                        <input type="text" id="regFirstName" placeholder="Имя">
+                        <input type="text" id="regLastName" placeholder="Фамилия">
+                        <input type="email" id="regEmail" placeholder="Email">
+                        <input type="password" id="regPassword" placeholder="Пароль (мин. 6)">
+                        <button id="doRegisterBtn">Зарегистрироваться</button>
+                        <div class="toggle-auth" id="showLoginBtn">Уже есть аккаунт? Войти</div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('doLoginBtn').addEventListener('click', () => handleLogin());
+        document.getElementById('showRegisterBtn').addEventListener('click', () => {
+            document.getElementById('loginView').classList.add('hidden');
+            document.getElementById('registerView').classList.remove('hidden');
+        });
+        document.getElementById('showLoginBtn').addEventListener('click', () => {
+            document.getElementById('registerView').classList.add('hidden');
+            document.getElementById('loginView').classList.remove('hidden');
+        });
+        document.getElementById('doRegisterBtn').addEventListener('click', () => handleRegister());
+        
+        // Enter key handlers
+        const inputs = ['loginEmail','loginPassword','regFirstName','regLastName','regEmail','regPassword'];
+        inputs.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    if (id.includes('login')) handleLogin();
+                    else handleRegister();
+                }
+            });
+        });
+    }
+    
+    async function handleLogin() {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        try {
+            await auth.signInWithEmailAndPassword(email, password);
+        } catch(e) { alert('Ошибка: ' + e.message); }
+    }
+    
+    async function handleRegister() {
+        const firstName = document.getElementById('regFirstName').value.trim();
+        const lastName = document.getElementById('regLastName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const password = document.getElementById('regPassword').value;
+        if (!firstName || !lastName) { alert('Введите имя и фамилию'); return; }
+        if (password.length < 6) { alert('Пароль минимум 6 символов'); return; }
+        try {
+            const cred = await auth.createUserWithEmailAndPassword(email, password);
+            const user = cred.user;
+            await db.collection('users').doc(user.uid).set({
+                firstName, lastName,
+                firstNameLower: firstName.toLowerCase(),
+                lastNameLower: lastName.toLowerCase(),
+                email,
+                friends: [],
+                friendRequests: { sent: [], received: [] },
+                online: true,
+                createdAt: new Date()
+            });
+        } catch(e) { alert('Ошибка: ' + e.message); }
+    }
+    
+    // Auth state listener
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            currentUser = user;
+            const doc = await db.collection('users').doc(user.uid).get();
+            if (!doc.exists) {
+                // Should not happen, but just in case
+                await db.collection('users').doc(user.uid).set({
+                    firstName: 'User', lastName: user.email.split('@')[0],
+                    firstNameLower: 'user', lastNameLower: user.email.split('@')[0],
+                    email: user.email, friends: [], friendRequests: { sent: [], received: [] }, online: true
+                });
+                userDoc = { firstName: 'User', lastName: user.email.split('@')[0], email: user.email, friends: [], friendRequests: { sent: [], received: [] } };
+            } else {
+                userDoc = doc.data();
+            }
+            await updateUserStatus(true);
+            renderApp();
+            window.addEventListener('beforeunload', () => updateUserStatus(false));
+        } else {
+            currentUser = null;
+            userDoc = null;
+            if (messagesUnsubscribe) messagesUnsubscribe();
+            renderAuth();
+        }
+    });
+</script>
+</body>
+</html>
