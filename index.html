@@ -3,91 +3,202 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ЧЕБУРЧАТ FULL</title>
+<title>ЧЕБУРЧАТ PRO</title>
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
 <style>
 body{margin:0;font-family:sans-serif;background:#f0f2f5}
 .app{display:flex;height:100vh}
-.sidebar{width:280px;background:#fff;border-right:1px solid #ddd;overflow:auto}
-.chat-item{padding:12px;border-bottom:1px solid #eee;cursor:pointer}
-.chat-item:hover{background:#f5f5f5}
+
+/* sidebar */
+.sidebar{width:300px;background:#fff;border-right:1px solid #ddd;display:flex;flex-direction:column}
+.nav{padding:15px;font-weight:bold;border-bottom:1px solid #eee}
+.tab{padding:12px;cursor:pointer}
+.tab.active{background:#f5f5f5}
+
+/* chat list */
+.chat{padding:12px;border-bottom:1px solid #eee;cursor:pointer}
+.chat:hover{background:#f5f5f5}
+
+/* main */
 .main{flex:1;display:flex;flex-direction:column}
-.messages{flex:1;overflow:auto;padding:20px}
-.msg{max-width:60%;margin:8px 0;padding:10px;border-radius:10px}
+.header{padding:15px;background:#fff;border-bottom:1px solid #ddd}
+.messages{flex:1;overflow:auto;padding:20px;display:flex;flex-direction:column}
+.msg{max-width:60%;margin:6px 0;padding:10px;border-radius:12px}
 .my{margin-left:auto;background:#ff7b2c;color:#fff}
 .other{background:#e4e6eb}
+
+.time{font-size:10px;opacity:0.6;margin-top:4px}
+
 .input{display:flex;padding:10px;background:#fff}
-input{flex:1;padding:10px}
-button{padding:10px 15px;background:#ff7b2c;color:#fff;border:none}
+.input input{flex:1;padding:10px;border-radius:20px;border:1px solid #ddd}
+.input button{margin-left:10px;padding:10px 15px;background:#ff7b2c;border:none;color:#fff;border-radius:20px}
 </style>
 </head>
 <body>
+
 <div id="app"></div>
+
 <script>
 
-const firebaseConfig = {
-apiKey: "AIzaSyBx_koHusbH0CwiGvVj132nZ0rUpuPyqQw",
-authDomain: "msend-92718.firebaseapp.com",
-projectId: "msend-92718"
+const firebaseConfig={
+apiKey:"AIzaSyBx_koHusbH0CwiGvVj132nZ0rUpuPyqQw",
+authDomain:"msend-92718.firebaseapp.com",
+projectId:"msend-92718"
 };
 
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+const auth=firebase.auth();
+const db=firebase.firestore();
 
-let user=null, currentChat=null, unsub=null;
+let user=null;
+let currentChat=null;
+let unsub=null;
+
+/* ===== AUTH ===== */
 
 function renderAuth(){
-document.getElementById('app').innerHTML=`
+app.innerHTML=`
 <div style="display:flex;justify-content:center;align-items:center;height:100vh">
 <div>
-<input id="email" placeholder="email"><br>
-<input id="pass" type="password" placeholder="password"><br>
+<input id="email" placeholder="email"><br><br>
+<input id="pass" type="password" placeholder="password"><br><br>
 <button onclick="login()">Войти</button>
 <button onclick="register()">Регистрация</button>
-</div></div>`;
+</div>
+</div>`;
 }
 
 async function register(){
 const e=email.value,p=pass.value;
 const cred=await auth.createUserWithEmailAndPassword(e,p);
-await db.collection('users').doc(cred.user.uid).set({email:e,friends:[]});
+await db.collection('users').doc(cred.user.uid).set({
+email:e,
+friends:[]
+});
 }
 
 async function login(){
 await auth.signInWithEmailAndPassword(email.value,pass.value);
 }
 
+/* ===== APP ===== */
+
 function renderApp(){
-document.getElementById('app').innerHTML=`
+app.innerHTML=`
 <div class="app">
-<div class="sidebar" id="chatList"></div>
+<div class="sidebar">
+<div class="nav">ЧЕБУРЧАТ</div>
+<div class="tab active" onclick="showChats()">Чаты</div>
+<div class="tab" onclick="showFriends()">Друзья</div>
+<div id="list"></div>
+</div>
+
 <div class="main">
+<div class="header" id="chatName">Выбери чат</div>
 <div class="messages" id="messages"></div>
 <div class="input">
-<input id="msg">
+<input id="msgInput">
 <button onclick="send()">➤</button>
 </div>
 </div>
 </div>`;
-loadChats();
+showChats();
 }
+
+/* ===== CHATS ===== */
 
 function chatId(a,b){return[a,b].sort().join('_')}
 
+function showChats(){
+loadChats();
+}
+
+function loadChats(){
+db.collection('chats')
+.where('users','array-contains',user.uid)
+.orderBy('lastTime','desc')
+.onSnapshot(async snap=>{
+list.innerHTML='';
+for(const d of snap.docs){
+const c=d.data();
+const other=c.users.find(u=>u!==user.uid);
+
+const el=document.createElement('div');
+el.className='chat';
+el.innerHTML=`${other}<br><small>${c.lastMessage||''}</small>`;
+el.onclick=()=>openChat(other);
+
+list.appendChild(el);
+}
+});
+}
+
+/* ===== FRIENDS ===== */
+
+async function showFriends(){
+list.innerHTML='';
+const me=await db.collection('users').doc(user.uid).get();
+const friends=me.data().friends||[];
+
+for(const f of friends){
+const el=document.createElement('div');
+el.className='chat';
+el.innerHTML=`${f} <button onclick="event.stopPropagation();openChat('${f}')">💬</button>`;
+list.appendChild(el);
+}
+}
+
+/* ===== CHAT ===== */
+
+function openChat(uid){
+currentChat=uid;
+chatName.innerText="Чат: "+uid;
+
+if(unsub)unsub();
+
+const id=chatId(user.uid,uid);
+
+unsub=db.collection('messages')
+.where('chatId','==',id)
+.orderBy('time')
+.onSnapshot(s=>{
+messages.innerHTML='';
+s.forEach(d=>{
+const m=d.data();
+
+const div=document.createElement('div');
+div.className='msg '+(m.from===user.uid?'my':'other');
+
+const time=m.time?.toDate?.()?
+new Date(m.time.toDate()).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'';
+
+div.innerHTML=`${m.text}<div class="time">${time}</div>`;
+messages.appendChild(div);
+});
+
+messages.scrollTop=messages.scrollHeight;
+});
+}
+
+/* ===== SEND ===== */
+
 async function send(){
 if(!currentChat)return;
-const text=msg.value.trim();
+const text=msgInput.value.trim();
 if(!text)return;
-msg.value='';
+
+msgInput.value='';
+
 const id=chatId(user.uid,currentChat);
 
 await db.collection('messages').add({
 chatId:id,
 from:user.uid,
-text,
+text:text,
 time:firebase.firestore.FieldValue.serverTimestamp()
 });
 
@@ -98,46 +209,11 @@ lastTime:firebase.firestore.FieldValue.serverTimestamp()
 },{merge:true});
 }
 
-function loadChats(){
-db.collection('chats')
-.where('users','array-contains',user.uid)
-.orderBy('lastTime','desc')
-.onSnapshot(async snap=>{
-chatList.innerHTML='';
-for(const d of snap.docs){
-const c=d.data();
-const other=c.users.find(u=>u!==user.uid);
-const el=document.createElement('div');
-el.className='chat-item';
-el.innerHTML=`${other}<br><small>${c.lastMessage||''}</small>`;
-el.onclick=()=>openChat(other);
-chatList.appendChild(el);
-}
-});
-}
-
-function openChat(uid){
-currentChat=uid;
-if(unsub)unsub();
-const id=chatId(user.uid,uid);
-
-unsub=db.collection('messages')
-.where('chatId','==',id)
-.orderBy('time')
-.onSnapshot(s=>{
-messages.innerHTML='';
-s.forEach(d=>{
-const m=d.data();
-const div=document.createElement('div');
-div.className='msg '+(m.from===user.uid?'my':'other');
-div.innerText=m.text;
-messages.appendChild(div);
-});
-});
-}
+/* ===== INIT ===== */
 
 auth.onAuthStateChanged(u=>{
-if(u){user=u;renderApp()}else renderAuth();
+if(u){user=u;renderApp()}
+else renderAuth();
 });
 
 </script>
