@@ -128,8 +128,6 @@
         .admin-stat-card { background: var(--bg-element); border-radius: 16px; padding: 12px 20px; text-align: center; flex: 1; min-width: 100px; }
         .admin-stat-value { font-size: 28px; font-weight: 700; color: var(--accent); }
         .admin-stat-label { font-size: 12px; color: var(--text-secondary); }
-        .admin-search { padding: 12px 16px; border-bottom: 1px solid var(--border); }
-        .admin-search input { width: 100%; padding: 10px 16px; border: none; background: var(--bg-element); border-radius: 24px; font-size: 15px; outline: none; color: var(--text); }
         .admin-list { flex: 1; overflow-y: auto; }
         .admin-user-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); }
         .admin-user-info { display: flex; align-items: center; gap: 12px; flex: 1; }
@@ -162,6 +160,15 @@
         .mobile-nav-item i { font-size: 22px; }
         .mobile-nav-item.active { color: var(--accent); background: var(--bg-element); }
         
+        /* Мобильный профиль с кнопкой выхода */
+        .mobile-profile-modal .modal { max-width: 320px; }
+        .mobile-profile-info { text-align: center; padding: 16px; }
+        .mobile-profile-avatar { width: 80px; height: 80px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 32px; margin: 0 auto 16px; position: relative; }
+        .mobile-profile-name { font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+        .mobile-profile-email { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; word-break: break-all; }
+        .mobile-profile-verified { color: var(--verified); margin-bottom: 20px; }
+        .mobile-logout-btn { width: 100%; padding: 14px; background: #dc3545; color: white; border: none; border-radius: 16px; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        
         @media (max-width: 768px) { .sidebar { display: none; } .mobile-bottom-nav { display: flex; } }
         @media (min-width: 769px) { .back-btn { display: flex !important; } }
     </style>
@@ -183,6 +190,25 @@
         <div class="modal-buttons">
             <button class="confirm" id="confirmCreateGroup">Создать</button>
             <button id="cancelCreateGroup">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<!-- Мобильное модальное окно профиля -->
+<div id="mobileProfileModal" class="modal-overlay mobile-profile-modal">
+    <div class="modal">
+        <div class="modal-header">Профиль</div>
+        <div class="modal-body">
+            <div class="mobile-profile-info">
+                <div class="mobile-profile-avatar" id="mobileProfileAvatar"></div>
+                <div class="mobile-profile-name" id="mobileProfileName"></div>
+                <div class="mobile-profile-email" id="mobileProfileEmail"></div>
+                <div class="mobile-profile-verified" id="mobileProfileVerified"></div>
+                <button class="mobile-logout-btn" id="mobileLogoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти из аккаунта</button>
+            </div>
+        </div>
+        <div class="modal-buttons">
+            <button class="confirm" id="closeMobileProfileBtn">Закрыть</button>
         </div>
     </div>
 </div>
@@ -275,7 +301,7 @@
                 await db.collection('groups').doc(currentChat.id).update({
                     lastMsg: text,
                     lastTime: new Date().toISOString()
-                });
+                }).catch(() => {});
             }
             
             await db.collection('messages').add(messageData);
@@ -296,24 +322,18 @@
             query = db.collection('messages').where('groupId', '==', currentChat.id);
         }
         
-        messagesUnsubscribe = query.onSnapshot(snapshot => {
+        messagesUnsubscribe = query.orderBy('timestamp', 'asc').onSnapshot(snapshot => {
             const container = document.getElementById('messagesArea');
             if(!container) return;
-            const messages = [];
-            snapshot.forEach(doc => { messages.push({ id: doc.id, ...doc.data() }); });
-            messages.sort((a, b) => {
-                const ta = a.timestamp?.toDate?.()?.getTime() || 0;
-                const tb = b.timestamp?.toDate?.()?.getTime() || 0;
-                return ta - tb;
-            });
             container.innerHTML = '';
-            messages.forEach(msg => {
+            snapshot.forEach(doc => {
+                const msg = doc.data();
                 const isMy = msg.userId === currentUser.uid;
                 const div = document.createElement('div');
                 div.className = `message ${isMy ? 'my' : 'other'}`;
                 const ts = msg.timestamp?.toDate?.() || new Date();
                 div.innerHTML = `
-                    ${!isMy ? `<div class="message-sender">${msg.userName || 'Пользователь'}</div>` : ''}
+                    ${!isMy ? `<div class="message-sender">${escapeHtml(msg.userName || 'Пользователь')}</div>` : ''}
                     <div class="message-bubble">${escapeHtml(msg.text)}</div>
                     <div class="message-time">${ts.toLocaleDateString()} в ${ts.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
                 `;
@@ -344,7 +364,7 @@
                     </div>
                     <div class="chat-header-info">
                         <div class="chat-header-name">
-                            ${isGroup ? chat.name : `${chat.firstName} ${chat.lastName}`}
+                            ${isGroup ? escapeHtml(chat.name) : `${escapeHtml(chat.firstName)} ${escapeHtml(chat.lastName)}`}
                             ${!isGroup && chat.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}
                         </div>
                         ${isGroup && chat.members ? `<div class="chat-header-members">${chat.members.length} участников</div>` : ''}
@@ -379,103 +399,104 @@
     async function loadChatsList() {
         if(!currentUser) return;
         
-        // Личные чаты
-        const allMessages = await db.collection('messages')
-            .where('userId', '==', currentUser.uid)
-            .get();
-        const messagesTo = await db.collection('messages')
-            .where('toUserId', '==', currentUser.uid)
-            .get();
-        
-        const chatUsers = new Map();
-        
-        allMessages.forEach(doc => {
-            const msg = doc.data();
-            if(msg.toUserId && msg.toUserId !== currentUser.uid && msg.chatType !== 'group') {
-                chatUsers.set(msg.toUserId, { lastMsg: msg.text, lastTime: msg.timestamp });
-            }
-        });
-        messagesTo.forEach(doc => {
-            const msg = doc.data();
-            if(msg.userId && msg.userId !== currentUser.uid && msg.chatType !== 'group') {
-                const existing = chatUsers.get(msg.userId);
-                if(!existing || (msg.timestamp && existing.lastTime?.toDate?.() < msg.timestamp.toDate())) {
-                    chatUsers.set(msg.userId, { lastMsg: msg.text, lastTime: msg.timestamp });
+        try {
+            // Личные чаты
+            const allMessages = await db.collection('messages')
+                .where('userId', '==', currentUser.uid)
+                .get();
+            const messagesTo = await db.collection('messages')
+                .where('toUserId', '==', currentUser.uid)
+                .get();
+            
+            const chatUsers = new Map();
+            
+            allMessages.forEach(doc => {
+                const msg = doc.data();
+                if(msg.toUserId && msg.toUserId !== currentUser.uid && msg.chatType !== 'group') {
+                    chatUsers.set(msg.toUserId, { lastMsg: msg.text, lastTime: msg.timestamp });
+                }
+            });
+            messagesTo.forEach(doc => {
+                const msg = doc.data();
+                if(msg.userId && msg.userId !== currentUser.uid && msg.chatType !== 'group') {
+                    const existing = chatUsers.get(msg.userId);
+                    if(!existing || (msg.timestamp && existing.lastTime?.toDate?.() < msg.timestamp.toDate())) {
+                        chatUsers.set(msg.userId, { lastMsg: msg.text, lastTime: msg.timestamp });
+                    }
+                }
+            });
+            
+            const friendIds = userData.friends || [];
+            for(const id of friendIds) {
+                if(!chatUsers.has(id)) {
+                    const userDoc = await db.collection('users').doc(id).get();
+                    if(userDoc.exists) {
+                        chatUsers.set(id, { lastMsg: 'Напишите первым', lastTime: null });
+                    }
                 }
             }
-        });
-        
-        const friendIds = userData.friends || [];
-        for(const id of friendIds) {
-            if(!chatUsers.has(id)) {
+            
+            const privateChats = [];
+            for(const [id, data] of chatUsers) {
                 const userDoc = await db.collection('users').doc(id).get();
                 if(userDoc.exists) {
-                    chatUsers.set(id, { lastMsg: 'Напишите первым', lastTime: null });
+                    const u = userDoc.data();
+                    privateChats.push({
+                        type: 'private',
+                        id: id,
+                        firstName: u.firstName,
+                        lastName: u.lastName,
+                        isVerified: u.isVerified || false,
+                        lastMsg: data.lastMsg || 'Напишите первым',
+                        lastTime: data.lastTime
+                    });
                 }
             }
-        }
-        
-        const privateChats = [];
-        for(const [id, data] of chatUsers) {
-            const userDoc = await db.collection('users').doc(id).get();
-            if(userDoc.exists) {
-                const u = userDoc.data();
-                privateChats.push({
-                    type: 'private',
-                    id: id,
-                    firstName: u.firstName,
-                    lastName: u.lastName,
-                    isVerified: u.isVerified || false,
-                    lastMsg: data.lastMsg || 'Напишите первым',
-                    lastTime: data.lastTime
+            
+            // Групповые чаты
+            const groupsSnapshot = await db.collection('groups')
+                .where('members', 'array-contains', currentUser.uid)
+                .get();
+            
+            const groupChats = [];
+            for(const doc of groupsSnapshot.docs) {
+                const group = doc.data();
+                const lastMsgSnapshot = await db.collection('messages')
+                    .where('groupId', '==', doc.id)
+                    .orderBy('timestamp', 'desc')
+                    .limit(1)
+                    .get();
+                let lastMsg = 'Нет сообщений';
+                let lastTime = null;
+                if(!lastMsgSnapshot.empty) {
+                    const lastMsgData = lastMsgSnapshot.docs[0].data();
+                    lastMsg = lastMsgData.text;
+                    lastTime = lastMsgData.timestamp?.toDate?.() || null;
+                }
+                groupChats.push({
+                    type: 'group',
+                    id: doc.id,
+                    name: group.name,
+                    members: group.members,
+                    lastMsg: lastMsg,
+                    lastTime: lastTime
                 });
             }
-        }
-        
-        // Групповые чаты
-        const groupsSnapshot = await db.collection('groups')
-            .where('members', 'array-contains', currentUser.uid)
-            .get();
-        
-        const groupChats = [];
-        for(const doc of groupsSnapshot.docs) {
-            const group = doc.data();
-            // Получаем последнее сообщение
-            const lastMsgSnapshot = await db.collection('messages')
-                .where('groupId', '==', doc.id)
-                .orderBy('timestamp', 'desc')
-                .limit(1)
-                .get();
-            let lastMsg = 'Нет сообщений';
-            let lastTime = null;
-            if(!lastMsgSnapshot.empty) {
-                const lastMsgData = lastMsgSnapshot.docs[0].data();
-                lastMsg = lastMsgData.text;
-                lastTime = lastMsgData.timestamp?.toDate?.() || null;
-            }
-            groupChats.push({
-                type: 'group',
-                id: doc.id,
-                name: group.name,
-                members: group.members,
-                lastMsg: lastMsg,
-                lastTime: lastTime
+            
+            groupChats.sort((a,b) => {
+                const ta = a.lastTime?.getTime?.() || 0;
+                const tb = b.lastTime?.getTime?.() || 0;
+                return tb - ta;
             });
-        }
-        
-        groupChats.sort((a,b) => {
-            const ta = a.lastTime?.getTime?.() || 0;
-            const tb = b.lastTime?.getTime?.() || 0;
-            return tb - ta;
-        });
-        privateChats.sort((a,b) => {
-            const ta = a.lastTime?.toDate?.()?.getTime() || 0;
-            const tb = b.lastTime?.toDate?.()?.getTime() || 0;
-            return tb - ta;
-        });
-        
-        chatsList = { private: privateChats, groups: groupChats };
-        renderChatsList();
+            privateChats.sort((a,b) => {
+                const ta = a.lastTime?.toDate?.()?.getTime() || 0;
+                const tb = b.lastTime?.toDate?.()?.getTime() || 0;
+                return tb - ta;
+            });
+            
+            chatsList = { private: privateChats, groups: groupChats };
+            renderChatsList();
+        } catch(e) { console.error(e); }
     }
 
     function renderChatsList(searchQuery = '') {
@@ -657,6 +678,31 @@
         loadChatsList();
         document.getElementById('chatsSearchInput').oninput = (e) => renderChatsList(e.target.value.trim());
         if(isMobile) updateMobileNav('chats');
+    }
+
+    // Показать мобильный профиль с кнопкой выхода
+    function showMobileProfile() {
+        const modal = document.getElementById('mobileProfileModal');
+        const avatarEl = document.getElementById('mobileProfileAvatar');
+        const nameEl = document.getElementById('mobileProfileName');
+        const emailEl = document.getElementById('mobileProfileEmail');
+        const verifiedEl = document.getElementById('mobileProfileVerified');
+        
+        avatarEl.textContent = getInitials(userData.firstName, userData.lastName);
+        nameEl.textContent = `${userData.firstName} ${userData.lastName}`;
+        emailEl.textContent = userData.email;
+        verifiedEl.innerHTML = userData.isVerified ? '<i class="fas fa-check-circle"></i> Официальная галочка' : '';
+        
+        modal.classList.add('active');
+        
+        document.getElementById('mobileLogoutBtn').onclick = () => {
+            modal.classList.remove('active');
+            logout();
+        };
+        
+        document.getElementById('closeMobileProfileBtn').onclick = () => {
+            modal.classList.remove('active');
+        };
     }
 
     async function loadPeopleList() {
@@ -864,7 +910,6 @@
             container.appendChild(div);
         });
         
-        // Статистика
         const usersSnapshot = await db.collection('users').get();
         document.getElementById('totalUsersCount').textContent = usersSnapshot.size;
         let verified = 0;
@@ -973,7 +1018,9 @@
                 else if(el.dataset.nav === 'chats') showChatsView();
             };
         });
-        document.getElementById('mobileProfileBtn').onclick = () => showModal('Профиль', `${userData.firstName} ${userData.lastName}\n${userData.email}\n✅ Email подтверждён\n${userData.isVerified ? '✅ Официальная галочка' : ''}`);
+        
+        // Кнопка профиля на телефоне открывает модальное окно с кнопкой выхода
+        document.getElementById('mobileProfileBtn').onclick = showMobileProfile;
         document.getElementById('profileBtn').onclick = () => showModal('Профиль', `${userData.firstName} ${userData.lastName}\n${userData.email}\n✅ Email подтверждён\n${userData.isVerified ? '✅ Официальная галочка' : ''}`);
         document.getElementById('logoutBtn').onclick = logout;
         
