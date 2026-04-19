@@ -82,7 +82,6 @@
         .message-footer { display: flex; align-items: center; justify-content: flex-end; gap: 6px; margin-top: 4px; margin-right: 6px; }
         .message-time { font-size: 10px; color: var(--text-secondary); }
         .read-status { font-size: 10px; display: flex; align-items: center; gap: 2px; }
-        .read-status i { font-size: 10px; }
         .read-status.read i { color: var(--read-status-delivered); }
         .read-status.delivered i { color: var(--read-status); }
         .input-area { padding: 12px 16px; background: var(--bg-surface); border-top: 1px solid var(--border); display: flex; gap: 12px; flex-shrink: 0; }
@@ -292,11 +291,12 @@
                 userId: currentUser.uid,
                 userName: `${userData.firstName} ${userData.lastName}`,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                chatType: currentChat.type,
-                read: false  // Новое сообщение непрочитано
+                chatType: currentChat.type
             };
             
+            // Только для личных чатов добавляем поле read
             if (currentChat.type === 'private') {
+                messageData.read = false;
                 messageData.chatId = getChatId(currentUser.uid, currentChat.id);
                 messageData.toUserId = currentChat.id;
             } else {
@@ -313,23 +313,15 @@
         } catch(e) { showModal('Ошибка', e.message); }
     }
 
-    // Функция для отметки сообщений как прочитанных
+    // Функция для отметки сообщений как прочитанных (только для личных чатов)
     async function markMessagesAsRead(chat) {
-        if (!currentUser) return;
+        if (!currentUser || chat.type !== 'private') return;
         
-        let query;
-        if (chat.type === 'private') {
-            const chatId = getChatId(currentUser.uid, chat.id);
-            query = db.collection('messages')
-                .where('chatId', '==', chatId)
-                .where('userId', '!=', currentUser.uid)
-                .where('read', '==', false);
-        } else {
-            query = db.collection('messages')
-                .where('groupId', '==', chat.id)
-                .where('userId', '!=', currentUser.uid)
-                .where('read', '==', false);
-        }
+        const chatId = getChatId(currentUser.uid, chat.id);
+        const query = db.collection('messages')
+            .where('chatId', '==', chatId)
+            .where('userId', '!=', currentUser.uid)
+            .where('read', '==', false);
         
         const snapshot = await query.get();
         const batch = db.batch();
@@ -356,8 +348,10 @@
             if(!container) return;
             container.innerHTML = '';
             
-            // Отмечаем сообщения как прочитанные
-            await markMessagesAsRead(currentChat);
+            // Отмечаем сообщения как прочитанные только для личных чатов
+            if (currentChat.type === 'private') {
+                await markMessagesAsRead(currentChat);
+            }
             
             snapshot.forEach(doc => {
                 const msg = doc.data();
@@ -366,7 +360,7 @@
                 div.className = `message ${isMy ? 'my' : 'other'}`;
                 const ts = msg.timestamp?.toDate?.() || new Date();
                 
-                // Статус прочтения для своих сообщений
+                // Статус прочтения только для личных чатов
                 let readStatusHtml = '';
                 if (isMy && currentChat.type === 'private') {
                     if (msg.read) {
@@ -443,23 +437,15 @@
         }, 100);
     }
 
-    // Функция для получения количества непрочитанных сообщений в чате
+    // Получение количества непрочитанных сообщений (только для личных чатов)
     async function getUnreadCount(chat) {
-        if (!currentUser) return 0;
+        if (!currentUser || chat.type !== 'private') return 0;
         
-        let query;
-        if (chat.type === 'private') {
-            const chatId = getChatId(currentUser.uid, chat.id);
-            query = db.collection('messages')
-                .where('chatId', '==', chatId)
-                .where('userId', '!=', currentUser.uid)
-                .where('read', '==', false);
-        } else {
-            query = db.collection('messages')
-                .where('groupId', '==', chat.id)
-                .where('userId', '!=', currentUser.uid)
-                .where('read', '==', false);
-        }
+        const chatId = getChatId(currentUser.uid, chat.id);
+        const query = db.collection('messages')
+            .where('chatId', '==', chatId)
+            .where('userId', '!=', currentUser.uid)
+            .where('read', '==', false);
         const snapshot = await query.get();
         return snapshot.size;
     }
@@ -523,7 +509,7 @@
                 }
             }
             
-            // Групповые чаты
+            // Групповые чаты (без статуса прочтения)
             const groupsSnapshot = await db.collection('groups')
                 .where('members', 'array-contains', currentUser.uid)
                 .get();
@@ -543,15 +529,13 @@
                     lastMsg = lastMsgData.text;
                     lastTime = lastMsgData.timestamp?.toDate?.() || null;
                 }
-                const unreadCount = await getUnreadCount({ type: 'group', id: doc.id });
                 groupChats.push({
                     type: 'group',
                     id: doc.id,
                     name: group.name,
                     members: group.members,
                     lastMsg: lastMsg,
-                    lastTime: lastTime,
-                    unreadCount: unreadCount
+                    lastTime: lastTime
                 });
             }
             
@@ -595,7 +579,6 @@
             const div = document.createElement('div');
             div.className = 'chat-item';
             const timeStr = chat.lastTime ? new Date(chat.lastTime).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
-            const unreadBadge = chat.unreadCount > 0 ? `<span style="background: var(--accent); color: white; border-radius: 20px; padding: 2px 8px; font-size: 11px; margin-left: 8px;">${chat.unreadCount}</span>` : '';
             div.innerHTML = `
                 <div class="chat-avatar group-avatar">
                     <i class="fas fa-users"></i>
@@ -604,7 +587,6 @@
                     <div class="chat-name">
                         ${escapeHtml(chat.name)}
                         <span class="group-icon"><i class="fas fa-users"></i></span>
-                        ${unreadBadge}
                     </div>
                     <div class="chat-last-msg">${escapeHtml(chat.lastMsg.substring(0, 50))}</div>
                 </div>
