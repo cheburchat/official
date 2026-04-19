@@ -10,109 +10,142 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f2f5; height: 100vh; overflow: hidden; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; height: 100vh; overflow: hidden; }
+        
+        /* Темы */
+        body[data-theme="default"] { --bg-page: #f0f2f5; --bg-surface: white; --bg-element: #f0f2f5; --text: #1a1a1a; --text-secondary: #65676b; --accent: #ff7b2c; --accent-hover: #e6691a; --border: #e4e6eb; --my-msg: #ff7b2c; --my-msg-text: white; --other-msg: white; --other-msg-text: #1a1a1a; --shadow: 0 1px 2px rgba(0,0,0,0.08); }
+        body[data-theme="dark"] { --bg-page: #18191a; --bg-surface: #242526; --bg-element: #3a3b3c; --text: #e4e6eb; --text-secondary: #b0b3b8; --accent: #ff7b2c; --accent-hover: #e6691a; --border: #3e4042; --my-msg: #ff7b2c; --my-msg-text: white; --other-msg: #3e4042; --other-msg-text: #e4e6eb; --shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        body[data-theme="purple"] { --bg-page: #f5f0ff; --bg-surface: white; --bg-element: #f0ebf8; --text: #2d1b4e; --text-secondary: #7c6b9e; --accent: #9b59b6; --accent-hover: #8e44ad; --border: #e8dfd5; --my-msg: #9b59b6; --my-msg-text: white; --other-msg: white; --other-msg-text: #2d1b4e; --shadow: 0 1px 2px rgba(155,89,182,0.1); }
+        body[data-theme="red"] { --bg-page: #1a0f0f; --bg-surface: #2a1a1a; --bg-element: #3d2525; --text: #f0d6d6; --text-secondary: #c4a0a0; --accent: #c0392b; --accent-hover: #e74c3c; --border: #4a2e2e; --my-msg: #c0392b; --my-msg-text: white; --other-msg: #3d2525; --other-msg-text: #f0d6d6; --shadow: 0 1px 2px rgba(0,0,0,0.3); }
+        body[data-theme="blue"] { --bg-page: #e8f0fe; --bg-surface: white; --bg-element: #e4edf7; --text: #1a3a5c; --text-secondary: #5a7a9e; --accent: #2d88ff; --accent-hover: #1a66cc; --border: #d4e0ec; --my-msg: #2d88ff; --my-msg-text: white; --other-msg: white; --other-msg-text: #1a3a5c; --shadow: 0 1px 2px rgba(45,136,255,0.1); }
+        body[data-theme="green"] { --bg-page: #eaf7ea; --bg-surface: white; --bg-element: #e2f0e2; --text: #1a4a1a; --text-secondary: #5a8a5a; --accent: #27ae60; --accent-hover: #219a52; --border: #d0e4d0; --my-msg: #27ae60; --my-msg-text: white; --other-msg: white; --other-msg-text: #1a4a1a; --shadow: 0 1px 2px rgba(39,174,96,0.1); }
+        
+        body { background: var(--bg-page); color: var(--text); }
         
         /* Auth */
-        .auth-container { height: 100vh; display: flex; align-items: center; justify-content: center; background: #f0f2f5; padding: 16px; }
-        .auth-card { background: white; padding: 32px 24px; border-radius: 28px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        .auth-card h1 { color: #ff7b2c; margin-bottom: 24px; font-size: 32px; }
-        .auth-card input { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid #e4e6eb; border-radius: 16px; font-size: 16px; background: #f0f2f5; }
-        .auth-card button { width: 100%; padding: 14px; background: #ff7b2c; border: none; border-radius: 16px; color: white; font-weight: 600; margin-top: 16px; cursor: pointer; font-size: 16px; }
-        .toggle-auth { margin-top: 16px; color: #ff7b2c; cursor: pointer; }
+        .auth-container { height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg-page); padding: 16px; }
+        .auth-card { background: var(--bg-surface); padding: 32px 24px; border-radius: 28px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 1px solid var(--border); }
+        .auth-card h1 { color: var(--accent); margin-bottom: 24px; font-size: 32px; }
+        .auth-card input { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid var(--border); border-radius: 16px; font-size: 16px; background: var(--bg-element); color: var(--text); }
+        .auth-card button { width: 100%; padding: 14px; background: var(--accent); border: none; border-radius: 16px; color: white; font-weight: 600; margin-top: 16px; cursor: pointer; font-size: 16px; }
+        .auth-card button:hover { background: var(--accent-hover); }
+        .toggle-auth { margin-top: 16px; color: var(--accent); cursor: pointer; }
         .verify-msg { background: #fff3cd; color: #856404; padding: 12px; border-radius: 16px; margin: 12px 0; font-size: 14px; }
         .hidden { display: none !important; }
         
         /* App layout */
-        .app { display: flex; height: 100vh; background: #f0f2f5; }
+        .app { display: flex; height: 100vh; background: var(--bg-page); }
         
         /* Sidebar */
-        .sidebar { width: 280px; background: white; border-right: 1px solid #e4e6eb; display: flex; flex-direction: column; flex-shrink: 0; height: 100vh; }
-        .logo { padding: 20px 20px 16px; font-size: 22px; font-weight: 800; color: #ff7b2c; border-bottom: 1px solid #e4e6eb; }
+        .sidebar { width: 280px; background: var(--bg-surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; height: 100vh; }
+        .logo { padding: 20px 20px 16px; font-size: 22px; font-weight: 800; color: var(--accent); border-bottom: 1px solid var(--border); }
         .sidebar-section { padding: 16px 0; }
-        .nav-item { padding: 10px 20px; display: flex; align-items: center; gap: 12px; cursor: pointer; color: #1a1a1a; font-weight: 500; border-radius: 10px; margin: 0 8px; transition: 0.2s; }
-        .nav-item:hover, .nav-item.active { background: #f0f2f5; color: #ff7b2c; }
+        .nav-item { padding: 10px 20px; display: flex; align-items: center; gap: 12px; cursor: pointer; color: var(--text); font-weight: 500; border-radius: 10px; margin: 0 8px; transition: 0.2s; }
+        .nav-item:hover, .nav-item.active { background: var(--bg-element); color: var(--accent); }
         .nav-item i { width: 24px; font-size: 20px; }
-        .user-info-sidebar { margin-top: auto; padding: 16px 20px; border-top: 1px solid #e4e6eb; display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .avatar { width: 44px; height: 44px; background: #ff7b2c; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; flex-shrink: 0; }
+        .user-info-sidebar { margin-top: auto; padding: 16px 20px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .avatar { width: 44px; height: 44px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; flex-shrink: 0; }
         .logout-btn { margin: 10px 16px; padding: 12px; background: #dc3545; color: white; border: none; border-radius: 14px; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; }
         
         /* Main content */
-        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #f0f2f5; position: relative; }
+        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--bg-page); position: relative; }
         
         /* Список чатов */
-        .chats-view { display: flex; flex-direction: column; height: 100%; background: white; }
-        .chats-header { padding: 16px 20px; border-bottom: 1px solid #e4e6eb; }
-        .chats-header h2 { font-size: 24px; font-weight: 700; }
-        .chats-search { padding: 12px 16px; border-bottom: 1px solid #e4e6eb; }
-        .chats-search input { width: 100%; padding: 10px 16px; border: none; background: #f0f2f5; border-radius: 24px; font-size: 15px; outline: none; }
+        .chats-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
+        .chats-header { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+        .chats-header h2 { font-size: 24px; font-weight: 700; color: var(--text); }
+        .chats-search { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+        .chats-search input { width: 100%; padding: 10px 16px; border: none; background: var(--bg-element); border-radius: 24px; font-size: 15px; outline: none; color: var(--text); }
         .chats-list { flex: 1; overflow-y: auto; }
-        .chat-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; cursor: pointer; transition: 0.2s; border-bottom: 1px solid #e4e6eb; }
-        .chat-item:hover { background: #f0f2f5; }
-        .chat-avatar { width: 52px; height: 52px; background: #ff7b2c; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 20px; flex-shrink: 0; }
+        .chat-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; cursor: pointer; transition: 0.2s; border-bottom: 1px solid var(--border); }
+        .chat-item:hover { background: var(--bg-element); }
+        .chat-avatar { width: 52px; height: 52px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 20px; flex-shrink: 0; }
         .chat-info { flex: 1; min-width: 0; }
-        .chat-name { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
-        .chat-last-msg { font-size: 13px; color: #65676b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .chat-time { font-size: 11px; color: #65676b; flex-shrink: 0; }
-        .empty-chats { text-align: center; padding: 60px 20px; color: #65676b; }
+        .chat-name { font-weight: 600; font-size: 16px; color: var(--text); margin-bottom: 4px; }
+        .chat-last-msg { font-size: 13px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .chat-time { font-size: 11px; color: var(--text-secondary); flex-shrink: 0; }
+        .empty-chats { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
         
         /* Окно чата */
-        .chat-window { display: flex; flex-direction: column; height: 100%; background: #f0f2f5; }
-        .chat-header { padding: 12px 16px; background: white; border-bottom: 1px solid #e4e6eb; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-        .back-btn { background: none; border: none; font-size: 22px; cursor: pointer; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #1a1a1a; }
-        .back-btn:hover { background: #f0f2f5; }
-        .chat-header-avatar { width: 44px; height: 44px; background: #ff7b2c; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; flex-shrink: 0; }
+        .chat-window { display: flex; flex-direction: column; height: 100%; background: var(--bg-page); }
+        .chat-header { padding: 12px 16px; background: var(--bg-surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+        .back-btn { background: none; border: none; font-size: 22px; cursor: pointer; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text); }
+        .back-btn:hover { background: var(--bg-element); }
+        .chat-header-avatar { width: 44px; height: 44px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; flex-shrink: 0; }
         .chat-header-info { flex: 1; }
-        .chat-header-name { font-weight: 600; font-size: 17px; }
+        .chat-header-name { font-weight: 600; font-size: 17px; color: var(--text); }
         .messages-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 8px; }
         .message { display: flex; flex-direction: column; max-width: 75%; animation: fadeIn 0.2s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .message.my { align-self: flex-end; }
         .message.other { align-self: flex-start; }
         .message-bubble { padding: 10px 14px; border-radius: 18px; word-wrap: break-word; }
-        .my .message-bubble { background: #ff7b2c; color: white; border-bottom-right-radius: 4px; }
-        .other .message-bubble { background: white; color: #1a1a1a; border-bottom-left-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
-        .message-sender { font-size: 11px; font-weight: 600; margin-bottom: 4px; margin-left: 6px; color: #65676b; }
-        .message-time { font-size: 10px; margin-top: 4px; margin-left: 8px; color: #65676b; }
+        .my .message-bubble { background: var(--my-msg); color: var(--my-msg-text); border-bottom-right-radius: 4px; }
+        .other .message-bubble { background: var(--other-msg); color: var(--other-msg-text); border-bottom-left-radius: 4px; box-shadow: var(--shadow); }
+        .message-sender { font-size: 11px; font-weight: 600; margin-bottom: 4px; margin-left: 6px; color: var(--text-secondary); }
+        .message-time { font-size: 10px; margin-top: 4px; margin-left: 8px; color: var(--text-secondary); }
         .my .message-time { text-align: right; margin-right: 6px; }
-        .input-area { padding: 12px 16px; background: white; border-top: 1px solid #e4e6eb; display: flex; gap: 12px; flex-shrink: 0; }
-        .input-area input { flex: 1; padding: 12px 18px; border: none; background: #f0f2f5; border-radius: 28px; font-size: 16px; outline: none; }
-        .input-area button { background: #ff7b2c; border: none; width: 48px; height: 48px; border-radius: 50%; color: white; cursor: pointer; font-size: 18px; flex-shrink: 0; }
+        .input-area { padding: 12px 16px; background: var(--bg-surface); border-top: 1px solid var(--border); display: flex; gap: 12px; flex-shrink: 0; }
+        .input-area input { flex: 1; padding: 12px 18px; border: none; background: var(--bg-element); border-radius: 28px; font-size: 16px; outline: none; color: var(--text); }
+        .input-area input::placeholder { color: var(--text-secondary); }
+        .input-area button { background: var(--accent); border: none; width: 48px; height: 48px; border-radius: 50%; color: white; cursor: pointer; font-size: 18px; flex-shrink: 0; }
+        .input-area button:hover { background: var(--accent-hover); }
         
         /* Страница людей */
-        .people-view { display: flex; flex-direction: column; height: 100%; background: white; }
-        .people-header { padding: 16px 20px; border-bottom: 1px solid #e4e6eb; }
-        .people-header h2 { font-size: 24px; font-weight: 700; }
-        .people-search { padding: 12px 16px; border-bottom: 1px solid #e4e6eb; }
-        .people-search input { width: 100%; padding: 10px 16px; border: none; background: #f0f2f5; border-radius: 24px; font-size: 15px; outline: none; }
+        .people-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
+        .people-header { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+        .people-header h2 { font-size: 24px; font-weight: 700; color: var(--text); }
+        .people-search { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+        .people-search input { width: 100%; padding: 10px 16px; border: none; background: var(--bg-element); border-radius: 24px; font-size: 15px; outline: none; color: var(--text); }
         .people-list { flex: 1; overflow-y: auto; }
-        .person-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #e4e6eb; cursor: pointer; }
-        .person-item:hover { background: #f0f2f5; }
+        .person-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer; }
+        .person-item:hover { background: var(--bg-element); }
         .person-info { display: flex; align-items: center; gap: 12px; flex: 1; }
-        .person-avatar { width: 48px; height: 48px; background: #ff7b2c; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; }
-        .person-name { font-weight: 600; font-size: 16px; }
+        .person-avatar { width: 48px; height: 48px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; }
+        .person-name { font-weight: 600; font-size: 16px; color: var(--text); }
         .action-btns { display: flex; gap: 8px; }
         .action-btn { background: none; border: none; padding: 8px 14px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: 500; }
-        .action-btn.write { background: #ff7b2c; color: white; }
-        .action-btn.add { background: #e4e6eb; color: #1a1a1a; }
+        .action-btn.write { background: var(--accent); color: white; }
+        .action-btn.add { background: var(--bg-element); color: var(--text); }
         .action-btn.remove { background: #dc3545; color: white; }
-        .action-btn.pending { background: #ffe4cc; color: #ff7b2c; cursor: default; }
+        .action-btn.pending { background: var(--bg-element); color: var(--text-secondary); cursor: default; }
+        
+        /* Настройки */
+        .settings-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
+        .settings-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+        .settings-header h2 { font-size: 24px; font-weight: 700; color: var(--text); flex: 1; }
+        .settings-list { padding: 16px; }
+        .settings-section { margin-bottom: 24px; }
+        .settings-section-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+        .theme-options { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; }
+        .theme-option { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px; border-radius: 16px; cursor: pointer; transition: 0.2s; border: 2px solid transparent; background: var(--bg-element); }
+        .theme-option:hover { transform: scale(1.02); }
+        .theme-option.active { border-color: var(--accent); }
+        .theme-preview { width: 50px; height: 50px; border-radius: 25px; }
+        .theme-preview.default { background: linear-gradient(135deg, #ff7b2c, #e6691a); }
+        .theme-preview.dark { background: linear-gradient(135deg, #242526, #3a3b3c); }
+        .theme-preview.purple { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+        .theme-preview.red { background: linear-gradient(135deg, #c0392b, #e74c3c); }
+        .theme-preview.blue { background: linear-gradient(135deg, #2d88ff, #1a66cc); }
+        .theme-preview.green { background: linear-gradient(135deg, #27ae60, #219a52); }
+        .theme-name { font-size: 13px; color: var(--text); }
         
         /* Mobile bottom nav */
-        .mobile-bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e4e6eb; padding: 8px 20px 12px; justify-content: space-around; z-index: 100; transition: transform 0.3s ease; }
+        .mobile-bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-surface); border-top: 1px solid var(--border); padding: 8px 20px 12px; justify-content: space-around; z-index: 100; transition: transform 0.3s ease; }
         .mobile-bottom-nav.hidden { transform: translateY(100%); }
-        .mobile-nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; font-size: 11px; color: #65676b; cursor: pointer; padding: 8px; border-radius: 12px; }
+        .mobile-nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; font-size: 11px; color: var(--text-secondary); cursor: pointer; padding: 8px; border-radius: 12px; }
         .mobile-nav-item i { font-size: 22px; }
-        .mobile-nav-item.active { color: #ff7b2c; background: #f0f2f5; }
+        .mobile-nav-item.active { color: var(--accent); background: var(--bg-element); }
         
         /* Modal */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
         .modal-overlay.active { display: flex; }
-        .modal { background: white; border-radius: 28px; width: 320px; max-width: 90%; text-align: center; overflow: hidden; }
-        .modal-header { padding: 24px 20px 0; font-size: 18px; font-weight: bold; }
-        .modal-body { padding: 20px; color: #65676b; }
-        .modal-buttons { display: flex; border-top: 1px solid #e4e6eb; }
-        .modal-buttons button { flex: 1; padding: 16px; border: none; background: none; font-size: 16px; font-weight: 600; cursor: pointer; }
-        .modal-buttons .confirm { color: #ff7b2c; border-left: 1px solid #e4e6eb; }
+        .modal { background: var(--bg-surface); border-radius: 28px; width: 320px; max-width: 90%; text-align: center; overflow: hidden; }
+        .modal-header { padding: 24px 20px 0; font-size: 18px; font-weight: bold; color: var(--text); }
+        .modal-body { padding: 20px; color: var(--text-secondary); }
+        .modal-buttons { display: flex; border-top: 1px solid var(--border); }
+        .modal-buttons button { flex: 1; padding: 16px; border: none; background: none; font-size: 16px; font-weight: 600; cursor: pointer; color: var(--text); }
+        .modal-buttons .confirm { color: var(--accent); border-left: 1px solid var(--border); }
         
         /* Responsive */
         @media (max-width: 768px) {
@@ -124,7 +157,7 @@
         }
     </style>
 </head>
-<body>
+<body data-theme="default">
 <div id="app"></div>
 
 <div id="modal" class="modal-overlay">
@@ -158,6 +191,20 @@
     let chatsList = [];
     let messagesUnsubscribe = null;
     let isMobile = window.innerWidth <= 768;
+
+    // Загрузка сохранённой темы
+    const savedTheme = localStorage.getItem('cheburchat_theme') || 'default';
+    document.body.setAttribute('data-theme', savedTheme);
+
+    function setTheme(theme) {
+        document.body.setAttribute('data-theme', theme);
+        localStorage.setItem('cheburchat_theme', theme);
+        // Обновляем активную тему в настройках если окно открыто
+        document.querySelectorAll('.theme-option').forEach(opt => {
+            if(opt.dataset.theme === theme) opt.classList.add('active');
+            else opt.classList.remove('active');
+        });
+    }
 
     function showModal(title, message, onConfirm = null) {
         const modal = document.getElementById('modal');
@@ -239,7 +286,6 @@
         if(messagesUnsubscribe) messagesUnsubscribe();
         currentChatUser = user;
         
-        // На телефоне скрываем нижнюю панель
         if(isMobile) {
             const bottomNav = document.querySelector('.mobile-bottom-nav');
             if(bottomNav) bottomNav.classList.add('hidden');
@@ -263,7 +309,6 @@
         `;
         
         document.getElementById('backBtn').onclick = () => {
-            // Показываем нижнюю панель обратно
             if(isMobile) {
                 const bottomNav = document.querySelector('.mobile-bottom-nav');
                 if(bottomNav) bottomNav.classList.remove('hidden');
@@ -371,7 +416,6 @@
     }
 
     function showChatsView() {
-        // Показываем нижнюю панель если она была скрыта
         if(isMobile) {
             const bottomNav = document.querySelector('.mobile-bottom-nav');
             if(bottomNav) bottomNav.classList.remove('hidden');
@@ -393,6 +437,72 @@
         loadChatsList();
         document.getElementById('chatsSearchInput').oninput = (e) => renderChatsList(e.target.value.trim());
         if(isMobile) updateMobileNav('chats');
+    }
+
+    function showSettingsView() {
+        if(isMobile) {
+            const bottomNav = document.querySelector('.mobile-bottom-nav');
+            if(bottomNav) bottomNav.classList.remove('hidden');
+        }
+        
+        document.getElementById('mainContent').innerHTML = `
+            <div class="settings-view">
+                <div class="settings-header">
+                    <button class="back-btn" id="settingsBackBtn"><i class="fas fa-arrow-left"></i></button>
+                    <h2>Настройки</h2>
+                </div>
+                <div class="settings-list">
+                    <div class="settings-section">
+                        <div class="settings-section-title">Тема оформления</div>
+                        <div class="theme-options">
+                            <div class="theme-option ${savedTheme === 'default' ? 'active' : ''}" data-theme="default">
+                                <div class="theme-preview default"></div>
+                                <span class="theme-name">Стандартная</span>
+                            </div>
+                            <div class="theme-option ${savedTheme === 'dark' ? 'active' : ''}" data-theme="dark">
+                                <div class="theme-preview dark"></div>
+                                <span class="theme-name">Тёмная</span>
+                            </div>
+                            <div class="theme-option ${savedTheme === 'purple' ? 'active' : ''}" data-theme="purple">
+                                <div class="theme-preview purple"></div>
+                                <span class="theme-name">Фиолетовая</span>
+                            </div>
+                            <div class="theme-option ${savedTheme === 'red' ? 'active' : ''}" data-theme="red">
+                                <div class="theme-preview red"></div>
+                                <span class="theme-name">Красная</span>
+                            </div>
+                            <div class="theme-option ${savedTheme === 'blue' ? 'active' : ''}" data-theme="blue">
+                                <div class="theme-preview blue"></div>
+                                <span class="theme-name">Синяя</span>
+                            </div>
+                            <div class="theme-option ${savedTheme === 'green' ? 'active' : ''}" data-theme="green">
+                                <div class="theme-preview green"></div>
+                                <span class="theme-name">Зелёная</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('settingsBackBtn').onclick = () => {
+            if(currentChatUser) {
+                openChat(currentChatUser);
+            } else {
+                showChatsView();
+            }
+        };
+        
+        document.querySelectorAll('.theme-option').forEach(opt => {
+            opt.onclick = () => {
+                const theme = opt.dataset.theme;
+                setTheme(theme);
+                document.querySelectorAll('.theme-option').forEach(o => o.classList.remove('active'));
+                opt.classList.add('active');
+            };
+        });
+        
+        if(isMobile) updateMobileNav('settings');
     }
 
     async function loadPeopleList(searchQuery = '') {
@@ -451,7 +561,6 @@
     }
 
     function showPeopleView() {
-        // Показываем нижнюю панель если она была скрыта
         if(isMobile) {
             const bottomNav = document.querySelector('.mobile-bottom-nav');
             if(bottomNav) bottomNav.classList.remove('hidden');
@@ -547,6 +656,7 @@
                     <div class="sidebar-section">
                         <div class="nav-item active" data-nav="chats"><i class="fas fa-comments"></i> Чаты</div>
                         <div class="nav-item" data-nav="people"><i class="fas fa-users"></i> Люди</div>
+                        <div class="nav-item" data-nav="settings"><i class="fas fa-cog"></i> Настройки</div>
                     </div>
                     <div class="user-info-sidebar" id="profileBtn">
                         <div class="avatar">${getInitials(userData.firstName, userData.lastName)}</div>
@@ -558,6 +668,7 @@
                 <div class="mobile-bottom-nav">
                     <button class="mobile-nav-item active" data-nav="chats"><i class="fas fa-comments"></i><span>Чаты</span></button>
                     <button class="mobile-nav-item" data-nav="people"><i class="fas fa-users"></i><span>Люди</span></button>
+                    <button class="mobile-nav-item" data-nav="settings"><i class="fas fa-cog"></i><span>Настройки</span></button>
                     <button class="mobile-nav-item" id="mobileProfileBtn"><i class="fas fa-user"></i><span>Профиль</span></button>
                 </div>
             </div>
@@ -568,12 +679,14 @@
                 document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
                 el.classList.add('active');
                 if(el.dataset.nav === 'people') showPeopleView();
+                else if(el.dataset.nav === 'settings') showSettingsView();
                 else showChatsView();
             };
         });
         document.querySelectorAll('.mobile-nav-item').forEach(el => {
             if(el.dataset.nav) el.onclick = () => {
                 if(el.dataset.nav === 'people') showPeopleView();
+                else if(el.dataset.nav === 'settings') showSettingsView();
                 else if(el.dataset.nav === 'chats') showChatsView();
             };
         });
