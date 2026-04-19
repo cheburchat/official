@@ -69,7 +69,8 @@
         .chat-header-avatar { width: 44px; height: 44px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; flex-shrink: 0; position: relative; }
         .chat-header-info { flex: 1; }
         .chat-header-name { font-weight: 600; font-size: 17px; color: var(--text); display: flex; align-items: center; gap: 6px; }
-        .chat-header-members { font-size: 12px; color: var(--text-secondary); }
+        .chat-header-members { font-size: 12px; color: var(--text-secondary); cursor: pointer; }
+        .chat-header-members:hover { text-decoration: underline; }
         .messages-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 8px; }
         .message { display: flex; flex-direction: column; max-width: 75%; animation: fadeIn 0.2s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -87,6 +88,20 @@
         .input-area { padding: 12px 16px; background: var(--bg-surface); border-top: 1px solid var(--border); display: flex; gap: 12px; flex-shrink: 0; }
         .input-area input { flex: 1; padding: 12px 18px; border: none; background: var(--bg-element); border-radius: 28px; font-size: 16px; outline: none; color: var(--text); }
         .input-area button { background: var(--accent); border: none; width: 48px; height: 48px; border-radius: 50%; color: white; cursor: pointer; font-size: 18px; }
+        
+        /* Модалка управления беседой */
+        .group-manage-modal .modal { max-width: 500px; }
+        .group-members-list { max-height: 300px; overflow-y: auto; margin: 16px 0; border: 1px solid var(--border); border-radius: 16px; }
+        .group-member-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+        .group-member-item:last-child { border-bottom: none; }
+        .group-member-info { display: flex; align-items: center; gap: 12px; }
+        .group-member-avatar { width: 40px; height: 40px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; }
+        .group-member-name { font-weight: 500; }
+        .remove-member-btn { background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 12px; }
+        .add-member-section { margin: 16px 0; padding-top: 16px; border-top: 1px solid var(--border); }
+        .add-member-select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 16px; background: var(--bg-element); color: var(--text); margin-bottom: 12px; }
+        .danger-btn { background: #dc3545; color: white; border: none; padding: 12px; border-radius: 16px; cursor: pointer; width: 100%; margin-top: 8px; font-weight: 600; }
+        .leave-btn { background: #ffc107; color: #1a1a1a; }
         
         .people-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
         .people-header { padding: 16px 20px; border-bottom: 1px solid var(--border); }
@@ -196,6 +211,27 @@
     </div>
 </div>
 
+<div id="groupManageModal" class="modal-overlay group-manage-modal">
+    <div class="modal">
+        <div class="modal-header" id="groupManageTitle">Управление беседой</div>
+        <div class="modal-body">
+            <div class="group-members-list" id="groupMembersList"></div>
+            <div class="add-member-section">
+                <div style="font-weight: 600; margin-bottom: 8px;">Добавить участника</div>
+                <select id="addMemberSelect" class="add-member-select">
+                    <option value="">Выберите друга</option>
+                </select>
+                <button id="addMemberBtn" class="action-btn add" style="width: 100%;">➕ Добавить</button>
+            </div>
+            <button id="leaveGroupBtn" class="danger-btn leave-btn">🚪 Выйти из беседы</button>
+            <button id="deleteGroupBtn" class="danger-btn" style="margin-top: 8px; background: #dc3545;">🗑️ Удалить беседу</button>
+        </div>
+        <div class="modal-buttons">
+            <button class="confirm" id="closeGroupManageBtn">Закрыть</button>
+        </div>
+    </div>
+</div>
+
 <div id="mobileProfileModal" class="modal-overlay mobile-profile-modal">
     <div class="modal">
         <div class="modal-header">Профиль</div>
@@ -242,6 +278,7 @@
     let userData = null;
     let currentChat = null;
     let allUsers = [];
+    let friendsList = [];
     let chatsList = { private: [], groups: [] };
     let messagesUnsubscribe = null;
     let isMobile = window.innerWidth <= 768;
@@ -294,7 +331,6 @@
                 chatType: currentChat.type
             };
             
-            // Только для личных чатов добавляем поле read
             if (currentChat.type === 'private') {
                 messageData.read = false;
                 messageData.chatId = getChatId(currentUser.uid, currentChat.id);
@@ -313,21 +349,16 @@
         } catch(e) { showModal('Ошибка', e.message); }
     }
 
-    // Функция для отметки сообщений как прочитанных (только для личных чатов)
     async function markMessagesAsRead(chat) {
         if (!currentUser || chat.type !== 'private') return;
-        
         const chatId = getChatId(currentUser.uid, chat.id);
         const query = db.collection('messages')
             .where('chatId', '==', chatId)
             .where('userId', '!=', currentUser.uid)
             .where('read', '==', false);
-        
         const snapshot = await query.get();
         const batch = db.batch();
-        snapshot.forEach(doc => {
-            batch.update(doc.ref, { read: true });
-        });
+        snapshot.forEach(doc => batch.update(doc.ref, { read: true }));
         await batch.commit();
     }
 
@@ -347,11 +378,7 @@
             const container = document.getElementById('messagesArea');
             if(!container) return;
             container.innerHTML = '';
-            
-            // Отмечаем сообщения как прочитанные только для личных чатов
-            if (currentChat.type === 'private') {
-                await markMessagesAsRead(currentChat);
-            }
+            if (currentChat.type === 'private') await markMessagesAsRead(currentChat);
             
             snapshot.forEach(doc => {
                 const msg = doc.data();
@@ -360,14 +387,11 @@
                 div.className = `message ${isMy ? 'my' : 'other'}`;
                 const ts = msg.timestamp?.toDate?.() || new Date();
                 
-                // Статус прочтения только для личных чатов
                 let readStatusHtml = '';
                 if (isMy && currentChat.type === 'private') {
-                    if (msg.read) {
-                        readStatusHtml = `<span class="read-status read"><i class="fas fa-check-double"></i></span>`;
-                    } else {
-                        readStatusHtml = `<span class="read-status delivered"><i class="fas fa-check"></i></span>`;
-                    }
+                    readStatusHtml = msg.read ? 
+                        `<span class="read-status read"><i class="fas fa-check-double"></i></span>` :
+                        `<span class="read-status delivered"><i class="fas fa-check"></i></span>`;
                 }
                 
                 div.innerHTML = `
@@ -382,6 +406,167 @@
             });
             scrollToBottom();
         });
+    }
+
+    // Управление беседой
+    async function showGroupManage() {
+        if (!currentChat || currentChat.type !== 'group') return;
+        
+        const groupDoc = await db.collection('groups').doc(currentChat.id).get();
+        const group = groupDoc.data();
+        const isCreator = group.createdBy === currentUser.uid;
+        
+        // Загружаем участников с их данными
+        const members = [];
+        for (const memberId of group.members) {
+            const userDoc = await db.collection('users').doc(memberId).get();
+            if (userDoc.exists) {
+                members.push({ id: memberId, ...userDoc.data() });
+            }
+        }
+        
+        // Загружаем друзей для добавления (кто ещё не в беседе)
+        const friendIds = userData.friends || [];
+        const availableFriends = [];
+        for (const id of friendIds) {
+            if (!group.members.includes(id)) {
+                const userDoc = await db.collection('users').doc(id).get();
+                if (userDoc.exists) {
+                    availableFriends.push({ id, ...userDoc.data() });
+                }
+            }
+        }
+        
+        const modal = document.getElementById('groupManageModal');
+        document.getElementById('groupManageTitle').textContent = `Управление: ${group.name}`;
+        
+        // Список участников
+        const membersListDiv = document.getElementById('groupMembersList');
+        membersListDiv.innerHTML = '<div style="padding: 12px; font-weight: 600;">Участники:</div>';
+        for (const member of members) {
+            const isCreatorBadge = group.createdBy === member.id ? ' 👑' : '';
+            const removeBtn = (isCreator && member.id !== currentUser.uid) ? 
+                `<button class="remove-member-btn" data-id="${member.id}">Удалить</button>` : '';
+            const div = document.createElement('div');
+            div.className = 'group-member-item';
+            div.innerHTML = `
+                <div class="group-member-info">
+                    <div class="group-member-avatar">${getInitials(member.firstName, member.lastName)}</div>
+                    <div class="group-member-name">${member.firstName} ${member.lastName}${isCreatorBadge}</div>
+                </div>
+                ${removeBtn}
+            `;
+            const removeBtnEl = div.querySelector('.remove-member-btn');
+            if (removeBtnEl) {
+                removeBtnEl.onclick = () => removeMemberFromGroup(member.id, member.firstName, member.lastName);
+            }
+            membersListDiv.appendChild(div);
+        }
+        
+        // Выпадающий список для добавления
+        const selectEl = document.getElementById('addMemberSelect');
+        selectEl.innerHTML = '<option value="">Выберите друга</option>';
+        for (const friend of availableFriends) {
+            const option = document.createElement('option');
+            option.value = friend.id;
+            option.textContent = `${friend.firstName} ${friend.lastName}`;
+            selectEl.appendChild(option);
+        }
+        
+        // Кнопка добавления
+        document.getElementById('addMemberBtn').onclick = async () => {
+            const friendId = selectEl.value;
+            if (!friendId) { showModal('Ошибка', 'Выберите друга'); return; }
+            const friend = availableFriends.find(f => f.id === friendId);
+            await addMemberToGroup(friendId, friend.firstName, friend.lastName);
+            modal.classList.remove('active');
+            showGroupManage(); // обновляем
+        };
+        
+        // Кнопка выхода
+        document.getElementById('leaveGroupBtn').onclick = () => {
+            showModal('Подтверждение', 'Вы уверены, что хотите выйти из беседы?', async () => {
+                await leaveGroup();
+                modal.classList.remove('active');
+                showChatsView();
+            });
+        };
+        
+        // Кнопка удаления (только для создателя)
+        const deleteBtn = document.getElementById('deleteGroupBtn');
+        if (isCreator) {
+            deleteBtn.style.display = 'block';
+            deleteBtn.onclick = () => {
+                showModal('Подтверждение', 'Вы уверены, что хотите УДАЛИТЬ беседу? Это действие необратимо.', async () => {
+                    await deleteGroup();
+                    modal.classList.remove('active');
+                    showChatsView();
+                });
+            };
+        } else {
+            deleteBtn.style.display = 'none';
+        }
+        
+        document.getElementById('closeGroupManageBtn').onclick = () => modal.classList.remove('active');
+        modal.classList.add('active');
+    }
+    
+    async function addMemberToGroup(userId, firstName, lastName) {
+        try {
+            await db.collection('groups').doc(currentChat.id).update({
+                members: firebase.firestore.FieldValue.arrayUnion(userId)
+            });
+            // Отправляем уведомление новому участнику
+            await db.collection('notifications').add({
+                userId: userId,
+                type: 'group_added',
+                title: 'Новый участник',
+                message: `${userData.firstName} ${userData.lastName} добавил(а) вас в беседу "${currentChat.name}"`,
+                createdAt: new Date().toISOString(),
+                read: false
+            });
+            showModal('Успех', `${firstName} ${lastName} добавлен(а) в беседу`);
+            loadChatsList();
+        } catch(e) { showModal('Ошибка', e.message); }
+    }
+    
+    async function removeMemberFromGroup(userId, firstName, lastName) {
+        showModal('Подтверждение', `Удалить ${firstName} ${lastName} из беседы?`, async () => {
+            try {
+                await db.collection('groups').doc(currentChat.id).update({
+                    members: firebase.firestore.FieldValue.arrayRemove(userId)
+                });
+                showModal('Успех', `${firstName} ${lastName} удалён(а) из беседы`);
+                loadChatsList();
+                if (currentChat && currentChat.id) showGroupManage(); // обновляем окно
+            } catch(e) { showModal('Ошибка', e.message); }
+        });
+    }
+    
+    async function leaveGroup() {
+        try {
+            await db.collection('groups').doc(currentChat.id).update({
+                members: firebase.firestore.FieldValue.arrayRemove(currentUser.uid)
+            });
+            showModal('Успех', 'Вы вышли из беседы');
+            currentChat = null;
+            loadChatsList();
+        } catch(e) { showModal('Ошибка', e.message); }
+    }
+    
+    async function deleteGroup() {
+        try {
+            // Удаляем все сообщения беседы
+            const messagesSnap = await db.collection('messages').where('groupId', '==', currentChat.id).get();
+            const batch = db.batch();
+            messagesSnap.forEach(doc => batch.delete(doc.ref));
+            await batch.commit();
+            // Удаляем саму беседу
+            await db.collection('groups').doc(currentChat.id).delete();
+            showModal('Успех', 'Беседа удалена');
+            currentChat = null;
+            loadChatsList();
+        } catch(e) { showModal('Ошибка', e.message); }
     }
 
     function openChat(chat) {
@@ -408,7 +593,7 @@
                             ${isGroup ? escapeHtml(chat.name) : `${escapeHtml(chat.firstName)} ${escapeHtml(chat.lastName)}`}
                             ${!isGroup && chat.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}
                         </div>
-                        ${isGroup && chat.members ? `<div class="chat-header-members">${chat.members.length} участников</div>` : ''}
+                        ${isGroup && chat.members ? `<div class="chat-header-members" id="groupManageBtn">${chat.members.length} участников</div>` : ''}
                     </div>
                 </div>
                 <div class="messages-area" id="messagesArea"></div>
@@ -428,6 +613,11 @@
             showChatsView();
         };
         
+        if (isGroup) {
+            const groupManageBtn = document.getElementById('groupManageBtn');
+            if (groupManageBtn) groupManageBtn.onclick = showGroupManage;
+        }
+        
         document.getElementById('sendBtn').onclick = sendMessage;
         document.getElementById('messageInput').onkeypress = (e) => { if(e.key === 'Enter') sendMessage(); };
         loadMessages();
@@ -437,10 +627,8 @@
         }, 100);
     }
 
-    // Получение количества непрочитанных сообщений (только для личных чатов)
     async function getUnreadCount(chat) {
         if (!currentUser || chat.type !== 'private') return 0;
-        
         const chatId = getChatId(currentUser.uid, chat.id);
         const query = db.collection('messages')
             .where('chatId', '==', chatId)
@@ -509,7 +697,7 @@
                 }
             }
             
-            // Групповые чаты (без статуса прочтения)
+            // Групповые чаты
             const groupsSnapshot = await db.collection('groups')
                 .where('members', 'array-contains', currentUser.uid)
                 .get();
@@ -534,6 +722,7 @@
                     id: doc.id,
                     name: group.name,
                     members: group.members,
+                    createdBy: group.createdBy,
                     lastMsg: lastMsg,
                     lastTime: lastTime
                 });
@@ -592,7 +781,7 @@
                 </div>
                 ${timeStr ? `<div class="chat-time">${timeStr}</div>` : ''}
             `;
-            div.onclick = () => openChat({ type: 'group', id: chat.id, name: chat.name, members: chat.members });
+            div.onclick = () => openChat({ type: 'group', id: chat.id, name: chat.name, members: chat.members, createdBy: chat.createdBy });
             container.appendChild(div);
         });
         
@@ -740,35 +929,20 @@
 
     function showMobileProfile() {
         const modal = document.getElementById('mobileProfileModal');
-        const avatarEl = document.getElementById('mobileProfileAvatar');
-        const nameEl = document.getElementById('mobileProfileName');
-        const emailEl = document.getElementById('mobileProfileEmail');
-        const verifiedEl = document.getElementById('mobileProfileVerified');
-        
-        avatarEl.textContent = getInitials(userData.firstName, userData.lastName);
-        nameEl.textContent = `${userData.firstName} ${userData.lastName}`;
-        emailEl.textContent = userData.email;
-        verifiedEl.innerHTML = userData.isVerified ? '<i class="fas fa-check-circle"></i> Официальная галочка' : '';
-        
+        document.getElementById('mobileProfileAvatar').textContent = getInitials(userData.firstName, userData.lastName);
+        document.getElementById('mobileProfileName').textContent = `${userData.firstName} ${userData.lastName}`;
+        document.getElementById('mobileProfileEmail').textContent = userData.email;
+        document.getElementById('mobileProfileVerified').innerHTML = userData.isVerified ? '<i class="fas fa-check-circle"></i> Официальная галочка' : '';
         modal.classList.add('active');
-        
-        document.getElementById('mobileLogoutBtn').onclick = () => {
-            modal.classList.remove('active');
-            logout();
-        };
-        
-        document.getElementById('closeMobileProfileBtn').onclick = () => {
-            modal.classList.remove('active');
-        };
+        document.getElementById('mobileLogoutBtn').onclick = () => { modal.classList.remove('active'); logout(); };
+        document.getElementById('closeMobileProfileBtn').onclick = () => modal.classList.remove('active');
     }
 
     async function loadPeopleList() {
         const snapshot = await db.collection('users').get();
         allUsers = [];
         snapshot.forEach(doc => {
-            if(doc.id !== currentUser.uid) {
-                allUsers.push({ id: doc.id, ...doc.data() });
-            }
+            if(doc.id !== currentUser.uid) allUsers.push({ id: doc.id, ...doc.data() });
         });
         renderPeopleList('');
     }
@@ -777,14 +951,8 @@
         const container = document.getElementById('peopleListContainer');
         if(!container) return;
         let filtered = allUsers;
-        if(searchQuery) {
-            const q = searchQuery.toLowerCase();
-            filtered = allUsers.filter(u => `${u.firstName} ${u.lastName}`.toLowerCase().includes(q));
-        }
-        if(filtered.length === 0) {
-            container.innerHTML = '<div style="text-align: center; padding: 40px;">Никого не найдено</div>';
-            return;
-        }
+        if(searchQuery) filtered = allUsers.filter(u => `${u.firstName} ${u.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()));
+        if(filtered.length === 0) { container.innerHTML = '<div style="text-align: center; padding: 40px;">Никого не найдено</div>'; return; }
         container.innerHTML = '';
         filtered.forEach(user => {
             const isFriend = userData.friends?.includes(user.id);
@@ -794,14 +962,8 @@
             div.className = 'person-item';
             div.innerHTML = `
                 <div class="person-info">
-                    <div class="person-avatar">
-                        ${getInitials(user.firstName, user.lastName)}
-                        ${user.isVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : ''}
-                    </div>
-                    <div class="person-name">
-                        ${user.firstName} ${user.lastName}
-                        ${user.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}
-                    </div>
+                    <div class="person-avatar">${getInitials(user.firstName, user.lastName)}${user.isVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : ''}</div>
+                    <div class="person-name">${user.firstName} ${user.lastName}${user.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div>
                 </div>
                 <div class="action-btns">
                     <button class="action-btn write" data-chat="${user.id}">💬</button>
@@ -824,22 +986,12 @@
     }
 
     function showPeopleView() {
-        if(isMobile) {
-            const bottomNav = document.querySelector('.mobile-bottom-nav');
-            if(bottomNav) bottomNav.classList.remove('hidden');
-        }
-        
+        if(isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
         document.getElementById('mainContent').innerHTML = `
             <div class="people-view">
-                <div class="people-header">
-                    <h2>Люди</h2>
-                </div>
-                <div class="people-search">
-                    <input type="text" id="peopleSearchInput" placeholder="Поиск людей...">
-                </div>
-                <div class="people-list" id="peopleListContainer">
-                    <div style="text-align: center; padding: 40px;">Загрузка...</div>
-                </div>
+                <div class="people-header"><h2>Люди</h2></div>
+                <div class="people-search"><input type="text" id="peopleSearchInput" placeholder="Поиск людей..."></div>
+                <div class="people-list" id="peopleListContainer"><div style="text-align:center;padding:40px;">Загрузка...</div></div>
             </div>
         `;
         loadPeopleList();
@@ -848,45 +1000,23 @@
     }
 
     function showSettingsView() {
-        if(isMobile) {
-            const bottomNav = document.querySelector('.mobile-bottom-nav');
-            if(bottomNav) bottomNav.classList.remove('hidden');
-        }
-        
+        if(isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
         document.getElementById('mainContent').innerHTML = `
             <div class="settings-view">
-                <div class="settings-header">
-                    <button class="back-btn" id="settingsBackBtn"><i class="fas fa-arrow-left"></i></button>
-                    <h2>Настройки</h2>
-                </div>
-                <div class="settings-list">
-                    <div class="settings-section">
-                        <div class="settings-section-title">Тема оформления</div>
-                        <div class="theme-options">
-                            <div class="theme-option ${savedTheme === 'default' ? 'active' : ''}" data-theme="default"><div class="theme-preview default"></div><span class="theme-name">Стандартная</span></div>
-                            <div class="theme-option ${savedTheme === 'dark' ? 'active' : ''}" data-theme="dark"><div class="theme-preview dark"></div><span class="theme-name">Тёмная</span></div>
-                            <div class="theme-option ${savedTheme === 'purple' ? 'active' : ''}" data-theme="purple"><div class="theme-preview purple"></div><span class="theme-name">Фиолетовая</span></div>
-                            <div class="theme-option ${savedTheme === 'red' ? 'active' : ''}" data-theme="red"><div class="theme-preview red"></div><span class="theme-name">Красная</span></div>
-                            <div class="theme-option ${savedTheme === 'blue' ? 'active' : ''}" data-theme="blue"><div class="theme-preview blue"></div><span class="theme-name">Синяя</span></div>
-                            <div class="theme-option ${savedTheme === 'green' ? 'active' : ''}" data-theme="green"><div class="theme-preview green"></div><span class="theme-name">Зелёная</span></div>
-                        </div>
-                    </div>
-                </div>
+                <div class="settings-header"><button class="back-btn" id="settingsBackBtn"><i class="fas fa-arrow-left"></i></button><h2>Настройки</h2></div>
+                <div class="settings-list"><div class="settings-section"><div class="settings-section-title">Тема оформления</div>
+                <div class="theme-options">
+                    <div class="theme-option ${savedTheme === 'default' ? 'active' : ''}" data-theme="default"><div class="theme-preview default"></div><span class="theme-name">Стандартная</span></div>
+                    <div class="theme-option ${savedTheme === 'dark' ? 'active' : ''}" data-theme="dark"><div class="theme-preview dark"></div><span class="theme-name">Тёмная</span></div>
+                    <div class="theme-option ${savedTheme === 'purple' ? 'active' : ''}" data-theme="purple"><div class="theme-preview purple"></div><span class="theme-name">Фиолетовая</span></div>
+                    <div class="theme-option ${savedTheme === 'red' ? 'active' : ''}" data-theme="red"><div class="theme-preview red"></div><span class="theme-name">Красная</span></div>
+                    <div class="theme-option ${savedTheme === 'blue' ? 'active' : ''}" data-theme="blue"><div class="theme-preview blue"></div><span class="theme-name">Синяя</span></div>
+                    <div class="theme-option ${savedTheme === 'green' ? 'active' : ''}" data-theme="green"><div class="theme-preview green"></div><span class="theme-name">Зелёная</span></div>
+                </div></div></div>
             </div>
         `;
-        
-        document.getElementById('settingsBackBtn').onclick = () => {
-            if(currentChat) openChat(currentChat);
-            else showChatsView();
-        };
-        
-        document.querySelectorAll('.theme-option').forEach(opt => {
-            opt.onclick = () => {
-                setTheme(opt.dataset.theme);
-                document.querySelectorAll('.theme-option').forEach(o => o.classList.remove('active'));
-                opt.classList.add('active');
-            };
-        });
+        document.getElementById('settingsBackBtn').onclick = () => { if(currentChat) openChat(currentChat); else showChatsView(); };
+        document.querySelectorAll('.theme-option').forEach(opt => { opt.onclick = () => { setTheme(opt.dataset.theme); document.querySelectorAll('.theme-option').forEach(o => o.classList.remove('active')); opt.classList.add('active'); }; });
         if(isMobile) updateMobileNav('settings');
     }
 
@@ -903,14 +1033,8 @@
 
     async function acceptFriendRequest(fromId) {
         try {
-            await db.collection('users').doc(currentUser.uid).update({
-                friends: firebase.firestore.FieldValue.arrayUnion(fromId),
-                'friendRequests.received': firebase.firestore.FieldValue.arrayRemove(fromId)
-            });
-            await db.collection('users').doc(fromId).update({
-                friends: firebase.firestore.FieldValue.arrayUnion(currentUser.uid),
-                'friendRequests.sent': firebase.firestore.FieldValue.arrayRemove(currentUser.uid)
-            });
+            await db.collection('users').doc(currentUser.uid).update({ friends: firebase.firestore.FieldValue.arrayUnion(fromId), 'friendRequests.received': firebase.firestore.FieldValue.arrayRemove(fromId) });
+            await db.collection('users').doc(fromId).update({ friends: firebase.firestore.FieldValue.arrayUnion(currentUser.uid), 'friendRequests.sent': firebase.firestore.FieldValue.arrayRemove(currentUser.uid) });
             showModal('Успех', 'Теперь вы друзья!');
             const updated = await db.collection('users').doc(currentUser.uid).get();
             userData = updated.data();
@@ -944,20 +1068,11 @@
             div.className = 'admin-user-item';
             div.innerHTML = `
                 <div class="admin-user-info">
-                    <div class="admin-user-avatar">
-                        ${getInitials(user.firstName, user.lastName)}
-                        ${user.isVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : ''}
-                    </div>
-                    <div class="admin-user-details">
-                        <div class="admin-user-name">${user.firstName} ${user.lastName} ${user.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div>
-                        <div class="admin-user-email">${user.email}</div>
-                    </div>
+                    <div class="admin-user-avatar">${getInitials(user.firstName, user.lastName)}${user.isVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : ''}</div>
+                    <div class="admin-user-details"><div class="admin-user-name">${user.firstName} ${user.lastName} ${user.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div><div class="admin-user-email">${user.email}</div></div>
                 </div>
                 <div class="action-btns">
-                    ${!user.isVerified ? 
-                        `<button class="action-btn verify" data-verify="${doc.id}" style="background:var(--verified);color:white;">✅ Выдать</button>` :
-                        `<button class="action-btn unverify" data-unverify="${doc.id}" style="background:#6c757d;color:white;">❌ Забрать</button>`
-                    }
+                    ${!user.isVerified ? `<button class="action-btn verify" data-verify="${doc.id}" style="background:var(--verified);color:white;">✅ Выдать</button>` : `<button class="action-btn unverify" data-unverify="${doc.id}" style="background:#6c757d;color:white;">❌ Забрать</button>`}
                 </div>
             `;
             const verifyBtn = div.querySelector('[data-verify]');
@@ -966,7 +1081,6 @@
             if(unverifyBtn) unverifyBtn.onclick = () => toggleVerification(doc.id, false, user.firstName, user.lastName);
             container.appendChild(div);
         });
-        
         const usersSnapshot = await db.collection('users').get();
         document.getElementById('totalUsersCount').textContent = usersSnapshot.size;
         let verified = 0;
@@ -987,46 +1101,26 @@
     }
 
     function showAdminView() {
-        if(isMobile) {
-            const bottomNav = document.querySelector('.mobile-bottom-nav');
-            if(bottomNav) bottomNav.classList.remove('hidden');
-        }
-        
+        if(isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
         document.getElementById('mainContent').innerHTML = `
             <div class="admin-view">
-                <div class="admin-header">
-                    <button class="back-btn" id="adminBackBtn"><i class="fas fa-arrow-left"></i></button>
-                    <h2>Админ панель</h2>
-                </div>
-                <div class="admin-stats">
-                    <div class="admin-stat-card"><div class="admin-stat-value" id="totalUsersCount">0</div><div class="admin-stat-label">Всего пользователей</div></div>
-                    <div class="admin-stat-card"><div class="admin-stat-value" id="verifiedUsersCount">0</div><div class="admin-stat-label">С галочкой</div></div>
-                </div>
+                <div class="admin-header"><button class="back-btn" id="adminBackBtn"><i class="fas fa-arrow-left"></i></button><h2>Админ панель</h2></div>
+                <div class="admin-stats"><div class="admin-stat-card"><div class="admin-stat-value" id="totalUsersCount">0</div><div class="admin-stat-label">Всего пользователей</div></div><div class="admin-stat-card"><div class="admin-stat-value" id="verifiedUsersCount">0</div><div class="admin-stat-label">С галочкой</div></div></div>
                 <div class="admin-list" id="adminUsersContainer">Загрузка...</div>
             </div>
         `;
-        
-        document.getElementById('adminBackBtn').onclick = () => {
-            if(currentChat) openChat(currentChat);
-            else showChatsView();
-        };
+        document.getElementById('adminBackBtn').onclick = () => { if(currentChat) openChat(currentChat); else showChatsView(); };
         loadAdminUsers();
         if(isMobile) updateMobileNav('admin');
     }
 
     function updateMobileNav(active) {
-        document.querySelectorAll('.mobile-nav-item').forEach(btn => {
-            if(btn.dataset.nav === active) btn.classList.add('active');
-            else btn.classList.remove('active');
-        });
+        document.querySelectorAll('.mobile-nav-item').forEach(btn => { if(btn.dataset.nav === active) btn.classList.add('active'); else btn.classList.remove('active'); });
     }
 
     function renderApp() {
         if(!currentUser || !userData) return;
-        if(!currentUser.emailVerified) {
-            renderEmailVerifyScreen();
-            return;
-        }
+        if(!currentUser.emailVerified) { renderEmailVerifyScreen(); return; }
         
         isAdmin = currentUser.email === 'sad.spotty@gmail.com';
         
@@ -1110,9 +1204,7 @@
         try {
             const cred = await auth.createUserWithEmailAndPassword(email, password);
             await cred.user.sendEmailVerification();
-            await db.collection('users').doc(cred.user.uid).set({
-                firstName, lastName, email, friends: [], friendRequests: { sent: [], received: [] }, createdAt: new Date(), isVerified: false
-            });
+            await db.collection('users').doc(cred.user.uid).set({ firstName, lastName, email, friends: [], friendRequests: { sent: [], received: [] }, createdAt: new Date(), isVerified: false });
             showModal('Регистрация', 'Письмо с подтверждением отправлено!');
         } catch(e) { showModal('Ошибка', e.message); }
     }
@@ -1120,9 +1212,7 @@
     async function handleLogin() {
         const email = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
-        try {
-            await auth.signInWithEmailAndPassword(email, password);
-        } catch(e) { showModal('Ошибка', e.message); }
+        try { await auth.signInWithEmailAndPassword(email, password); } catch(e) { showModal('Ошибка', e.message); }
     }
 
     function renderAuth() {
@@ -1158,9 +1248,7 @@
             currentUser = user;
             const doc = await db.collection('users').doc(user.uid).get();
             if(!doc.exists) {
-                await db.collection('users').doc(user.uid).set({
-                    firstName: user.email.split('@')[0], lastName: 'User', email: user.email, friends: [], friendRequests: { sent: [], received: [] }, isVerified: false
-                });
+                await db.collection('users').doc(user.uid).set({ firstName: user.email.split('@')[0], lastName: 'User', email: user.email, friends: [], friendRequests: { sent: [], received: [] }, isVerified: false });
                 userData = { firstName: user.email.split('@')[0], lastName: 'User', email: user.email, friends: [], friendRequests: { sent: [], received: [] }, isVerified: false };
             } else {
                 userData = doc.data();
