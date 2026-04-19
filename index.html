@@ -131,6 +131,11 @@
         renderAuth();
     }
 
+    // Функция для генерации ID чата (как в анонимном чате)
+    function getChatId(userId1, userId2) {
+        return [userId1, userId2].sort().join('_');
+    }
+
     // ОТПРАВКА СООБЩЕНИЯ (рабочая логика из анонимного чата)
     async function sendMessage() {
         const input = document.getElementById('messageInput');
@@ -139,13 +144,14 @@
         if(!text) return;
         input.value = '';
         
+        const chatId = getChatId(currentUser.uid, currentChatUser.id);
+        
         try {
             const message = {
+                chatId: chatId,
                 text: text,
                 userId: currentUser.uid,
                 userName: `${userData.firstName} ${userData.lastName}`,
-                toUserId: currentChatUser.id,
-                toUserName: `${currentChatUser.firstName} ${currentChatUser.lastName}`,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                 deleted: false
             };
@@ -155,14 +161,15 @@
         } catch(e) { showModal('Ошибка', e.message); }
     }
 
-    // ЗАГРУЗКА СООБЩЕНИЙ
+    // ЗАГРУЗКА СООБЩЕНИЙ (как в анонимном чате - через chatId)
     function loadMessages() {
         if(messagesUnsubscribe) messagesUnsubscribe();
         if(!currentChatUser) return;
         
+        const chatId = getChatId(currentUser.uid, currentChatUser.id);
+        
         messagesUnsubscribe = db.collection('messages')
-            .where('userId', 'in', [currentUser.uid, currentChatUser.id])
-            .where('toUserId', 'in', [currentUser.uid, currentChatUser.id])
+            .where('chatId', '==', chatId)
             .orderBy('timestamp', 'asc')
             .onSnapshot(snapshot => {
                 const container = document.getElementById('messagesArea');
@@ -170,26 +177,23 @@
                 container.innerHTML = '';
                 snapshot.forEach(doc => {
                     const msg = doc.data();
-                    // Показываем только сообщения между этими двумя пользователями
-                    if((msg.userId === currentUser.uid && msg.toUserId === currentChatUser.id) ||
-                       (msg.userId === currentChatUser.id && msg.toUserId === currentUser.uid)) {
-                        if(msg.deleted) return;
-                        const isMy = msg.userId === currentUser.uid;
-                        const div = document.createElement('div');
-                        div.className = `message ${isMy ? 'my' : 'other'}`;
-                        
-                        const timestamp = msg.timestamp?.toDate ? msg.timestamp.toDate() : new Date();
-                        const timeStr = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                        const dateStr = timestamp.toLocaleDateString([], { day: '2-digit', month: '2-digit' });
-                        const fullTime = `${dateStr} в ${timeStr}`;
-                        
-                        div.innerHTML = `
-                            ${!isMy ? `<div class="message-sender">${msg.userName || 'Пользователь'}</div>` : ''}
-                            <div class="message-bubble">${escapeHtml(msg.text)}</div>
-                            <div class="message-time">${fullTime}</div>
-                        `;
-                        container.appendChild(div);
-                    }
+                    if(msg.deleted) return;
+                    
+                    const isMy = msg.userId === currentUser.uid;
+                    const div = document.createElement('div');
+                    div.className = `message ${isMy ? 'my' : 'other'}`;
+                    
+                    const timestamp = msg.timestamp?.toDate ? msg.timestamp.toDate() : new Date();
+                    const timeStr = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const dateStr = timestamp.toLocaleDateString([], { day: '2-digit', month: '2-digit' });
+                    const fullTime = `${dateStr} в ${timeStr}`;
+                    
+                    div.innerHTML = `
+                        ${!isMy ? `<div class="message-sender">${msg.userName || 'Пользователь'}</div>` : ''}
+                        <div class="message-bubble">${escapeHtml(msg.text)}</div>
+                        <div class="message-time">${fullTime}</div>
+                    `;
+                    container.appendChild(div);
                 });
                 scrollToBottom();
             }, error => {
