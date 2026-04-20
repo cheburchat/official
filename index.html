@@ -63,7 +63,7 @@
         .chat-time { font-size: 11px; color: var(--text-secondary); flex-shrink: 0; }
         .empty-chats { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
         
-        /* Сообщения с реакциями */
+        /* Сообщения */
         .message { display: flex; flex-direction: column; max-width: 75%; animation: fadeIn 0.2s ease; margin-bottom: 8px; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .message.my { align-self: flex-end; }
@@ -78,7 +78,7 @@
         .read-status.read i { color: var(--read-status-delivered); }
         .read-status.delivered i { color: var(--read-status); }
         
-        /* Реакции */
+        /* Реакции под сообщением */
         .reactions-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; margin-left: 6px; }
         .reaction-item { display: inline-flex; align-items: center; gap: 4px; background: var(--bg-element); padding: 2px 8px; border-radius: 20px; font-size: 13px; cursor: pointer; transition: 0.1s; border: 1px solid var(--border); }
         .reaction-item:hover { background: var(--reaction-hover); transform: scale(1.05); }
@@ -90,16 +90,14 @@
         /* Контекстное меню для ПК */
         .context-menu { position: fixed; background: var(--bg-surface); border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); z-index: 1000; min-width: 180px; overflow: hidden; border: 1px solid var(--border); display: none; }
         .context-menu.active { display: block; }
-        .context-menu-item { padding: 12px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.1s; color: var(--text); position: relative; }
+        .context-menu-item { padding: 12px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.1s; color: var(--text); }
         .context-menu-item:hover { background: var(--bg-element); }
         .context-menu-item.delete { color: #dc3545; }
-        .context-menu-divider { height: 1px; background: var(--border); margin: 4px 0; }
         
-        /* Подменю реакций для ПК (выезжает вправо) */
-        .reactions-submenu { position: absolute; left: 100%; top: 0; background: var(--bg-surface); border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); display: none; min-width: 160px; border: 1px solid var(--border); z-index: 1001; }
-        .context-menu-item.has-submenu:hover .reactions-submenu { display: block; }
-        .reaction-option { display: flex; align-items: center; gap: 10px; padding: 10px 16px; cursor: pointer; font-size: 16px; }
-        .reaction-option:hover { background: var(--bg-element); }
+        /* Окно выбора реакций (для ПК) */
+        .reactions-popup { position: fixed; background: var(--bg-surface); border-radius: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); z-index: 1001; display: flex; gap: 8px; padding: 8px 12px; border: 1px solid var(--border); }
+        .reactions-popup .reaction-option { font-size: 28px; padding: 6px; cursor: pointer; border-radius: 40px; transition: 0.1s; }
+        .reactions-popup .reaction-option:hover { background: var(--bg-element); transform: scale(1.2); }
         
         /* Мобильное контекстное меню */
         .mobile-context-menu { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-surface); border-radius: 20px 20px 0 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.15); z-index: 1001; display: none; flex-direction: column; padding: 16px; animation: slideUp 0.2s ease; }
@@ -112,7 +110,7 @@
         .mobile-context-btn { padding: 14px; border-radius: 14px; background: var(--bg-element); border: none; font-size: 16px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--text); }
         .mobile-context-btn.delete { color: #dc3545; background: rgba(220,53,69,0.1); }
         .mobile-reactions-row { display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); margin-top: 8px; flex-wrap: wrap; gap: 8px; }
-        .mobile-reaction { font-size: 28px; padding: 8px; cursor: pointer; border-radius: 40px; transition: 0.1s; }
+        .mobile-reaction { font-size: 32px; padding: 10px; cursor: pointer; border-radius: 50px; transition: 0.1s; }
         .mobile-reaction:active { background: var(--bg-element); transform: scale(1.1); }
         
         .chat-window { display: flex; flex-direction: column; height: 100%; background: var(--bg-page); }
@@ -127,7 +125,7 @@
         .input-area input { flex: 1; padding: 12px 18px; border: none; background: var(--bg-element); border-radius: 28px; font-size: 16px; outline: none; color: var(--text); }
         .input-area button { background: var(--accent); border: none; width: 48px; height: 48px; border-radius: 50%; color: white; cursor: pointer; font-size: 18px; }
         
-        /* Остальные стили компактно */
+        /* Остальные стили (компактно) */
         .people-view, .settings-view, .admin-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
         .people-header, .settings-header, .admin-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
         .people-header h2, .settings-header h2, .admin-header h2 { font-size: 24px; font-weight: 700; color: var(--text); flex: 1; }
@@ -214,21 +212,23 @@
 
 <!-- Контекстное меню для ПК -->
 <div id="contextMenu" class="context-menu">
-    <div id="contextReactionItem" class="context-menu-item has-submenu">
+    <div id="contextReactionItem" class="context-menu-item">
         <i class="fas fa-smile"></i> Реакция
-        <div class="reactions-submenu" id="reactionsSubmenu">
-            <div class="reaction-option" data-reaction="❤️">❤️ Сердце</div>
-            <div class="reaction-option" data-reaction="👍">👍 Класс</div>
-            <div class="reaction-option" data-reaction="🔥">🔥 Огонь</div>
-            <div class="reaction-option" data-reaction="😂">😂 Смех</div>
-            <div class="reaction-option" data-reaction="😮">😮 Удивление</div>
-            <div class="reaction-option" data-reaction="😢">😢 Грусть</div>
-            <div class="reaction-option" data-reaction="😡">😡 Злость</div>
-        </div>
     </div>
     <div id="contextDeleteItem" class="context-menu-item delete">
         <i class="fas fa-trash"></i> Удалить
     </div>
+</div>
+
+<!-- Плавающее окно для выбора реакций (ПК) -->
+<div id="reactionsPopup" class="reactions-popup" style="display: none;">
+    <span class="reaction-option" data-reaction="❤️">❤️</span>
+    <span class="reaction-option" data-reaction="👍">👍</span>
+    <span class="reaction-option" data-reaction="🔥">🔥</span>
+    <span class="reaction-option" data-reaction="😂">😂</span>
+    <span class="reaction-option" data-reaction="😮">😮</span>
+    <span class="reaction-option" data-reaction="😢">😢</span>
+    <span class="reaction-option" data-reaction="😡">😡</span>
 </div>
 
 <!-- Мобильное контекстное меню -->
@@ -373,6 +373,8 @@
         }
         
         await messageRef.update({ reactions: reactions });
+        hideContextMenu();
+        hideReactionsPopup();
     }
 
     async function deleteMessage(messageId) {
@@ -382,6 +384,7 @@
                 showModal('Успех', 'Сообщение удалено');
             } catch(e) { showModal('Ошибка', e.message); }
         });
+        hideContextMenu();
     }
 
     // ========== КОНТЕКСТНОЕ МЕНЮ ==========
@@ -390,6 +393,22 @@
         document.getElementById('mobileContextOverlay').classList.remove('active');
         document.getElementById('mobileContextMenu').classList.remove('active');
         activeMessageId = null;
+    }
+    
+    function hideReactionsPopup() {
+        document.getElementById('reactionsPopup').style.display = 'none';
+    }
+    
+    function showReactionsPopup(x, y) {
+        const popup = document.getElementById('reactionsPopup');
+        popup.style.left = x + 'px';
+        popup.style.top = (y - 50) + 'px';
+        popup.style.display = 'flex';
+        
+        // Через 3 секунды скрываем
+        setTimeout(() => {
+            if (popup.style.display === 'flex') popup.style.display = 'none';
+        }, 3000);
     }
 
     function showContextMenu(e, messageId, isMyMessage) {
@@ -428,13 +447,11 @@
             document.querySelectorAll('.mobile-reaction').forEach(el => {
                 el.onclick = () => {
                     addReaction(messageId, el.dataset.reaction);
-                    hideContextMenu();
                 };
             });
             
             deleteBtn.onclick = () => {
                 if (isMyMessage) deleteMessage(messageId);
-                hideContextMenu();
             };
             
             overlay.onclick = hideContextMenu;
@@ -443,6 +460,7 @@
         } else {
             const menu = document.getElementById('contextMenu');
             const deleteItem = document.getElementById('contextDeleteItem');
+            const reactionItem = document.getElementById('contextReactionItem');
             
             if (isMyMessage) {
                 deleteItem.style.display = 'flex';
@@ -450,28 +468,33 @@
                 deleteItem.style.display = 'none';
             }
             
-            // Назначаем обработчики для реакций
-            document.querySelectorAll('.reaction-option').forEach(el => {
-                el.onclick = () => {
-                    addReaction(messageId, el.dataset.reaction);
-                    hideContextMenu();
-                };
-            });
-            
-            deleteItem.onclick = () => {
-                if (isMyMessage) deleteMessage(messageId);
-                hideContextMenu();
-            };
-            
             let x = e.clientX;
             let y = e.clientY;
-            const menuWidth = 200;
-            const menuHeight = 100;
+            const menuWidth = 180;
+            const menuHeight = 80;
             if (x + menuWidth > window.innerWidth) x = window.innerWidth - menuWidth - 10;
             if (y + menuHeight > window.innerHeight) y = window.innerHeight - menuHeight - 10;
             menu.style.left = x + 'px';
             menu.style.top = y + 'px';
             menu.classList.add('active');
+            
+            // Обработчик для кнопки "Реакция" - показываем плавающее окно с эмодзи
+            reactionItem.onclick = () => {
+                menu.classList.remove('active');
+                showReactionsPopup(x, y);
+                
+                // Назначаем обработчики для реакций в плавающем окне
+                document.querySelectorAll('#reactionsPopup .reaction-option').forEach(el => {
+                    el.onclick = () => {
+                        addReaction(messageId, el.dataset.reaction);
+                    };
+                });
+            };
+            
+            deleteItem.onclick = () => {
+                if (isMyMessage) deleteMessage(messageId);
+                hideContextMenu();
+            };
         }
     }
 
@@ -660,7 +683,7 @@
         setTimeout(() => { const ma = document.getElementById('messagesArea'); if(ma) ma.scrollTop = ma.scrollHeight; }, 100);
     }
 
-    // Групповые функции
+    // Групповые функции (сокращённо, но рабочие)
     async function showGroupManage() {
         if (!currentChat || currentChat.type !== 'group') return;
         const groupDoc = await db.collection('groups').doc(currentChat.id).get();
@@ -1114,7 +1137,7 @@
     });
     
     window.addEventListener('resize', () => { isMobile = window.innerWidth <= 768; });
-    document.addEventListener('click', () => hideContextMenu());
+    document.addEventListener('click', () => { hideContextMenu(); hideReactionsPopup(); });
 </script>
 </body>
 </html>
