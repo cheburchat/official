@@ -78,6 +78,12 @@
         .read-status.read i { color: var(--read-status-delivered); }
         .read-status.delivered i { color: var(--read-status); }
         
+        /* Медиа в сообщениях */
+        .media-container { margin: 4px 0; border-radius: 16px; overflow: hidden; max-width: 260px; }
+        .message-image { width: 100%; height: auto; max-height: 300px; object-fit: cover; cursor: pointer; border-radius: 16px; }
+        .message-video { width: 100%; max-height: 260px; border-radius: 16px; background: #000; }
+        .loading-indicator { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--bg-element); border-radius: 20px; font-size: 13px; color: var(--text-secondary); }
+        
         /* Реакции под сообщением */
         .reactions-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; margin-left: 6px; }
         .reaction-item { display: inline-flex; align-items: center; gap: 4px; background: var(--bg-element); padding: 2px 8px; border-radius: 20px; font-size: 13px; cursor: pointer; transition: 0.1s; border: 1px solid var(--border); }
@@ -87,7 +93,7 @@
         .reaction-emoji { font-size: 14px; }
         .reaction-count { font-size: 11px; font-weight: 500; }
         
-        /* Контекстное меню для ПК */
+        /* Контекстное меню */
         .context-menu { position: fixed; background: var(--bg-surface); border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); z-index: 1000; min-width: 180px; overflow: hidden; border: 1px solid var(--border); display: none; }
         .context-menu.active { display: block; }
         .context-menu-item { padding: 12px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.1s; color: var(--text); }
@@ -124,6 +130,8 @@
         .input-area { padding: 12px 16px; background: var(--bg-surface); border-top: 1px solid var(--border); display: flex; gap: 12px; flex-shrink: 0; }
         .input-area input { flex: 1; padding: 12px 18px; border: none; background: var(--bg-element); border-radius: 28px; font-size: 16px; outline: none; color: var(--text); }
         .input-area button { background: var(--accent); border: none; width: 48px; height: 48px; border-radius: 50%; color: white; cursor: pointer; font-size: 18px; }
+        .attach-btn { background: var(--bg-element); border: none; width: 48px; height: 48px; border-radius: 50%; color: var(--text); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+        .attach-btn:hover { background: var(--accent); color: white; }
         
         /* Остальные стили (компактно) */
         .people-view, .settings-view, .admin-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
@@ -316,6 +324,10 @@
         appId: "1:672219125451:web:84871d4e136d0168076d4e"
     };
 
+    // Cloudinary конфиг
+    const CLOUDINARY_CLOUD_NAME = 'dsf0w12ff';
+    const CLOUDINARY_UPLOAD_PRESET = 'cheburchat_preset';
+
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
@@ -373,6 +385,79 @@
     function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m] || m)).replace(/\n/g,'<br>'); }
     function scrollToBottom() { const el = document.getElementById('messagesArea'); if(el) setTimeout(() => el.scrollTop = el.scrollHeight, 100); }
     function getChatId(a, b) { return [a, b].sort().join('_'); }
+
+    // ========== ЗАГРУЗКА ФАЙЛОВ В CLOUDINARY ==========
+    function uploadFileToCloudinary(file, onSuccess, onError) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+        
+        fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`, {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.secure_url) {
+                onSuccess(data.secure_url, data.resource_type);
+            } else {
+                onError('Ошибка загрузки: ' + (data.error?.message || 'Неизвестная ошибка'));
+            }
+        })
+        .catch(err => onError(err.message));
+    }
+
+    function sendMediaFile(file) {
+        if (!currentChat) {
+            showModal('Ошибка', 'Сначала выберите чат');
+            return;
+        }
+        
+        // Показываем индикатор загрузки
+        showModal('Загрузка', 'Отправка файла...');
+        
+        uploadFileToCloudinary(file, (url, resourceType) => {
+            // Отправляем сообщение с медиа
+            const messageData = {
+                text: '',
+                mediaUrl: url,
+                mediaType: resourceType, // 'image' или 'video'
+                userId: currentUser.uid,
+                userName: `${userData.firstName} ${userData.lastName}`,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                chatType: currentChat.type,
+                reactions: {}
+            };
+            
+            if (currentChat.type === 'private') {
+                messageData.chatId = getChatId(currentUser.uid, currentChat.id);
+                messageData.toUserId = currentChat.id;
+            } else {
+                messageData.groupId = currentChat.id;
+            }
+            
+            db.collection('messages').add(messageData).then(() => {
+                document.querySelector('.modal-overlay.active')?.classList.remove('active');
+                scrollToBottom();
+                loadChatsList();
+            }).catch(err => {
+                showModal('Ошибка', 'Ошибка отправки сообщения: ' + err.message);
+            });
+        }, (error) => {
+            showModal('Ошибка', 'Не удалось загрузить файл: ' + error);
+        });
+    }
+
+    function openFilePicker() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*,video/*';
+        input.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) sendMediaFile(file);
+        };
+        input.click();
+    }
 
     // ========== РЕАКЦИИ ==========
     async function addReaction(messageId, reaction) {
@@ -478,7 +563,7 @@
         }
     }
 
-    async function sendMessage() {
+    async function sendTextMessage() {
         const input = document.getElementById('messageInput');
         if(!input || !currentChat) return;
         const text = input.value.trim();
@@ -488,6 +573,7 @@
         try {
             const messageData = {
                 text: text,
+                mediaUrl: null,
                 userId: currentUser.uid,
                 userName: `${userData.firstName} ${userData.lastName}`,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -548,6 +634,17 @@
                 const ts = msg.timestamp?.toDate?.() || new Date();
                 const reactions = msg.reactions || {};
                 
+                // Медиа контент
+                let mediaHtml = '';
+                if (msg.mediaUrl) {
+                    if (msg.mediaType === 'image') {
+                        mediaHtml = `<div class="media-container"><img src="${msg.mediaUrl}" class="message-image" onclick="window.open('${msg.mediaUrl}', '_blank')" loading="lazy"></div>`;
+                    } else if (msg.mediaType === 'video') {
+                        mediaHtml = `<div class="media-container"><video src="${msg.mediaUrl}" class="message-video" controls preload="metadata"></video></div>`;
+                    }
+                }
+                
+                // Реакции
                 const reactionGroups = {};
                 Object.values(reactions).forEach(r => { reactionGroups[r] = (reactionGroups[r] || 0) + 1; });
                 const myReactionValue = reactions[currentUser.uid];
@@ -577,7 +674,8 @@
                 messageDiv.setAttribute('data-message-id', msgId);
                 messageDiv.innerHTML = `
                     ${!isMy ? `<div class="message-sender">${escapeHtml(msg.userName || 'Пользователь')}</div>` : ''}
-                    <div class="message-bubble">${escapeHtml(msg.text)}</div>
+                    ${mediaHtml}
+                    ${msg.text ? `<div class="message-bubble">${escapeHtml(msg.text)}</div>` : ''}
                     <div class="message-footer">
                         <span class="message-time">${ts.toLocaleDateString()} в ${ts.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
                         ${readStatusHtml}
@@ -592,21 +690,23 @@
                     };
                 });
                 
-                const bubble = messageDiv.querySelector('.message-bubble');
-                bubble.addEventListener('contextmenu', (e) => {
-                    e.preventDefault();
-                    showContextMenu(e, msgId, isMy);
-                });
-                
-                let lastTap = 0;
-                bubble.addEventListener('touchstart', (e) => {
-                    const now = Date.now();
-                    if (now - lastTap < 300) {
+                const bubble = messageDiv.querySelector('.message-bubble') || messageDiv.querySelector('.media-container');
+                if (bubble) {
+                    bubble.addEventListener('contextmenu', (e) => {
                         e.preventDefault();
                         showContextMenu(e, msgId, isMy);
-                    }
-                    lastTap = now;
-                });
+                    });
+                    
+                    let lastTap = 0;
+                    bubble.addEventListener('touchstart', (e) => {
+                        const now = Date.now();
+                        if (now - lastTap < 300) {
+                            e.preventDefault();
+                            showContextMenu(e, msgId, isMy);
+                        }
+                        lastTap = now;
+                    });
+                }
                 
                 container.appendChild(messageDiv);
             });
@@ -644,6 +744,7 @@
                 <div class="messages-area" id="messagesArea"></div>
                 <div class="input-area">
                     <input type="text" id="messageInput" placeholder="Сообщение..." autocomplete="off">
+                    <button class="attach-btn" id="attachBtn"><i class="fas fa-paperclip"></i></button>
                     <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
@@ -657,13 +758,14 @@
         if (isGroup && document.getElementById('groupManageBtn')) {
             document.getElementById('groupManageBtn').onclick = showGroupManage;
         }
-        document.getElementById('sendBtn').onclick = sendMessage;
-        document.getElementById('messageInput').onkeypress = (e) => { if(e.key === 'Enter') sendMessage(); };
+        document.getElementById('sendBtn').onclick = sendTextMessage;
+        document.getElementById('attachBtn').onclick = openFilePicker;
+        document.getElementById('messageInput').onkeypress = (e) => { if(e.key === 'Enter') sendTextMessage(); };
         loadMessages();
         setTimeout(() => { const ma = document.getElementById('messagesArea'); if(ma) ma.scrollTop = ma.scrollHeight; }, 100);
     }
 
-    // Групповые функции (сокращённо, но рабочие)
+    // Групповые функции (сокращённо)
     async function showGroupManage() {
         if (!currentChat || currentChat.type !== 'group') return;
         const groupDoc = await db.collection('groups').doc(currentChat.id).get();
@@ -788,8 +890,8 @@
             const allMessages = await db.collection('messages').where('userId', '==', currentUser.uid).get();
             const messagesTo = await db.collection('messages').where('toUserId', '==', currentUser.uid).get();
             const chatUsers = new Map();
-            allMessages.forEach(doc => { const msg = doc.data(); if(msg.toUserId && msg.toUserId !== currentUser.uid && msg.chatType !== 'group') chatUsers.set(msg.toUserId, { lastMsg: msg.text, lastTime: msg.timestamp }); });
-            messagesTo.forEach(doc => { const msg = doc.data(); if(msg.userId && msg.userId !== currentUser.uid && msg.chatType !== 'group') { const existing = chatUsers.get(msg.userId); if(!existing || (msg.timestamp && existing.lastTime?.toDate?.() < msg.timestamp.toDate())) chatUsers.set(msg.userId, { lastMsg: msg.text, lastTime: msg.timestamp }); } });
+            allMessages.forEach(doc => { const msg = doc.data(); if(msg.toUserId && msg.toUserId !== currentUser.uid && msg.chatType !== 'group') chatUsers.set(msg.toUserId, { lastMsg: msg.text || '📎 Медиа', lastTime: msg.timestamp }); });
+            messagesTo.forEach(doc => { const msg = doc.data(); if(msg.userId && msg.userId !== currentUser.uid && msg.chatType !== 'group') { const existing = chatUsers.get(msg.userId); if(!existing || (msg.timestamp && existing.lastTime?.toDate?.() < msg.timestamp.toDate())) chatUsers.set(msg.userId, { lastMsg: msg.text || '📎 Медиа', lastTime: msg.timestamp }); } });
             const friendIds = userData.friends || [];
             for(const id of friendIds) { if(!chatUsers.has(id)) { const userDoc = await db.collection('users').doc(id).get(); if(userDoc.exists) chatUsers.set(id, { lastMsg: 'Напишите первым', lastTime: null }); } }
             const privateChats = [];
@@ -806,7 +908,11 @@
                 const group = doc.data();
                 const lastMsgSnapshot = await db.collection('messages').where('groupId', '==', doc.id).orderBy('timestamp', 'desc').limit(1).get();
                 let lastMsg = 'Нет сообщений', lastTime = null;
-                if(!lastMsgSnapshot.empty) { lastMsg = lastMsgSnapshot.docs[0].data().text; lastTime = lastMsgSnapshot.docs[0].data().timestamp?.toDate?.() || null; }
+                if(!lastMsgSnapshot.empty) { 
+                    const lastMsgData = lastMsgSnapshot.docs[0].data();
+                    lastMsg = lastMsgData.text || '📎 Медиа';
+                    lastTime = lastMsgData.timestamp?.toDate?.() || null;
+                }
                 groupChats.push({ type: 'group', id: doc.id, name: group.name, members: group.members, createdBy: group.createdBy, lastMsg, lastTime });
             }
             groupChats.sort((a,b) => (b.lastTime?.getTime?.() || 0) - (a.lastTime?.getTime?.() || 0));
