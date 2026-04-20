@@ -63,7 +63,6 @@
         .chat-time { font-size: 11px; color: var(--text-secondary); flex-shrink: 0; }
         .empty-chats { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
         
-        /* Сообщения */
         .message { display: flex; flex-direction: column; max-width: 75%; animation: fadeIn 0.2s ease; margin-bottom: 8px; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .message.my { align-self: flex-end; }
@@ -78,13 +77,10 @@
         .read-status.read i { color: var(--read-status-delivered); }
         .read-status.delivered i { color: var(--read-status); }
         
-        /* Медиа в сообщениях */
-        .media-container { margin: 4px 0; border-radius: 16px; overflow: hidden; max-width: 260px; }
+        .media-container { margin: 4px 0; border-radius: 16px; overflow: hidden; max-width: 280px; }
         .message-image { width: 100%; height: auto; max-height: 300px; object-fit: cover; cursor: pointer; border-radius: 16px; }
-        .message-video { width: 100%; max-height: 260px; border-radius: 16px; background: #000; }
-        .loading-indicator { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--bg-element); border-radius: 20px; font-size: 13px; color: var(--text-secondary); }
+        .message-video { width: 100%; max-height: 280px; border-radius: 16px; background: #000; outline: none; }
         
-        /* Реакции под сообщением */
         .reactions-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; margin-left: 6px; }
         .reaction-item { display: inline-flex; align-items: center; gap: 4px; background: var(--bg-element); padding: 2px 8px; border-radius: 20px; font-size: 13px; cursor: pointer; transition: 0.1s; border: 1px solid var(--border); }
         .reaction-item:hover { background: var(--bg-element); transform: scale(1.05); }
@@ -93,14 +89,12 @@
         .reaction-emoji { font-size: 14px; }
         .reaction-count { font-size: 11px; font-weight: 500; }
         
-        /* Контекстное меню */
         .context-menu { position: fixed; background: var(--bg-surface); border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); z-index: 1000; min-width: 180px; overflow: hidden; border: 1px solid var(--border); display: none; }
         .context-menu.active { display: block; }
         .context-menu-item { padding: 12px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.1s; color: var(--text); }
         .context-menu-item:hover { background: var(--bg-element); }
         .context-menu-item.delete { color: #dc3545; }
         
-        /* Модальное окно выбора реакций */
         .reactions-modal .modal { max-width: 350px; }
         .reactions-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; padding: 16px; }
         .reaction-option { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px; cursor: pointer; border-radius: 16px; transition: 0.1s; min-width: 60px; }
@@ -108,7 +102,6 @@
         .reaction-emoji-big { font-size: 32px; }
         .reaction-name { font-size: 12px; color: var(--text-secondary); }
         
-        /* Мобильное контекстное меню */
         .mobile-context-menu { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-surface); border-radius: 20px 20px 0 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.15); z-index: 1001; display: none; flex-direction: column; padding: 16px; animation: slideUp 0.2s ease; }
         .mobile-context-menu.active { display: flex; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -133,7 +126,6 @@
         .attach-btn { background: var(--bg-element); border: none; width: 48px; height: 48px; border-radius: 50%; color: var(--text); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
         .attach-btn:hover { background: var(--accent); color: white; }
         
-        /* Остальные стили (компактно) */
         .people-view, .settings-view, .admin-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
         .people-header, .settings-header, .admin-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
         .people-header h2, .settings-header h2, .admin-header h2 { font-size: 24px; font-weight: 700; color: var(--text); flex: 1; }
@@ -218,17 +210,11 @@
 <body data-theme="default">
 <div id="app"></div>
 
-<!-- Контекстное меню для ПК -->
 <div id="contextMenu" class="context-menu">
-    <div id="contextReactionItem" class="context-menu-item">
-        <i class="fas fa-smile"></i> Реакция
-    </div>
-    <div id="contextDeleteItem" class="context-menu-item delete">
-        <i class="fas fa-trash"></i> Удалить
-    </div>
+    <div id="contextReactionItem" class="context-menu-item"><i class="fas fa-smile"></i> Реакция</div>
+    <div id="contextDeleteItem" class="context-menu-item delete"><i class="fas fa-trash"></i> Удалить</div>
 </div>
 
-<!-- Модальное окно выбора реакций -->
 <div id="reactionsModal" class="modal-overlay reactions-modal">
     <div class="modal">
         <div class="modal-header">Выберите реакцию</div>
@@ -243,17 +229,14 @@
                 <div class="reaction-option" data-reaction="😡"><span class="reaction-emoji-big">😡</span><span class="reaction-name">Злость</span></div>
             </div>
         </div>
-        <div class="modal-buttons">
-            <button class="confirm" id="closeReactionsModal">Отмена</button>
-        </div>
+        <div class="modal-buttons"><button class="confirm" id="closeReactionsModal">Отмена</button></div>
     </div>
 </div>
 
-<!-- Мобильное контекстное меню -->
 <div id="mobileContextOverlay" class="mobile-context-overlay"></div>
 <div id="mobileContextMenu" class="mobile-context-menu">
-    <div class="mobile-context-title" id="mobileContextTitle">Действия с сообщением</div>
-    <div class="mobile-context-buttons" id="mobileContextButtons">
+    <div class="mobile-context-title">Действия с сообщением</div>
+    <div class="mobile-context-buttons">
         <button class="mobile-context-btn" id="mobileReactionBtn"><i class="fas fa-smile"></i> Реакция</button>
         <button class="mobile-context-btn delete" id="mobileDeleteBtn"><i class="fas fa-trash"></i> Удалить</button>
     </div>
@@ -267,10 +250,7 @@
             <div class="friend-list-select" id="friendsForGroupList">Загрузка...</div>
             <div class="selected-friends" id="selectedFriendsList"></div>
         </div>
-        <div class="modal-buttons">
-            <button class="confirm" id="confirmCreateGroup">Создать</button>
-            <button id="cancelCreateGroup">Отмена</button>
-        </div>
+        <div class="modal-buttons"><button class="confirm" id="confirmCreateGroup">Создать</button><button id="cancelCreateGroup">Отмена</button></div>
     </div>
 </div>
 
@@ -279,10 +259,7 @@
         <div class="modal-header" id="groupManageTitle">Управление беседой</div>
         <div class="modal-body">
             <div class="group-members-list" id="groupMembersList"></div>
-            <div class="add-member-section">
-                <select id="addMemberSelect" class="add-member-select"><option value="">Выберите друга</option></select>
-                <button id="addMemberBtn" class="action-btn add" style="width:100%">➕ Добавить</button>
-            </div>
+            <div class="add-member-section"><select id="addMemberSelect" class="add-member-select"><option value="">Выберите друга</option></select><button id="addMemberBtn" class="action-btn add" style="width:100%">➕ Добавить</button></div>
             <button id="leaveGroupBtn" class="danger-btn leave-btn">🚪 Выйти из беседы</button>
             <button id="deleteGroupBtn" class="danger-btn">🗑️ Удалить беседу</button>
         </div>
@@ -324,7 +301,6 @@
         appId: "1:672219125451:web:84871d4e136d0168076d4e"
     };
 
-    // Cloudinary конфиг
     const CLOUDINARY_CLOUD_NAME = 'dsf0w12ff';
     const CLOUDINARY_UPLOAD_PRESET = 'cheburchat_preset';
 
@@ -340,9 +316,7 @@
     let messagesUnsubscribe = null;
     let isMobile = window.innerWidth <= 768;
     let isAdmin = false;
-    
     let activeMessageId = null;
-    let activeMessageIsMy = false;
 
     const savedTheme = localStorage.getItem('cheburchat_theme') || 'default';
     document.body.setAttribute('data-theme', savedTheme);
@@ -367,18 +341,13 @@
     function showReactionsModal(messageId) {
         const modal = document.getElementById('reactionsModal');
         modal.classList.add('active');
-        
         document.querySelectorAll('#reactionsModal .reaction-option').forEach(el => {
             el.onclick = () => {
-                const reaction = el.dataset.reaction;
-                addReaction(messageId, reaction);
+                addReaction(messageId, el.dataset.reaction);
                 modal.classList.remove('active');
             };
         });
-        
-        document.getElementById('closeReactionsModal').onclick = () => {
-            modal.classList.remove('active');
-        };
+        document.getElementById('closeReactionsModal').onclick = () => modal.classList.remove('active');
     }
 
     function getInitials(first, last) { return (first?.[0] || '?') + (last?.[0] || '?'); }
@@ -386,25 +355,29 @@
     function scrollToBottom() { const el = document.getElementById('messagesArea'); if(el) setTimeout(() => el.scrollTop = el.scrollHeight, 100); }
     function getChatId(a, b) { return [a, b].sort().join('_'); }
 
-    // ========== ЗАГРУЗКА ФАЙЛОВ В CLOUDINARY ==========
+    // Загрузка файлов в Cloudinary с поддержкой видео
     function uploadFileToCloudinary(file, onSuccess, onError) {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
         
-        fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`, {
-            method: 'POST',
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.secure_url) {
-                onSuccess(data.secure_url, data.resource_type);
-            } else {
-                onError('Ошибка загрузки: ' + (data.error?.message || 'Неизвестная ошибка'));
-            }
-        })
-        .catch(err => onError(err.message));
+        // Для видео добавляем параметры оптимизации
+        if (file.type.startsWith('video/')) {
+            formData.append('resource_type', 'video');
+        }
+        
+        const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${file.type.startsWith('video/') ? 'video' : 'image'}/upload`;
+        
+        fetch(url, { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(data => {
+                if (data.secure_url) {
+                    onSuccess(data.secure_url, data.resource_type);
+                } else {
+                    onError(data.error?.message || 'Ошибка загрузки');
+                }
+            })
+            .catch(err => onError(err.message));
     }
 
     function sendMediaFile(file) {
@@ -412,16 +385,23 @@
             showModal('Ошибка', 'Сначала выберите чат');
             return;
         }
+        if (!file) return;
         
-        // Показываем индикатор загрузки
-        showModal('Загрузка', 'Отправка файла...');
+        const isVideo = file.type.startsWith('video/');
+        const fileSizeMB = file.size / (1024 * 1024);
+        
+        if (fileSizeMB > 100) {
+            showModal('Ошибка', 'Файл слишком большой. Максимум 100 МБ');
+            return;
+        }
+        
+        showModal('Загрузка', isVideo ? '🎬 Обработка видео... (может занять до минуты)' : '📸 Отправка фото...');
         
         uploadFileToCloudinary(file, (url, resourceType) => {
-            // Отправляем сообщение с медиа
             const messageData = {
                 text: '',
                 mediaUrl: url,
-                mediaType: resourceType, // 'image' или 'video'
+                mediaType: resourceType,
                 userId: currentUser.uid,
                 userName: `${userData.firstName} ${userData.lastName}`,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -441,7 +421,7 @@
                 scrollToBottom();
                 loadChatsList();
             }).catch(err => {
-                showModal('Ошибка', 'Ошибка отправки сообщения: ' + err.message);
+                showModal('Ошибка', 'Ошибка отправки: ' + err.message);
             });
         }, (error) => {
             showModal('Ошибка', 'Не удалось загрузить файл: ' + error);
@@ -453,43 +433,33 @@
         input.type = 'file';
         input.accept = 'image/*,video/*';
         input.onchange = (e) => {
-            const file = e.target.files[0];
+            const file = e.target.files?.[0];
             if (file) sendMediaFile(file);
         };
         input.click();
     }
 
-    // ========== РЕАКЦИИ ==========
     async function addReaction(messageId, reaction) {
         if (!messageId || !reaction) return;
         const messageRef = db.collection('messages').doc(messageId);
         const messageDoc = await messageRef.get();
         if (!messageDoc.exists) return;
-        
         const reactions = messageDoc.data().reactions || {};
         const userId = currentUser.uid;
-        
-        if (reactions[userId] === reaction) {
-            delete reactions[userId];
-        } else {
-            reactions[userId] = reaction;
-        }
-        
+        if (reactions[userId] === reaction) delete reactions[userId];
+        else reactions[userId] = reaction;
         await messageRef.update({ reactions: reactions });
         hideContextMenu();
     }
 
     async function deleteMessage(messageId) {
         showModal('Подтверждение', 'Удалить это сообщение?', async () => {
-            try {
-                await db.collection('messages').doc(messageId).delete();
-                showModal('Успех', 'Сообщение удалено');
-            } catch(e) { showModal('Ошибка', e.message); }
+            try { await db.collection('messages').doc(messageId).delete(); showModal('Успех', 'Сообщение удалено'); } 
+            catch(e) { showModal('Ошибка', e.message); }
         });
         hideContextMenu();
     }
 
-    // ========== КОНТЕКСТНОЕ МЕНЮ ==========
     function hideContextMenu() {
         document.getElementById('contextMenu').classList.remove('active');
         document.getElementById('mobileContextOverlay').classList.remove('active');
@@ -501,7 +471,6 @@
         e.preventDefault();
         e.stopPropagation();
         activeMessageId = messageId;
-        activeMessageIsMy = isMyMessage;
         
         if (isMobile) {
             const mobileMenu = document.getElementById('mobileContextMenu');
@@ -509,23 +478,11 @@
             const deleteBtn = document.getElementById('mobileDeleteBtn');
             const reactionBtn = document.getElementById('mobileReactionBtn');
             
-            if (isMyMessage) {
-                deleteBtn.style.display = 'flex';
-                reactionBtn.style.display = 'flex';
-            } else {
-                deleteBtn.style.display = 'none';
-                reactionBtn.style.display = 'flex';
-            }
+            deleteBtn.style.display = isMyMessage ? 'flex' : 'none';
+            reactionBtn.style.display = 'flex';
             
-            reactionBtn.onclick = () => {
-                hideContextMenu();
-                showReactionsModal(messageId);
-            };
-            
-            deleteBtn.onclick = () => {
-                if (isMyMessage) deleteMessage(messageId);
-                hideContextMenu();
-            };
+            reactionBtn.onclick = () => { hideContextMenu(); showReactionsModal(messageId); };
+            deleteBtn.onclick = () => { if (isMyMessage) deleteMessage(messageId); hideContextMenu(); };
             
             overlay.onclick = hideContextMenu;
             overlay.classList.add('active');
@@ -535,31 +492,17 @@
             const deleteItem = document.getElementById('contextDeleteItem');
             const reactionItem = document.getElementById('contextReactionItem');
             
-            if (isMyMessage) {
-                deleteItem.style.display = 'flex';
-            } else {
-                deleteItem.style.display = 'none';
-            }
+            deleteItem.style.display = isMyMessage ? 'flex' : 'none';
             
-            let x = e.clientX;
-            let y = e.clientY;
-            const menuWidth = 180;
-            const menuHeight = 80;
-            if (x + menuWidth > window.innerWidth) x = window.innerWidth - menuWidth - 10;
-            if (y + menuHeight > window.innerHeight) y = window.innerHeight - menuHeight - 10;
+            let x = e.clientX, y = e.clientY;
+            if (x + 180 > window.innerWidth) x = window.innerWidth - 190;
+            if (y + 80 > window.innerHeight) y = window.innerHeight - 90;
             menu.style.left = x + 'px';
             menu.style.top = y + 'px';
             menu.classList.add('active');
             
-            reactionItem.onclick = () => {
-                menu.classList.remove('active');
-                showReactionsModal(messageId);
-            };
-            
-            deleteItem.onclick = () => {
-                if (isMyMessage) deleteMessage(messageId);
-                hideContextMenu();
-            };
+            reactionItem.onclick = () => { menu.classList.remove('active'); showReactionsModal(messageId); };
+            deleteItem.onclick = () => { if (isMyMessage) deleteMessage(messageId); hideContextMenu(); };
         }
     }
 
@@ -570,33 +513,28 @@
         if(!text) return;
         input.value = '';
         
-        try {
-            const messageData = {
-                text: text,
-                mediaUrl: null,
-                userId: currentUser.uid,
-                userName: `${userData.firstName} ${userData.lastName}`,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                chatType: currentChat.type,
-                reactions: {}
-            };
-            
-            if (currentChat.type === 'private') {
-                messageData.read = false;
-                messageData.chatId = getChatId(currentUser.uid, currentChat.id);
-                messageData.toUserId = currentChat.id;
-            } else {
-                messageData.groupId = currentChat.id;
-                await db.collection('groups').doc(currentChat.id).update({
-                    lastMsg: text,
-                    lastTime: new Date().toISOString()
-                }).catch(() => {});
-            }
-            
-            await db.collection('messages').add(messageData);
-            scrollToBottom();
-            loadChatsList();
-        } catch(e) { showModal('Ошибка', e.message); }
+        const messageData = {
+            text: text,
+            mediaUrl: null,
+            userId: currentUser.uid,
+            userName: `${userData.firstName} ${userData.lastName}`,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            chatType: currentChat.type,
+            reactions: {}
+        };
+        
+        if (currentChat.type === 'private') {
+            messageData.read = false;
+            messageData.chatId = getChatId(currentUser.uid, currentChat.id);
+            messageData.toUserId = currentChat.id;
+        } else {
+            messageData.groupId = currentChat.id;
+            await db.collection('groups').doc(currentChat.id).update({ lastMsg: text, lastTime: new Date().toISOString() }).catch(() => {});
+        }
+        
+        await db.collection('messages').add(messageData);
+        scrollToBottom();
+        loadChatsList();
     }
 
     async function markMessagesAsRead(chat) {
@@ -615,8 +553,7 @@
         
         let query;
         if (currentChat.type === 'private') {
-            const chatId = getChatId(currentUser.uid, currentChat.id);
-            query = db.collection('messages').where('chatId', '==', chatId);
+            query = db.collection('messages').where('chatId', '==', getChatId(currentUser.uid, currentChat.id));
         } else {
             query = db.collection('messages').where('groupId', '==', currentChat.id);
         }
@@ -634,17 +571,15 @@
                 const ts = msg.timestamp?.toDate?.() || new Date();
                 const reactions = msg.reactions || {};
                 
-                // Медиа контент
                 let mediaHtml = '';
                 if (msg.mediaUrl) {
                     if (msg.mediaType === 'image') {
                         mediaHtml = `<div class="media-container"><img src="${msg.mediaUrl}" class="message-image" onclick="window.open('${msg.mediaUrl}', '_blank')" loading="lazy"></div>`;
                     } else if (msg.mediaType === 'video') {
-                        mediaHtml = `<div class="media-container"><video src="${msg.mediaUrl}" class="message-video" controls preload="metadata"></video></div>`;
+                        mediaHtml = `<div class="media-container"><video src="${msg.mediaUrl}" class="message-video" controls preload="metadata" playsinline></video></div>`;
                     }
                 }
                 
-                // Реакции
                 const reactionGroups = {};
                 Object.values(reactions).forEach(r => { reactionGroups[r] = (reactionGroups[r] || 0) + 1; });
                 const myReactionValue = reactions[currentUser.uid];
@@ -653,8 +588,7 @@
                 if (Object.keys(reactionGroups).length > 0) {
                     reactionsHtml = '<div class="reactions-bar">';
                     for (const [emoji, count] of Object.entries(reactionGroups)) {
-                        const isMyReaction = myReactionValue === emoji;
-                        reactionsHtml += `<div class="reaction-item ${isMyReaction ? 'my-reaction' : ''}" data-msg="${msgId}" data-reaction="${emoji}">
+                        reactionsHtml += `<div class="reaction-item ${myReactionValue === emoji ? 'my-reaction' : ''}" data-msg="${msgId}" data-reaction="${emoji}">
                             <span class="reaction-emoji">${emoji}</span>
                             ${count > 1 ? `<span class="reaction-count">${count}</span>` : ''}
                         </div>`;
@@ -671,7 +605,6 @@
                 
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `message ${isMy ? 'my' : 'other'}`;
-                messageDiv.setAttribute('data-message-id', msgId);
                 messageDiv.innerHTML = `
                     ${!isMy ? `<div class="message-sender">${escapeHtml(msg.userName || 'Пользователь')}</div>` : ''}
                     ${mediaHtml}
@@ -684,30 +617,19 @@
                 `;
                 
                 messageDiv.querySelectorAll('.reaction-item').forEach(el => {
-                    el.onclick = (e) => {
-                        e.stopPropagation();
-                        addReaction(el.dataset.msg, el.dataset.reaction);
-                    };
+                    el.onclick = (e) => { e.stopPropagation(); addReaction(el.dataset.msg, el.dataset.reaction); };
                 });
                 
-                const bubble = messageDiv.querySelector('.message-bubble') || messageDiv.querySelector('.media-container');
-                if (bubble) {
-                    bubble.addEventListener('contextmenu', (e) => {
-                        e.preventDefault();
-                        showContextMenu(e, msgId, isMy);
-                    });
-                    
+                const clickableElement = messageDiv.querySelector('.message-bubble') || messageDiv.querySelector('.media-container');
+                if (clickableElement) {
+                    clickableElement.addEventListener('contextmenu', (e) => { e.preventDefault(); showContextMenu(e, msgId, isMy); });
                     let lastTap = 0;
-                    bubble.addEventListener('touchstart', (e) => {
+                    clickableElement.addEventListener('touchstart', (e) => {
                         const now = Date.now();
-                        if (now - lastTap < 300) {
-                            e.preventDefault();
-                            showContextMenu(e, msgId, isMy);
-                        }
+                        if (now - lastTap < 300) { e.preventDefault(); showContextMenu(e, msgId, isMy); }
                         lastTap = now;
                     });
                 }
-                
                 container.appendChild(messageDiv);
             });
             scrollToBottom();
@@ -730,20 +652,15 @@
             <div class="chat-window">
                 <div class="chat-header">
                     <button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i></button>
-                    <div class="chat-header-avatar ${isGroup ? 'group-avatar' : ''}">
-                        ${isGroup ? '<i class="fas fa-users"></i>' : avatarText}
-                    </div>
+                    <div class="chat-header-avatar ${isGroup ? 'group-avatar' : ''}">${isGroup ? '<i class="fas fa-users"></i>' : avatarText}</div>
                     <div class="chat-header-info">
-                        <div class="chat-header-name">
-                            ${isGroup ? escapeHtml(chat.name) : `${escapeHtml(chat.firstName)} ${escapeHtml(chat.lastName)}`}
-                            ${!isGroup && chat.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}
-                        </div>
+                        <div class="chat-header-name">${isGroup ? escapeHtml(chat.name) : `${escapeHtml(chat.firstName)} ${escapeHtml(chat.lastName)}`}${!isGroup && chat.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div>
                         ${isGroup && chat.members ? `<div class="chat-header-members" id="groupManageBtn">${chat.members.length} участников</div>` : ''}
                     </div>
                 </div>
                 <div class="messages-area" id="messagesArea"></div>
                 <div class="input-area">
-                    <input type="text" id="messageInput" placeholder="Сообщение..." autocomplete="off">
+                    <input type="text" id="messageInput" placeholder="Сообщение...">
                     <button class="attach-btn" id="attachBtn"><i class="fas fa-paperclip"></i></button>
                     <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
                 </div>
@@ -765,7 +682,7 @@
         setTimeout(() => { const ma = document.getElementById('messagesArea'); if(ma) ma.scrollTop = ma.scrollHeight; }, 100);
     }
 
-    // Групповые функции (сокращённо)
+    // Групповые функции
     async function showGroupManage() {
         if (!currentChat || currentChat.type !== 'group') return;
         const groupDoc = await db.collection('groups').doc(currentChat.id).get();
