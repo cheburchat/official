@@ -132,7 +132,6 @@
         .attach-btn { background: var(--bg-element); border: none; width: 48px; height: 48px; border-radius: 50%; color: var(--text); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
         .attach-btn:hover { background: var(--accent); color: white; }
         
-        /* Экран звонка */
         .call-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--call-bg); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .call-video-container { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .remote-video { width: 100%; height: 100%; object-fit: cover; background: #000; }
@@ -354,194 +353,9 @@
     let currentCall = null;
     let localStream = null;
     let callUserId = null;
-    let callType = null; // 'audio' или 'video'
-    let incomingCallData = null;
-    
-    // Слушаем входящие звонки
-    db.collection('calls').where('to', '==', 'pending').onSnapshot((snapshot) => {
-        snapshot.docChanges().forEach((change) => {
-            if (change.type === 'added') {
-                const call = change.doc.data();
-                if (call.to === currentUser?.uid && call.status === 'pending') {
-                    incomingCallData = { id: change.doc.id, ...call };
-                    showIncomingCall(call.fromName, call.from, call.type);
-                }
-            }
-        });
-    });
-
-    function showIncomingCall(fromName, fromId, type) {
-        const container = document.getElementById('mainContent');
-        const existingDiv = document.getElementById('incomingCallDiv');
-        if (existingDiv) existingDiv.remove();
-        
-        const div = document.createElement('div');
-        div.id = 'incomingCallDiv';
-        div.className = 'incoming-call';
-        div.innerHTML = `
-            <div class="incoming-call-info">
-                <div class="incoming-call-avatar">${getInitials(fromName.split(' ')[0], fromName.split(' ')[1] || '')}</div>
-                <div class="incoming-call-name">${fromName}<br><small>${type === 'audio' ? '🎤 Аудиозвонок' : '📹 Видеозвонок'}</small></div>
-            </div>
-            <div class="incoming-call-buttons">
-                <button class="incoming-call-btn accept" id="acceptCallBtn"><i class="fas fa-phone"></i></button>
-                <button class="incoming-call-btn reject" id="rejectCallBtn"><i class="fas fa-times"></i></button>
-            </div>
-        `;
-        container.appendChild(div);
-        
-        document.getElementById('acceptCallBtn').onclick = () => acceptCall(fromId, type);
-        document.getElementById('rejectCallBtn').onclick = () => rejectCall(fromId);
-    }
-
-    async function startCall(targetUserId, targetUserName, type) {
-        if (!peer) {
-            peer = new Peer(currentUser.uid);
-            await new Promise(r => peer.on('open', r));
-        }
-        
-        callType = type;
-        callUserId = targetUserId;
-        
-        try {
-            localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: type === 'video' });
-            const call = peer.call(targetUserId, localStream);
-            setupCall(call, true);
-            
-            await db.collection('calls').add({
-                from: currentUser.uid,
-                fromName: `${userData.firstName} ${userData.lastName}`,
-                to: targetUserId,
-                type: type,
-                status: 'pending',
-                createdAt: new Date().toISOString()
-            });
-            
-            showCallScreen(targetUserName, type);
-        } catch (e) {
-            showModal('Ошибка', 'Не удалось начать звонок: ' + e.message);
-        }
-    }
-
-    async function acceptCall(fromId, type) {
-        if (!peer) {
-            peer = new Peer(currentUser.uid);
-            await new Promise(r => peer.on('open', r));
-        }
-        
-        callType = type;
-        callUserId = fromId;
-        
-        try {
-            localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: type === 'video' });
-            peer.on('call', (call) => {
-                call.answer(localStream);
-                setupCall(call, false);
-            });
-            
-            await db.collection('calls').where('from', '==', fromId).where('status', '==', 'pending').get().then(snap => {
-                snap.forEach(doc => doc.ref.update({ status: 'accepted' }));
-            });
-            
-            document.getElementById('incomingCallDiv')?.remove();
-            showCallScreen('Звонок', type);
-        } catch (e) {
-            showModal('Ошибка', 'Не удалось ответить: ' + e.message);
-        }
-    }
-
-    async function rejectCall(fromId) {
-        await db.collection('calls').where('from', '==', fromId).where('status', '==', 'pending').get().then(snap => {
-            snap.forEach(doc => doc.ref.update({ status: 'rejected' }));
-        });
-        document.getElementById('incomingCallDiv')?.remove();
-    }
-
-    function setupCall(call, isCaller) {
-        currentCall = call;
-        
-        call.on('stream', (remoteStream) => {
-            const remoteVideo = document.getElementById('remoteVideo');
-            if (remoteVideo) remoteVideo.srcObject = remoteStream;
-        });
-        
-        call.on('close', () => {
-            endCall();
-        });
-        
-        call.on('error', () => {
-            endCall();
-        });
-    }
-
-    function showCallScreen(name, type) {
-        const screen = document.createElement('div');
-        screen.id = 'callScreen';
-        screen.className = 'call-screen';
-        screen.innerHTML = `
-            <div class="call-video-container">
-                <video id="remoteVideo" class="remote-video" autoplay playsinline></video>
-                ${type === 'video' ? '<video id="localVideo" class="local-video" autoplay playsinline muted></video>' : ''}
-                <div class="call-info">
-                    ${name}<br>
-                    <span class="call-status" id="callStatus">Соединение...</span>
-                </div>
-                <div class="call-controls">
-                    <button class="call-control-btn mute" id="muteBtn"><i class="fas fa-microphone"></i></button>
-                    ${type === 'video' ? '<button class="call-control-btn camera" id="cameraBtn"><i class="fas fa-video"></i></button>' : ''}
-                    ${type === 'video' ? '<button class="call-control-btn switch" id="switchCameraBtn"><i class="fas fa-sync-alt"></i></button>' : ''}
-                    <button class="call-control-btn end" id="endCallBtn"><i class="fas fa-phone-slash"></i></button>
-                </div>
-            </div>
-        `;
-        document.getElementById('app').appendChild(screen);
-        
-        if (localStream) {
-            const localVideo = document.getElementById('localVideo');
-            if (localVideo) localVideo.srcObject = localStream;
-        }
-        
-        document.getElementById('endCallBtn').onclick = endCall;
-        document.getElementById('muteBtn').onclick = () => {
-            const enabled = localStream.getAudioTracks()[0].enabled;
-            localStream.getAudioTracks()[0].enabled = !enabled;
-            document.getElementById('muteBtn').innerHTML = enabled ? '<i class="fas fa-microphone-slash"></i>' : '<i class="fas fa-microphone"></i>';
-        };
-        
-        if (type === 'video') {
-            let facingMode = 'user';
-            document.getElementById('cameraBtn').onclick = () => {
-                const enabled = localStream.getVideoTracks()[0].enabled;
-                localStream.getVideoTracks()[0].enabled = !enabled;
-                document.getElementById('cameraBtn').innerHTML = enabled ? '<i class="fas fa-video-slash"></i>' : '<i class="fas fa-video"></i>';
-            };
-            document.getElementById('switchCameraBtn').onclick = async () => {
-                facingMode = facingMode === 'user' ? 'environment' : 'user';
-                const newStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: facingMode }, audio: true });
-                localStream.getTracks().forEach(track => track.stop());
-                localStream = newStream;
-                const localVideo = document.getElementById('localVideo');
-                if (localVideo) localVideo.srcObject = localStream;
-                if (currentCall) currentCall.peerConnection.getSenders().forEach(sender => {
-                    if (sender.track.kind === 'video') sender.replaceTrack(localStream.getVideoTracks()[0]);
-                });
-            };
-        }
-        
-        setTimeout(() => {
-            const statusEl = document.getElementById('callStatus');
-            if (statusEl) statusEl.textContent = 'В разговоре';
-        }, 2000);
-    }
-
-    function endCall() {
-        if (localStream) localStream.getTracks().forEach(track => track.stop());
-        if (currentCall) currentCall.close();
-        document.getElementById('callScreen')?.remove();
-        currentCall = null;
-        localStream = null;
-        callUserId = null;
-    }
+    let callType = null;
+    let incomingCallId = null;
+    let incomingCallTimeout = null;
 
     const savedTheme = localStorage.getItem('cheburchat_theme') || 'default';
     document.body.setAttribute('data-theme', savedTheme);
@@ -579,6 +393,281 @@
     function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m] || m)).replace(/\n/g,'<br>'); }
     function scrollToBottom() { const el = document.getElementById('messagesArea'); if(el) setTimeout(() => el.scrollTop = el.scrollHeight, 100); }
     function getChatId(a, b) { return [a, b].sort().join('_'); }
+
+    // ========== ЗВОНКИ ==========
+    async function initPeer() {
+        if (peer && !peer.destroyed) return;
+        peer = new Peer(currentUser.uid, {
+            config: {
+                iceServers: [
+                    { urls: 'stun:stun.l.google.com:19302' },
+                    { urls: 'stun:stun1.l.google.com:19302' }
+                ]
+            }
+        });
+        
+        peer.on('open', (id) => {
+            console.log('Peer готов, ID:', id);
+        });
+        
+        peer.on('call', (call) => {
+            console.log('Входящий звонок от:', call.peer);
+            if (callUserId === call.peer) {
+                call.answer(localStream);
+                setupCall(call);
+            }
+        });
+        
+        peer.on('error', (err) => {
+            console.error('Peer ошибка:', err);
+        });
+    }
+
+    async function startCall(targetUserId, targetUserName, type) {
+        try {
+            if (!peer || peer.destroyed) {
+                await initPeer();
+                await new Promise(r => setTimeout(r, 500));
+            }
+            
+            callType = type;
+            callUserId = targetUserId;
+            
+            // Запрашиваем доступ к медиа
+            localStream = await navigator.mediaDevices.getUserMedia({ 
+                audio: true, 
+                video: type === 'video' 
+            });
+            
+            // Создаём звонок
+            const call = peer.call(targetUserId, localStream);
+            setupCall(call);
+            
+            // Сохраняем в Firestore уведомление о звонке
+            const callRef = await db.collection('calls').add({
+                from: currentUser.uid,
+                fromName: `${userData.firstName} ${userData.lastName}`,
+                to: targetUserId,
+                type: type,
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            });
+            incomingCallId = callRef.id;
+            
+            // Показываем экран звонка
+            showCallScreen(targetUserName, type);
+            
+            // Устанавливаем таймаут на случай если не ответят
+            incomingCallTimeout = setTimeout(() => {
+                if (currentCall && currentCall.open) {
+                    endCall();
+                    showModal('Звонок', 'Абонент не ответил');
+                }
+            }, 30000);
+            
+        } catch (e) {
+            console.error('Ошибка звонка:', e);
+            showModal('Ошибка', 'Не удалось начать звонок: ' + e.message);
+            if (localStream) localStream.getTracks().forEach(track => track.stop());
+            localStream = null;
+        }
+    }
+
+    async function acceptCall(fromId, type) {
+        try {
+            if (!peer || peer.destroyed) {
+                await initPeer();
+                await new Promise(r => setTimeout(r, 500));
+            }
+            
+            callType = type;
+            callUserId = fromId;
+            
+            localStream = await navigator.mediaDevices.getUserMedia({ 
+                audio: true, 
+                video: type === 'video' 
+            });
+            
+            // Обновляем статус звонка в Firestore
+            const snapshot = await db.collection('calls').where('from', '==', fromId).where('status', '==', 'pending').get();
+            snapshot.forEach(doc => {
+                doc.ref.update({ status: 'accepted' });
+                incomingCallId = doc.id;
+            });
+            
+            showCallScreen('Звонок', type);
+            
+            // Убираем уведомление о входящем звонке
+            document.getElementById('incomingCallDiv')?.remove();
+            
+        } catch (e) {
+            console.error('Ошибка ответа:', e);
+            showModal('Ошибка', 'Не удалось ответить: ' + e.message);
+        }
+    }
+
+    async function rejectCall(fromId) {
+        const snapshot = await db.collection('calls').where('from', '==', fromId).where('status', '==', 'pending').get();
+        snapshot.forEach(doc => doc.ref.update({ status: 'rejected' }));
+        document.getElementById('incomingCallDiv')?.remove();
+        if (incomingCallTimeout) clearTimeout(incomingCallTimeout);
+    }
+
+    function setupCall(call) {
+        currentCall = call;
+        
+        call.on('stream', (remoteStream) => {
+            const remoteVideo = document.getElementById('remoteVideo');
+            if (remoteVideo) remoteVideo.srcObject = remoteStream;
+        });
+        
+        call.on('close', () => {
+            endCall();
+        });
+        
+        call.on('error', (err) => {
+            console.error('Call error:', err);
+            endCall();
+        });
+    }
+
+    function showCallScreen(name, type) {
+        // Удаляем старый экран если есть
+        document.getElementById('callScreen')?.remove();
+        
+        const screen = document.createElement('div');
+        screen.id = 'callScreen';
+        screen.className = 'call-screen';
+        screen.innerHTML = `
+            <div class="call-video-container">
+                <video id="remoteVideo" class="remote-video" autoplay playsinline></video>
+                ${type === 'video' ? '<video id="localVideo" class="local-video" autoplay playsinline muted></video>' : ''}
+                <div class="call-info">
+                    ${name}<br>
+                    <span class="call-status" id="callStatus">Соединение...</span>
+                </div>
+                <div class="call-controls">
+                    <button class="call-control-btn mute" id="muteBtn"><i class="fas fa-microphone"></i></button>
+                    ${type === 'video' ? '<button class="call-control-btn camera" id="cameraBtn"><i class="fas fa-video"></i></button>' : ''}
+                    ${type === 'video' ? '<button class="call-control-btn switch" id="switchCameraBtn"><i class="fas fa-sync-alt"></i></button>' : ''}
+                    <button class="call-control-btn end" id="endCallBtn"><i class="fas fa-phone-slash"></i></button>
+                </div>
+            </div>
+        `;
+        document.getElementById('app').appendChild(screen);
+        
+        if (localStream) {
+            const localVideo = document.getElementById('localVideo');
+            if (localVideo) localVideo.srcObject = localStream;
+        }
+        
+        // Кнопка завершения
+        document.getElementById('endCallBtn').onclick = endCall;
+        
+        // Кнопка отключения микрофона
+        let muted = false;
+        document.getElementById('muteBtn').onclick = () => {
+            if (localStream) {
+                muted = !muted;
+                localStream.getAudioTracks().forEach(track => track.enabled = !muted);
+                document.getElementById('muteBtn').innerHTML = muted ? '<i class="fas fa-microphone-slash"></i>' : '<i class="fas fa-microphone"></i>';
+            }
+        };
+        
+        if (type === 'video') {
+            let cameraOff = false;
+            document.getElementById('cameraBtn').onclick = () => {
+                if (localStream) {
+                    cameraOff = !cameraOff;
+                    localStream.getVideoTracks().forEach(track => track.enabled = !cameraOff);
+                    document.getElementById('cameraBtn').innerHTML = cameraOff ? '<i class="fas fa-video-slash"></i>' : '<i class="fas fa-video"></i>';
+                }
+            };
+            
+            let facingMode = 'user';
+            document.getElementById('switchCameraBtn').onclick = async () => {
+                facingMode = facingMode === 'user' ? 'environment' : 'user';
+                const newStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: facingMode }, audio: true });
+                if (localStream) localStream.getTracks().forEach(track => track.stop());
+                localStream = newStream;
+                const localVideo = document.getElementById('localVideo');
+                if (localVideo) localVideo.srcObject = localStream;
+                if (currentCall) {
+                    const sender = currentCall.peerConnection.getSenders().find(s => s.track?.kind === 'video');
+                    if (sender) sender.replaceTrack(localStream.getVideoTracks()[0]);
+                }
+            };
+        }
+        
+        setTimeout(() => {
+            const statusEl = document.getElementById('callStatus');
+            if (statusEl && currentCall && currentCall.open) statusEl.textContent = 'В разговоре';
+        }, 2000);
+    }
+
+    function endCall() {
+        if (incomingCallTimeout) clearTimeout(incomingCallTimeout);
+        if (localStream) localStream.getTracks().forEach(track => track.stop());
+        if (currentCall) currentCall.close();
+        if (incomingCallId) {
+            db.collection('calls').doc(incomingCallId).update({ status: 'ended' }).catch(() => {});
+        }
+        document.getElementById('callScreen')?.remove();
+        currentCall = null;
+        localStream = null;
+        callUserId = null;
+        incomingCallId = null;
+    }
+
+    // Слушаем входящие звонки
+    function listenForCalls() {
+        if (!currentUser) return;
+        
+        db.collection('calls')
+            .where('to', '==', currentUser.uid)
+            .where('status', '==', 'pending')
+            .onSnapshot((snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === 'added') {
+                        const call = change.doc.data();
+                        // Показываем уведомление только если нет активного звонка
+                        if (!currentCall && !document.getElementById('incomingCallDiv')) {
+                            showIncomingCall(call.fromName, call.from, call.type);
+                        }
+                    }
+                });
+            });
+    }
+
+    function showIncomingCall(fromName, fromId, type) {
+        const container = document.getElementById('mainContent');
+        const existingDiv = document.getElementById('incomingCallDiv');
+        if (existingDiv) existingDiv.remove();
+        
+        const div = document.createElement('div');
+        div.id = 'incomingCallDiv';
+        div.className = 'incoming-call';
+        div.innerHTML = `
+            <div class="incoming-call-info">
+                <div class="incoming-call-avatar">${getInitials(fromName.split(' ')[0], fromName.split(' ')[1] || '')}</div>
+                <div class="incoming-call-name">${fromName}<br><small>${type === 'audio' ? '🎤 Аудиозвонок' : '📹 Видеозвонок'}</small></div>
+            </div>
+            <div class="incoming-call-buttons">
+                <button class="incoming-call-btn accept" id="acceptCallBtn"><i class="fas fa-phone"></i></button>
+                <button class="incoming-call-btn reject" id="rejectCallBtn"><i class="fas fa-times"></i></button>
+            </div>
+        `;
+        container.appendChild(div);
+        
+        document.getElementById('acceptCallBtn').onclick = () => {
+            div.remove();
+            acceptCall(fromId, type);
+        };
+        document.getElementById('rejectCallBtn').onclick = () => {
+            div.remove();
+            rejectCall(fromId);
+        };
+    }
 
     function uploadFileToCloudinary(file, onSuccess, onError) {
         const formData = new FormData();
@@ -1129,7 +1218,12 @@
         document.querySelectorAll('.mobile-nav-item').forEach(el => { if(el.dataset.nav) el.onclick = () => { if(el.dataset.nav === 'people') showPeopleView(); else if(el.dataset.nav === 'settings') showSettingsView(); else if(el.dataset.nav === 'admin') showAdminView(); else if(el.dataset.nav === 'chats') showChatsView(); }; });
         document.getElementById('mobileProfileBtn').onclick = showMobileProfile;
         document.getElementById('profileBtn').onclick = () => showModal('Профиль', `${userData.firstName} ${userData.lastName}\n${userData.email}\n✅ Email подтверждён\n${userData.isVerified ? '✅ Официальная галочка' : ''}`);
-        document.getElementById('logoutBtn').onclick = () => { if(messagesUnsubscribe) messagesUnsubscribe(); auth.signOut(); renderAuth(); };
+        document.getElementById('logoutBtn').onclick = () => { if(messagesUnsubscribe) messagesUnsubscribe(); if(peer) peer.destroy(); auth.signOut(); renderAuth(); };
+        
+        // Инициализируем Peer и слушаем звонки
+        initPeer();
+        listenForCalls();
+        
         showChatsView();
     }
 
@@ -1137,7 +1231,7 @@
         document.getElementById('app').innerHTML = `<div class="auth-container"><div class="auth-card"><h1>ЧЕБУРЧАТ</h1><div class="verify-msg"><i class="fas fa-envelope"></i> Подтвердите email<br><small>${currentUser.email}</small></div><button id="resendBtn">Отправить повторно</button><button id="checkBtn" style="background:#28a745">Я подтвердил</button><button id="logoutVerifyBtn" style="background:#dc3545; margin-top:10px">Выйти</button></div></div>`;
         document.getElementById('resendBtn').onclick = async () => { await currentUser.sendEmailVerification(); showModal('Письмо отправлено', 'Проверьте почту'); };
         document.getElementById('checkBtn').onclick = async () => { await currentUser.reload(); if(currentUser.emailVerified) location.reload(); else showModal('Ошибка', 'Email не подтверждён'); };
-        document.getElementById('logoutVerifyBtn').onclick = () => { if(messagesUnsubscribe) messagesUnsubscribe(); auth.signOut(); renderAuth(); };
+        document.getElementById('logoutVerifyBtn').onclick = () => { if(messagesUnsubscribe) messagesUnsubscribe(); if(peer) peer.destroy(); auth.signOut(); renderAuth(); };
     }
 
     async function handleRegister() {
@@ -1177,15 +1271,6 @@
                 if(!userData.friendRequests) await db.collection('users').doc(user.uid).update({ friendRequests: { sent: [], received: [] } });
                 if(userData.isVerified === undefined) await db.collection('users').doc(user.uid).update({ isVerified: false });
             }
-            // Инициализируем Peer
-            peer = new Peer(currentUser.uid);
-            peer.on('open', (id) => console.log('Peer готов:', id));
-            peer.on('call', (call) => {
-                if (callUserId === call.peer) {
-                    call.answer(localStream);
-                    setupCall(call, false);
-                }
-            });
             renderApp();
         } else {
             if(messagesUnsubscribe) messagesUnsubscribe();
