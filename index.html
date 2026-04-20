@@ -8,16 +8,17 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; height: 100vh; overflow: hidden; }
         
-        body[data-theme="default"] { --bg-page: #f0f2f5; --bg-surface: white; --bg-element: #f0f2f5; --text: #1a1a1a; --text-secondary: #65676b; --accent: #ff7b2c; --accent-hover: #e6691a; --border: #e4e6eb; --my-msg: #ff7b2c; --my-msg-text: white; --other-msg: white; --other-msg-text: #1a1a1a; --verified: #3b82f6; --read-status: #8e8e8e; --read-status-delivered: #34c759; }
-        body[data-theme="dark"] { --bg-page: #18191a; --bg-surface: #242526; --bg-element: #3a3b3c; --text: #e4e6eb; --text-secondary: #b0b3b8; --accent: #ff7b2c; --accent-hover: #e6691a; --border: #3e4042; --my-msg: #ff7b2c; --my-msg-text: white; --other-msg: #3e4042; --other-msg-text: #e4e6eb; --verified: #3b82f6; --read-status: #8e8e8e; --read-status-delivered: #34c759; }
-        body[data-theme="purple"] { --bg-page: #f5f0ff; --bg-surface: white; --bg-element: #f0ebf8; --text: #2d1b4e; --text-secondary: #7c6b9e; --accent: #9b59b6; --accent-hover: #8e44ad; --border: #e8dfd5; --my-msg: #9b59b6; --my-msg-text: white; --other-msg: white; --other-msg-text: #2d1b4e; --verified: #3b82f6; --read-status: #8e8e8e; --read-status-delivered: #34c759; }
-        body[data-theme="red"] { --bg-page: #1a0f0f; --bg-surface: #2a1a1a; --bg-element: #3d2525; --text: #f0d6d6; --text-secondary: #c4a0a0; --accent: #c0392b; --accent-hover: #e74c3c; --border: #4a2e2e; --my-msg: #c0392b; --my-msg-text: white; --other-msg: #3d2525; --other-msg-text: #f0d6d6; --verified: #3b82f6; --read-status: #8e8e8e; --read-status-delivered: #34c759; }
-        body[data-theme="blue"] { --bg-page: #e8f0fe; --bg-surface: white; --bg-element: #e4edf7; --text: #1a3a5c; --text-secondary: #5a7a9e; --accent: #2d88ff; --accent-hover: #1a66cc; --border: #d4e0ec; --my-msg: #2d88ff; --my-msg-text: white; --other-msg: white; --other-msg-text: #1a3a5c; --verified: #fbbf24; --read-status: #8e8e8e; --read-status-delivered: #34c759; }
-        body[data-theme="green"] { --bg-page: #eaf7ea; --bg-surface: white; --bg-element: #e2f0e2; --text: #1a4a1a; --text-secondary: #5a8a5a; --accent: #27ae60; --accent-hover: #219a52; --border: #d0e4d0; --my-msg: #27ae60; --my-msg-text: white; --other-msg: white; --other-msg-text: #1a4a1a; --verified: #3b82f6; --read-status: #8e8e8e; --read-status-delivered: #34c759; }
+        body[data-theme="default"] { --bg-page: #f0f2f5; --bg-surface: white; --bg-element: #f0f2f5; --text: #1a1a1a; --text-secondary: #65676b; --accent: #ff7b2c; --accent-hover: #e6691a; --border: #e4e6eb; --my-msg: #ff7b2c; --my-msg-text: white; --other-msg: white; --other-msg-text: #1a1a1a; --verified: #3b82f6; --read-status: #8e8e8e; --read-status-delivered: #34c759; --call-bg: rgba(0,0,0,0.9); }
+        body[data-theme="dark"] { --bg-page: #18191a; --bg-surface: #242526; --bg-element: #3a3b3c; --text: #e4e6eb; --text-secondary: #b0b3b8; --accent: #ff7b2c; --accent-hover: #e6691a; --border: #3e4042; --my-msg: #ff7b2c; --my-msg-text: white; --other-msg: #3e4042; --other-msg-text: #e4e6eb; --verified: #3b82f6; --read-status: #8e8e8e; --read-status-delivered: #34c759; --call-bg: rgba(0,0,0,0.95); }
+        body[data-theme="purple"] { --bg-page: #f5f0ff; --bg-surface: white; --bg-element: #f0ebf8; --text: #2d1b4e; --text-secondary: #7c6b9e; --accent: #9b59b6; --accent-hover: #8e44ad; --border: #e8dfd5; --my-msg: #9b59b6; --my-msg-text: white; --other-msg: white; --other-msg-text: #2d1b4e; --verified: #3b82f6; --read-status: #8e8e8e; --read-status-delivered: #34c759; --call-bg: rgba(0,0,0,0.9); }
+        body[data-theme="red"] { --bg-page: #1a0f0f; --bg-surface: #2a1a1a; --bg-element: #3d2525; --text: #f0d6d6; --text-secondary: #c4a0a0; --accent: #c0392b; --accent-hover: #e74c3c; --border: #4a2e2e; --my-msg: #c0392b; --my-msg-text: white; --other-msg: #3d2525; --other-msg-text: #f0d6d6; --verified: #3b82f6; --read-status: #8e8e8e; --read-status-delivered: #34c759; --call-bg: rgba(0,0,0,0.95); }
+        body[data-theme="blue"] { --bg-page: #e8f0fe; --bg-surface: white; --bg-element: #e4edf7; --text: #1a3a5c; --text-secondary: #5a7a9e; --accent: #2d88ff; --accent-hover: #1a66cc; --border: #d4e0ec; --my-msg: #2d88ff; --my-msg-text: white; --other-msg: white; --other-msg-text: #1a3a5c; --verified: #fbbf24; --read-status: #8e8e8e; --read-status-delivered: #34c759; --call-bg: rgba(0,0,0,0.9); }
+        body[data-theme="green"] { --bg-page: #eaf7ea; --bg-surface: white; --bg-element: #e2f0e2; --text: #1a4a1a; --text-secondary: #5a8a5a; --accent: #27ae60; --accent-hover: #219a52; --border: #d0e4d0; --my-msg: #27ae60; --my-msg-text: white; --other-msg: white; --other-msg-text: #1a4a1a; --verified: #3b82f6; --read-status: #8e8e8e; --read-status-delivered: #34c759; --call-bg: rgba(0,0,0,0.9); }
         
         body { background: var(--bg-page); color: var(--text); }
         
@@ -119,12 +120,41 @@
         .chat-header-info { flex: 1; }
         .chat-header-name { font-weight: 600; font-size: 17px; color: var(--text); display: flex; align-items: center; gap: 6px; }
         .chat-header-members { font-size: 12px; color: var(--text-secondary); cursor: pointer; }
+        .call-buttons { display: flex; gap: 8px; margin-left: auto; }
+        .call-btn { background: none; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 18px; color: var(--text); display: flex; align-items: center; justify-content: center; }
+        .call-btn:hover { background: var(--bg-element); }
+        .call-btn.audio { color: #4caf50; }
+        .call-btn.video { color: #2196f3; }
         .messages-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 8px; }
         .input-area { padding: 12px 16px; background: var(--bg-surface); border-top: 1px solid var(--border); display: flex; gap: 12px; flex-shrink: 0; }
         .input-area input { flex: 1; padding: 12px 18px; border: none; background: var(--bg-element); border-radius: 28px; font-size: 16px; outline: none; color: var(--text); }
         .input-area button { background: var(--accent); border: none; width: 48px; height: 48px; border-radius: 50%; color: white; cursor: pointer; font-size: 18px; }
         .attach-btn { background: var(--bg-element); border: none; width: 48px; height: 48px; border-radius: 50%; color: var(--text); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
         .attach-btn:hover { background: var(--accent); color: white; }
+        
+        /* Экран звонка */
+        .call-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--call-bg); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .call-video-container { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .remote-video { width: 100%; height: 100%; object-fit: cover; background: #000; }
+        .local-video { position: absolute; bottom: 20px; right: 20px; width: 120px; height: 160px; object-fit: cover; border-radius: 16px; border: 2px solid white; background: #000; cursor: pointer; }
+        .call-controls { position: absolute; bottom: 30px; left: 0; right: 0; display: flex; justify-content: center; gap: 20px; padding: 20px; background: rgba(0,0,0,0.5); }
+        .call-control-btn { width: 60px; height: 60px; border-radius: 50%; border: none; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.1s; }
+        .call-control-btn.end { background: #dc3545; color: white; }
+        .call-control-btn.mute { background: #6c757d; color: white; }
+        .call-control-btn.camera { background: #6c757d; color: white; }
+        .call-control-btn.switch { background: #6c757d; color: white; }
+        .call-control-btn:hover { transform: scale(1.05); }
+        .call-info { position: absolute; top: 50px; left: 0; right: 0; text-align: center; color: white; font-size: 24px; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        .call-status { font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 8px; }
+        
+        .incoming-call { position: fixed; bottom: 100px; left: 20px; right: 20px; background: var(--bg-surface); border-radius: 20px; padding: 16px; display: flex; align-items: center; justify-content: space-between; z-index: 2000; box-shadow: 0 4px 20px rgba(0,0,0,0.2); border: 1px solid var(--border); animation: slideUp 0.3s ease; max-width: 350px; margin: 0 auto; }
+        .incoming-call-info { display: flex; align-items: center; gap: 12px; }
+        .incoming-call-avatar { width: 48px; height: 48px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 20px; }
+        .incoming-call-name { font-weight: 600; color: var(--text); }
+        .incoming-call-buttons { display: flex; gap: 12px; }
+        .incoming-call-btn { width: 44px; height: 44px; border-radius: 50%; border: none; font-size: 18px; cursor: pointer; }
+        .incoming-call-btn.accept { background: #28a745; color: white; }
+        .incoming-call-btn.reject { background: #dc3545; color: white; }
         
         .people-view, .settings-view, .admin-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
         .people-header, .settings-header, .admin-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
@@ -143,6 +173,7 @@
         .action-btn.add { background: var(--bg-element); color: var(--text); }
         .action-btn.remove { background: #dc3545; color: white; }
         .action-btn.pending { background: var(--bg-element); color: var(--text-secondary); cursor: default; }
+        .action-btn.call { background: #4caf50; color: white; }
         
         .settings-list { padding: 16px; }
         .settings-section { margin-bottom: 24px; }
@@ -317,6 +348,200 @@
     let isMobile = window.innerWidth <= 768;
     let isAdmin = false;
     let activeMessageId = null;
+    
+    // Переменные для звонков
+    let peer = null;
+    let currentCall = null;
+    let localStream = null;
+    let callUserId = null;
+    let callType = null; // 'audio' или 'video'
+    let incomingCallData = null;
+    
+    // Слушаем входящие звонки
+    db.collection('calls').where('to', '==', 'pending').onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+            if (change.type === 'added') {
+                const call = change.doc.data();
+                if (call.to === currentUser?.uid && call.status === 'pending') {
+                    incomingCallData = { id: change.doc.id, ...call };
+                    showIncomingCall(call.fromName, call.from, call.type);
+                }
+            }
+        });
+    });
+
+    function showIncomingCall(fromName, fromId, type) {
+        const container = document.getElementById('mainContent');
+        const existingDiv = document.getElementById('incomingCallDiv');
+        if (existingDiv) existingDiv.remove();
+        
+        const div = document.createElement('div');
+        div.id = 'incomingCallDiv';
+        div.className = 'incoming-call';
+        div.innerHTML = `
+            <div class="incoming-call-info">
+                <div class="incoming-call-avatar">${getInitials(fromName.split(' ')[0], fromName.split(' ')[1] || '')}</div>
+                <div class="incoming-call-name">${fromName}<br><small>${type === 'audio' ? '🎤 Аудиозвонок' : '📹 Видеозвонок'}</small></div>
+            </div>
+            <div class="incoming-call-buttons">
+                <button class="incoming-call-btn accept" id="acceptCallBtn"><i class="fas fa-phone"></i></button>
+                <button class="incoming-call-btn reject" id="rejectCallBtn"><i class="fas fa-times"></i></button>
+            </div>
+        `;
+        container.appendChild(div);
+        
+        document.getElementById('acceptCallBtn').onclick = () => acceptCall(fromId, type);
+        document.getElementById('rejectCallBtn').onclick = () => rejectCall(fromId);
+    }
+
+    async function startCall(targetUserId, targetUserName, type) {
+        if (!peer) {
+            peer = new Peer(currentUser.uid);
+            await new Promise(r => peer.on('open', r));
+        }
+        
+        callType = type;
+        callUserId = targetUserId;
+        
+        try {
+            localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: type === 'video' });
+            const call = peer.call(targetUserId, localStream);
+            setupCall(call, true);
+            
+            await db.collection('calls').add({
+                from: currentUser.uid,
+                fromName: `${userData.firstName} ${userData.lastName}`,
+                to: targetUserId,
+                type: type,
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            });
+            
+            showCallScreen(targetUserName, type);
+        } catch (e) {
+            showModal('Ошибка', 'Не удалось начать звонок: ' + e.message);
+        }
+    }
+
+    async function acceptCall(fromId, type) {
+        if (!peer) {
+            peer = new Peer(currentUser.uid);
+            await new Promise(r => peer.on('open', r));
+        }
+        
+        callType = type;
+        callUserId = fromId;
+        
+        try {
+            localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: type === 'video' });
+            peer.on('call', (call) => {
+                call.answer(localStream);
+                setupCall(call, false);
+            });
+            
+            await db.collection('calls').where('from', '==', fromId).where('status', '==', 'pending').get().then(snap => {
+                snap.forEach(doc => doc.ref.update({ status: 'accepted' }));
+            });
+            
+            document.getElementById('incomingCallDiv')?.remove();
+            showCallScreen('Звонок', type);
+        } catch (e) {
+            showModal('Ошибка', 'Не удалось ответить: ' + e.message);
+        }
+    }
+
+    async function rejectCall(fromId) {
+        await db.collection('calls').where('from', '==', fromId).where('status', '==', 'pending').get().then(snap => {
+            snap.forEach(doc => doc.ref.update({ status: 'rejected' }));
+        });
+        document.getElementById('incomingCallDiv')?.remove();
+    }
+
+    function setupCall(call, isCaller) {
+        currentCall = call;
+        
+        call.on('stream', (remoteStream) => {
+            const remoteVideo = document.getElementById('remoteVideo');
+            if (remoteVideo) remoteVideo.srcObject = remoteStream;
+        });
+        
+        call.on('close', () => {
+            endCall();
+        });
+        
+        call.on('error', () => {
+            endCall();
+        });
+    }
+
+    function showCallScreen(name, type) {
+        const screen = document.createElement('div');
+        screen.id = 'callScreen';
+        screen.className = 'call-screen';
+        screen.innerHTML = `
+            <div class="call-video-container">
+                <video id="remoteVideo" class="remote-video" autoplay playsinline></video>
+                ${type === 'video' ? '<video id="localVideo" class="local-video" autoplay playsinline muted></video>' : ''}
+                <div class="call-info">
+                    ${name}<br>
+                    <span class="call-status" id="callStatus">Соединение...</span>
+                </div>
+                <div class="call-controls">
+                    <button class="call-control-btn mute" id="muteBtn"><i class="fas fa-microphone"></i></button>
+                    ${type === 'video' ? '<button class="call-control-btn camera" id="cameraBtn"><i class="fas fa-video"></i></button>' : ''}
+                    ${type === 'video' ? '<button class="call-control-btn switch" id="switchCameraBtn"><i class="fas fa-sync-alt"></i></button>' : ''}
+                    <button class="call-control-btn end" id="endCallBtn"><i class="fas fa-phone-slash"></i></button>
+                </div>
+            </div>
+        `;
+        document.getElementById('app').appendChild(screen);
+        
+        if (localStream) {
+            const localVideo = document.getElementById('localVideo');
+            if (localVideo) localVideo.srcObject = localStream;
+        }
+        
+        document.getElementById('endCallBtn').onclick = endCall;
+        document.getElementById('muteBtn').onclick = () => {
+            const enabled = localStream.getAudioTracks()[0].enabled;
+            localStream.getAudioTracks()[0].enabled = !enabled;
+            document.getElementById('muteBtn').innerHTML = enabled ? '<i class="fas fa-microphone-slash"></i>' : '<i class="fas fa-microphone"></i>';
+        };
+        
+        if (type === 'video') {
+            let facingMode = 'user';
+            document.getElementById('cameraBtn').onclick = () => {
+                const enabled = localStream.getVideoTracks()[0].enabled;
+                localStream.getVideoTracks()[0].enabled = !enabled;
+                document.getElementById('cameraBtn').innerHTML = enabled ? '<i class="fas fa-video-slash"></i>' : '<i class="fas fa-video"></i>';
+            };
+            document.getElementById('switchCameraBtn').onclick = async () => {
+                facingMode = facingMode === 'user' ? 'environment' : 'user';
+                const newStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: facingMode }, audio: true });
+                localStream.getTracks().forEach(track => track.stop());
+                localStream = newStream;
+                const localVideo = document.getElementById('localVideo');
+                if (localVideo) localVideo.srcObject = localStream;
+                if (currentCall) currentCall.peerConnection.getSenders().forEach(sender => {
+                    if (sender.track.kind === 'video') sender.replaceTrack(localStream.getVideoTracks()[0]);
+                });
+            };
+        }
+        
+        setTimeout(() => {
+            const statusEl = document.getElementById('callStatus');
+            if (statusEl) statusEl.textContent = 'В разговоре';
+        }, 2000);
+    }
+
+    function endCall() {
+        if (localStream) localStream.getTracks().forEach(track => track.stop());
+        if (currentCall) currentCall.close();
+        document.getElementById('callScreen')?.remove();
+        currentCall = null;
+        localStream = null;
+        callUserId = null;
+    }
 
     const savedTheme = localStorage.getItem('cheburchat_theme') || 'default';
     document.body.setAttribute('data-theme', savedTheme);
@@ -355,87 +580,38 @@
     function scrollToBottom() { const el = document.getElementById('messagesArea'); if(el) setTimeout(() => el.scrollTop = el.scrollHeight, 100); }
     function getChatId(a, b) { return [a, b].sort().join('_'); }
 
-    // Загрузка файлов в Cloudinary с поддержкой видео
     function uploadFileToCloudinary(file, onSuccess, onError) {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-        
-        // Для видео добавляем параметры оптимизации
-        if (file.type.startsWith('video/')) {
-            formData.append('resource_type', 'video');
-        }
-        
+        if (file.type.startsWith('video/')) formData.append('resource_type', 'video');
         const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${file.type.startsWith('video/') ? 'video' : 'image'}/upload`;
-        
         fetch(url, { method: 'POST', body: formData })
             .then(res => res.json())
-            .then(data => {
-                if (data.secure_url) {
-                    onSuccess(data.secure_url, data.resource_type);
-                } else {
-                    onError(data.error?.message || 'Ошибка загрузки');
-                }
-            })
+            .then(data => { if (data.secure_url) onSuccess(data.secure_url, data.resource_type); else onError(data.error?.message || 'Ошибка загрузки'); })
             .catch(err => onError(err.message));
     }
 
     function sendMediaFile(file) {
-        if (!currentChat) {
-            showModal('Ошибка', 'Сначала выберите чат');
-            return;
-        }
+        if (!currentChat) { showModal('Ошибка', 'Сначала выберите чат'); return; }
         if (!file) return;
-        
         const isVideo = file.type.startsWith('video/');
         const fileSizeMB = file.size / (1024 * 1024);
-        
-        if (fileSizeMB > 100) {
-            showModal('Ошибка', 'Файл слишком большой. Максимум 100 МБ');
-            return;
-        }
-        
-        showModal('Загрузка', isVideo ? '🎬 Обработка видео... (может занять до минуты)' : '📸 Отправка фото...');
-        
+        if (fileSizeMB > 100) { showModal('Ошибка', 'Файл слишком большой. Максимум 100 МБ'); return; }
+        showModal('Загрузка', isVideo ? '🎬 Обработка видео...' : '📸 Отправка фото...');
         uploadFileToCloudinary(file, (url, resourceType) => {
-            const messageData = {
-                text: '',
-                mediaUrl: url,
-                mediaType: resourceType,
-                userId: currentUser.uid,
-                userName: `${userData.firstName} ${userData.lastName}`,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                chatType: currentChat.type,
-                reactions: {}
-            };
-            
-            if (currentChat.type === 'private') {
-                messageData.chatId = getChatId(currentUser.uid, currentChat.id);
-                messageData.toUserId = currentChat.id;
-            } else {
-                messageData.groupId = currentChat.id;
-            }
-            
-            db.collection('messages').add(messageData).then(() => {
-                document.querySelector('.modal-overlay.active')?.classList.remove('active');
-                scrollToBottom();
-                loadChatsList();
-            }).catch(err => {
-                showModal('Ошибка', 'Ошибка отправки: ' + err.message);
-            });
-        }, (error) => {
-            showModal('Ошибка', 'Не удалось загрузить файл: ' + error);
-        });
+            const messageData = { text: '', mediaUrl: url, mediaType: resourceType, userId: currentUser.uid, userName: `${userData.firstName} ${userData.lastName}`, timestamp: firebase.firestore.FieldValue.serverTimestamp(), chatType: currentChat.type, reactions: {} };
+            if (currentChat.type === 'private') { messageData.chatId = getChatId(currentUser.uid, currentChat.id); messageData.toUserId = currentChat.id; }
+            else messageData.groupId = currentChat.id;
+            db.collection('messages').add(messageData).then(() => { document.querySelector('.modal-overlay.active')?.classList.remove('active'); scrollToBottom(); loadChatsList(); }).catch(err => showModal('Ошибка', 'Ошибка отправки: ' + err.message));
+        }, (error) => showModal('Ошибка', 'Не удалось загрузить файл: ' + error));
     }
 
     function openFilePicker() {
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = 'image/*,video/*';
-        input.onchange = (e) => {
-            const file = e.target.files?.[0];
-            if (file) sendMediaFile(file);
-        };
+        input.onchange = (e) => { const file = e.target.files?.[0]; if (file) sendMediaFile(file); };
         input.click();
     }
 
@@ -471,19 +647,15 @@
         e.preventDefault();
         e.stopPropagation();
         activeMessageId = messageId;
-        
         if (isMobile) {
             const mobileMenu = document.getElementById('mobileContextMenu');
             const overlay = document.getElementById('mobileContextOverlay');
             const deleteBtn = document.getElementById('mobileDeleteBtn');
             const reactionBtn = document.getElementById('mobileReactionBtn');
-            
             deleteBtn.style.display = isMyMessage ? 'flex' : 'none';
             reactionBtn.style.display = 'flex';
-            
             reactionBtn.onclick = () => { hideContextMenu(); showReactionsModal(messageId); };
             deleteBtn.onclick = () => { if (isMyMessage) deleteMessage(messageId); hideContextMenu(); };
-            
             overlay.onclick = hideContextMenu;
             overlay.classList.add('active');
             mobileMenu.classList.add('active');
@@ -491,16 +663,13 @@
             const menu = document.getElementById('contextMenu');
             const deleteItem = document.getElementById('contextDeleteItem');
             const reactionItem = document.getElementById('contextReactionItem');
-            
             deleteItem.style.display = isMyMessage ? 'flex' : 'none';
-            
             let x = e.clientX, y = e.clientY;
             if (x + 180 > window.innerWidth) x = window.innerWidth - 190;
             if (y + 80 > window.innerHeight) y = window.innerHeight - 90;
             menu.style.left = x + 'px';
             menu.style.top = y + 'px';
             menu.classList.add('active');
-            
             reactionItem.onclick = () => { menu.classList.remove('active'); showReactionsModal(messageId); };
             deleteItem.onclick = () => { if (isMyMessage) deleteMessage(messageId); hideContextMenu(); };
         }
@@ -512,26 +681,9 @@
         const text = input.value.trim();
         if(!text) return;
         input.value = '';
-        
-        const messageData = {
-            text: text,
-            mediaUrl: null,
-            userId: currentUser.uid,
-            userName: `${userData.firstName} ${userData.lastName}`,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            chatType: currentChat.type,
-            reactions: {}
-        };
-        
-        if (currentChat.type === 'private') {
-            messageData.read = false;
-            messageData.chatId = getChatId(currentUser.uid, currentChat.id);
-            messageData.toUserId = currentChat.id;
-        } else {
-            messageData.groupId = currentChat.id;
-            await db.collection('groups').doc(currentChat.id).update({ lastMsg: text, lastTime: new Date().toISOString() }).catch(() => {});
-        }
-        
+        const messageData = { text: text, mediaUrl: null, userId: currentUser.uid, userName: `${userData.firstName} ${userData.lastName}`, timestamp: firebase.firestore.FieldValue.serverTimestamp(), chatType: currentChat.type, reactions: {} };
+        if (currentChat.type === 'private') { messageData.read = false; messageData.chatId = getChatId(currentUser.uid, currentChat.id); messageData.toUserId = currentChat.id; }
+        else { messageData.groupId = currentChat.id; await db.collection('groups').doc(currentChat.id).update({ lastMsg: text, lastTime: new Date().toISOString() }).catch(() => {}); }
         await db.collection('messages').add(messageData);
         scrollToBottom();
         loadChatsList();
@@ -550,85 +702,45 @@
     function loadMessages() {
         if(messagesUnsubscribe) messagesUnsubscribe();
         if(!currentChat) return;
-        
         let query;
-        if (currentChat.type === 'private') {
-            query = db.collection('messages').where('chatId', '==', getChatId(currentUser.uid, currentChat.id));
-        } else {
-            query = db.collection('messages').where('groupId', '==', currentChat.id);
-        }
-        
+        if (currentChat.type === 'private') query = db.collection('messages').where('chatId', '==', getChatId(currentUser.uid, currentChat.id));
+        else query = db.collection('messages').where('groupId', '==', currentChat.id);
         messagesUnsubscribe = query.orderBy('timestamp', 'asc').onSnapshot(async (snapshot) => {
             const container = document.getElementById('messagesArea');
             if(!container) return;
             container.innerHTML = '';
             if (currentChat.type === 'private') await markMessagesAsRead(currentChat);
-            
             snapshot.forEach(doc => {
                 const msg = doc.data();
                 const msgId = doc.id;
                 const isMy = msg.userId === currentUser.uid;
                 const ts = msg.timestamp?.toDate?.() || new Date();
                 const reactions = msg.reactions || {};
-                
                 let mediaHtml = '';
                 if (msg.mediaUrl) {
-                    if (msg.mediaType === 'image') {
-                        mediaHtml = `<div class="media-container"><img src="${msg.mediaUrl}" class="message-image" onclick="window.open('${msg.mediaUrl}', '_blank')" loading="lazy"></div>`;
-                    } else if (msg.mediaType === 'video') {
-                        mediaHtml = `<div class="media-container"><video src="${msg.mediaUrl}" class="message-video" controls preload="metadata" playsinline></video></div>`;
-                    }
+                    if (msg.mediaType === 'image') mediaHtml = `<div class="media-container"><img src="${msg.mediaUrl}" class="message-image" onclick="window.open('${msg.mediaUrl}', '_blank')" loading="lazy"></div>`;
+                    else if (msg.mediaType === 'video') mediaHtml = `<div class="media-container"><video src="${msg.mediaUrl}" class="message-video" controls preload="metadata" playsinline></video></div>`;
                 }
-                
                 const reactionGroups = {};
                 Object.values(reactions).forEach(r => { reactionGroups[r] = (reactionGroups[r] || 0) + 1; });
                 const myReactionValue = reactions[currentUser.uid];
-                
                 let reactionsHtml = '';
                 if (Object.keys(reactionGroups).length > 0) {
                     reactionsHtml = '<div class="reactions-bar">';
-                    for (const [emoji, count] of Object.entries(reactionGroups)) {
-                        reactionsHtml += `<div class="reaction-item ${myReactionValue === emoji ? 'my-reaction' : ''}" data-msg="${msgId}" data-reaction="${emoji}">
-                            <span class="reaction-emoji">${emoji}</span>
-                            ${count > 1 ? `<span class="reaction-count">${count}</span>` : ''}
-                        </div>`;
-                    }
+                    for (const [emoji, count] of Object.entries(reactionGroups)) reactionsHtml += `<div class="reaction-item ${myReactionValue === emoji ? 'my-reaction' : ''}" data-msg="${msgId}" data-reaction="${emoji}"><span class="reaction-emoji">${emoji}</span>${count > 1 ? `<span class="reaction-count">${count}</span>` : ''}</div>`;
                     reactionsHtml += '</div>';
                 }
-                
                 let readStatusHtml = '';
-                if (isMy && currentChat.type === 'private') {
-                    readStatusHtml = msg.read ? 
-                        `<span class="read-status read"><i class="fas fa-check-double"></i></span>` :
-                        `<span class="read-status delivered"><i class="fas fa-check"></i></span>`;
-                }
-                
+                if (isMy && currentChat.type === 'private') readStatusHtml = msg.read ? `<span class="read-status read"><i class="fas fa-check-double"></i></span>` : `<span class="read-status delivered"><i class="fas fa-check"></i></span>`;
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `message ${isMy ? 'my' : 'other'}`;
-                messageDiv.innerHTML = `
-                    ${!isMy ? `<div class="message-sender">${escapeHtml(msg.userName || 'Пользователь')}</div>` : ''}
-                    ${mediaHtml}
-                    ${msg.text ? `<div class="message-bubble">${escapeHtml(msg.text)}</div>` : ''}
-                    <div class="message-footer">
-                        <span class="message-time">${ts.toLocaleDateString()} в ${ts.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
-                        ${readStatusHtml}
-                    </div>
-                    ${reactionsHtml}
-                `;
-                
-                messageDiv.querySelectorAll('.reaction-item').forEach(el => {
-                    el.onclick = (e) => { e.stopPropagation(); addReaction(el.dataset.msg, el.dataset.reaction); };
-                });
-                
+                messageDiv.innerHTML = `${!isMy ? `<div class="message-sender">${escapeHtml(msg.userName || 'Пользователь')}</div>` : ''}${mediaHtml}${msg.text ? `<div class="message-bubble">${escapeHtml(msg.text)}</div>` : ''}<div class="message-footer"><span class="message-time">${ts.toLocaleDateString()} в ${ts.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>${readStatusHtml}</div>${reactionsHtml}`;
+                messageDiv.querySelectorAll('.reaction-item').forEach(el => { el.onclick = (e) => { e.stopPropagation(); addReaction(el.dataset.msg, el.dataset.reaction); }; });
                 const clickableElement = messageDiv.querySelector('.message-bubble') || messageDiv.querySelector('.media-container');
                 if (clickableElement) {
                     clickableElement.addEventListener('contextmenu', (e) => { e.preventDefault(); showContextMenu(e, msgId, isMy); });
                     let lastTap = 0;
-                    clickableElement.addEventListener('touchstart', (e) => {
-                        const now = Date.now();
-                        if (now - lastTap < 300) { e.preventDefault(); showContextMenu(e, msgId, isMy); }
-                        lastTap = now;
-                    });
+                    clickableElement.addEventListener('touchstart', (e) => { const now = Date.now(); if (now - lastTap < 300) { e.preventDefault(); showContextMenu(e, msgId, isMy); } lastTap = now; });
                 }
                 container.appendChild(messageDiv);
             });
@@ -639,24 +751,22 @@
     function openChat(chat) {
         if(messagesUnsubscribe) messagesUnsubscribe();
         currentChat = chat;
-        
-        if(isMobile) {
-            const bottomNav = document.querySelector('.mobile-bottom-nav');
-            if(bottomNav) bottomNav.classList.add('hidden');
-        }
-        
+        if(isMobile) { const bottomNav = document.querySelector('.mobile-bottom-nav'); if(bottomNav) bottomNav.classList.add('hidden'); }
         const isGroup = chat.type === 'group';
         const avatarText = isGroup ? (chat.name?.substring(0,2).toUpperCase() || 'ГЧ') : getInitials(chat.firstName, chat.lastName);
-        
         document.getElementById('mainContent').innerHTML = `
             <div class="chat-window">
                 <div class="chat-header">
                     <button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i></button>
-                    <div class="chat-header-avatar ${isGroup ? 'group-avatar' : ''}">${isGroup ? '<i class="fas fa-users"></i>' : avatarText}</div>
+                    <div class="chat-header-avatar ${isGroup ? 'group-avatar' : ''}">${isGroup ? '<i class="fas fa-users"></i>' : avatarText}${!isGroup && chat.isVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : ''}</div>
                     <div class="chat-header-info">
                         <div class="chat-header-name">${isGroup ? escapeHtml(chat.name) : `${escapeHtml(chat.firstName)} ${escapeHtml(chat.lastName)}`}${!isGroup && chat.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div>
                         ${isGroup && chat.members ? `<div class="chat-header-members" id="groupManageBtn">${chat.members.length} участников</div>` : ''}
                     </div>
+                    ${!isGroup ? `<div class="call-buttons">
+                        <button class="call-btn audio" id="audioCallBtn"><i class="fas fa-phone"></i></button>
+                        <button class="call-btn video" id="videoCallBtn"><i class="fas fa-video"></i></button>
+                    </div>` : ''}
                 </div>
                 <div class="messages-area" id="messagesArea"></div>
                 <div class="input-area">
@@ -666,47 +776,31 @@
                 </div>
             </div>
         `;
-        
-        document.getElementById('backBtn').onclick = () => {
-            if(isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
-            currentChat = null;
-            showChatsView();
-        };
-        if (isGroup && document.getElementById('groupManageBtn')) {
-            document.getElementById('groupManageBtn').onclick = showGroupManage;
-        }
+        document.getElementById('backBtn').onclick = () => { if(isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); } currentChat = null; showChatsView(); };
+        if (isGroup && document.getElementById('groupManageBtn')) document.getElementById('groupManageBtn').onclick = showGroupManage;
         document.getElementById('sendBtn').onclick = sendTextMessage;
         document.getElementById('attachBtn').onclick = openFilePicker;
         document.getElementById('messageInput').onkeypress = (e) => { if(e.key === 'Enter') sendTextMessage(); };
+        if (!isGroup) {
+            document.getElementById('audioCallBtn').onclick = () => startCall(chat.id, `${chat.firstName} ${chat.lastName}`, 'audio');
+            document.getElementById('videoCallBtn').onclick = () => startCall(chat.id, `${chat.firstName} ${chat.lastName}`, 'video');
+        }
         loadMessages();
         setTimeout(() => { const ma = document.getElementById('messagesArea'); if(ma) ma.scrollTop = ma.scrollHeight; }, 100);
     }
 
-    // Групповые функции
     async function showGroupManage() {
         if (!currentChat || currentChat.type !== 'group') return;
         const groupDoc = await db.collection('groups').doc(currentChat.id).get();
         const group = groupDoc.data();
         const isCreator = group.createdBy === currentUser.uid;
-        
         const members = [];
-        for (const memberId of group.members) {
-            const userDoc = await db.collection('users').doc(memberId).get();
-            if (userDoc.exists) members.push({ id: memberId, ...userDoc.data() });
-        }
-        
+        for (const memberId of group.members) { const userDoc = await db.collection('users').doc(memberId).get(); if (userDoc.exists) members.push({ id: memberId, ...userDoc.data() }); }
         const friendIds = userData.friends || [];
         const availableFriends = [];
-        for (const id of friendIds) {
-            if (!group.members.includes(id)) {
-                const userDoc = await db.collection('users').doc(id).get();
-                if (userDoc.exists) availableFriends.push({ id, ...userDoc.data() });
-            }
-        }
-        
+        for (const id of friendIds) { if (!group.members.includes(id)) { const userDoc = await db.collection('users').doc(id).get(); if (userDoc.exists) availableFriends.push({ id, ...userDoc.data() }); } }
         const modal = document.getElementById('groupManageModal');
         document.getElementById('groupManageTitle').textContent = `Управление: ${group.name}`;
-        
         const membersListDiv = document.getElementById('groupMembersList');
         membersListDiv.innerHTML = '<div style="padding: 12px; font-weight: 600;">Участники:</div>';
         for (const member of members) {
@@ -719,79 +813,38 @@
             if (removeBtnEl) removeBtnEl.onclick = () => removeMemberFromGroup(member.id, member.firstName, member.lastName);
             membersListDiv.appendChild(div);
         }
-        
         const selectEl = document.getElementById('addMemberSelect');
         selectEl.innerHTML = '<option value="">Выберите друга</option>';
-        for (const friend of availableFriends) {
-            selectEl.innerHTML += `<option value="${friend.id}">${friend.firstName} ${friend.lastName}</option>`;
-        }
-        
-        document.getElementById('addMemberBtn').onclick = async () => {
-            const friendId = selectEl.value;
-            if (!friendId) { showModal('Ошибка', 'Выберите друга'); return; }
-            const friend = availableFriends.find(f => f.id === friendId);
-            await addMemberToGroup(friendId, friend.firstName, friend.lastName);
-            modal.classList.remove('active');
-            showGroupManage();
-        };
-        
-        document.getElementById('leaveGroupBtn').onclick = () => {
-            showModal('Подтверждение', 'Выйти из беседы?', async () => { await leaveGroup(); modal.classList.remove('active'); showChatsView(); });
-        };
-        
+        for (const friend of availableFriends) selectEl.innerHTML += `<option value="${friend.id}">${friend.firstName} ${friend.lastName}</option>`;
+        document.getElementById('addMemberBtn').onclick = async () => { const friendId = selectEl.value; if (!friendId) { showModal('Ошибка', 'Выберите друга'); return; } const friend = availableFriends.find(f => f.id === friendId); await addMemberToGroup(friendId, friend.firstName, friend.lastName); modal.classList.remove('active'); showGroupManage(); };
+        document.getElementById('leaveGroupBtn').onclick = () => { showModal('Подтверждение', 'Выйти из беседы?', async () => { await leaveGroup(); modal.classList.remove('active'); showChatsView(); }); };
         const deleteBtn = document.getElementById('deleteGroupBtn');
-        if (isCreator) {
-            deleteBtn.style.display = 'block';
-            deleteBtn.onclick = () => {
-                showModal('Подтверждение', 'Удалить беседу? Это необратимо.', async () => { await deleteGroup(); modal.classList.remove('active'); showChatsView(); });
-            };
-        } else {
-            deleteBtn.style.display = 'none';
-        }
-        
+        if (isCreator) { deleteBtn.style.display = 'block'; deleteBtn.onclick = () => { showModal('Подтверждение', 'Удалить беседу? Это необратимо.', async () => { await deleteGroup(); modal.classList.remove('active'); showChatsView(); }); }; }
+        else deleteBtn.style.display = 'none';
         document.getElementById('closeGroupManageBtn').onclick = () => modal.classList.remove('active');
         modal.classList.add('active');
     }
     
     async function addMemberToGroup(userId, firstName, lastName) {
-        try {
-            await db.collection('groups').doc(currentChat.id).update({ members: firebase.firestore.FieldValue.arrayUnion(userId) });
-            showModal('Успех', `${firstName} ${lastName} добавлен(а) в беседу`);
-            loadChatsList();
-        } catch(e) { showModal('Ошибка', e.message); }
+        try { await db.collection('groups').doc(currentChat.id).update({ members: firebase.firestore.FieldValue.arrayUnion(userId) }); showModal('Успех', `${firstName} ${lastName} добавлен(а) в беседу`); loadChatsList(); } 
+        catch(e) { showModal('Ошибка', e.message); }
     }
     
     async function removeMemberFromGroup(userId, firstName, lastName) {
         showModal('Подтверждение', `Удалить ${firstName} ${lastName} из беседы?`, async () => {
-            try {
-                await db.collection('groups').doc(currentChat.id).update({ members: firebase.firestore.FieldValue.arrayRemove(userId) });
-                showModal('Успех', `${firstName} ${lastName} удалён(а) из беседы`);
-                loadChatsList();
-                if (currentChat && currentChat.id) showGroupManage();
-            } catch(e) { showModal('Ошибка', e.message); }
+            try { await db.collection('groups').doc(currentChat.id).update({ members: firebase.firestore.FieldValue.arrayRemove(userId) }); showModal('Успех', `${firstName} ${lastName} удалён(а) из беседы`); loadChatsList(); if (currentChat && currentChat.id) showGroupManage(); } 
+            catch(e) { showModal('Ошибка', e.message); }
         });
     }
     
     async function leaveGroup() {
-        try {
-            await db.collection('groups').doc(currentChat.id).update({ members: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) });
-            showModal('Успех', 'Вы вышли из беседы');
-            currentChat = null;
-            loadChatsList();
-        } catch(e) { showModal('Ошибка', e.message); }
+        try { await db.collection('groups').doc(currentChat.id).update({ members: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) }); showModal('Успех', 'Вы вышли из беседы'); currentChat = null; loadChatsList(); } 
+        catch(e) { showModal('Ошибка', e.message); }
     }
     
     async function deleteGroup() {
-        try {
-            const messagesSnap = await db.collection('messages').where('groupId', '==', currentChat.id).get();
-            const batch = db.batch();
-            messagesSnap.forEach(doc => batch.delete(doc.ref));
-            await batch.commit();
-            await db.collection('groups').doc(currentChat.id).delete();
-            showModal('Успех', 'Беседа удалена');
-            currentChat = null;
-            loadChatsList();
-        } catch(e) { showModal('Ошибка', e.message); }
+        try { const messagesSnap = await db.collection('messages').where('groupId', '==', currentChat.id).get(); const batch = db.batch(); messagesSnap.forEach(doc => batch.delete(doc.ref)); await batch.commit(); await db.collection('groups').doc(currentChat.id).delete(); showModal('Успех', 'Беседа удалена'); currentChat = null; loadChatsList(); } 
+        catch(e) { showModal('Ошибка', e.message); }
     }
 
     async function getUnreadCount(chat) {
@@ -814,10 +867,7 @@
             const privateChats = [];
             for(const [id, data] of chatUsers) {
                 const userDoc = await db.collection('users').doc(id).get();
-                if(userDoc.exists) {
-                    const u = userDoc.data();
-                    privateChats.push({ type: 'private', id, firstName: u.firstName, lastName: u.lastName, isVerified: u.isVerified || false, lastMsg: data.lastMsg || 'Напишите первым', lastTime: data.lastTime, unreadCount: await getUnreadCount({ type: 'private', id }) });
-                }
+                if(userDoc.exists) { const u = userDoc.data(); privateChats.push({ type: 'private', id, firstName: u.firstName, lastName: u.lastName, isVerified: u.isVerified || false, lastMsg: data.lastMsg || 'Напишите первым', lastTime: data.lastTime, unreadCount: await getUnreadCount({ type: 'private', id }) }); }
             }
             const groupsSnapshot = await db.collection('groups').where('members', 'array-contains', currentUser.uid).get();
             const groupChats = [];
@@ -825,11 +875,7 @@
                 const group = doc.data();
                 const lastMsgSnapshot = await db.collection('messages').where('groupId', '==', doc.id).orderBy('timestamp', 'desc').limit(1).get();
                 let lastMsg = 'Нет сообщений', lastTime = null;
-                if(!lastMsgSnapshot.empty) { 
-                    const lastMsgData = lastMsgSnapshot.docs[0].data();
-                    lastMsg = lastMsgData.text || '📎 Медиа';
-                    lastTime = lastMsgData.timestamp?.toDate?.() || null;
-                }
+                if(!lastMsgSnapshot.empty) { const lastMsgData = lastMsgSnapshot.docs[0].data(); lastMsg = lastMsgData.text || '📎 Медиа'; lastTime = lastMsgData.timestamp?.toDate?.() || null; }
                 groupChats.push({ type: 'group', id: doc.id, name: group.name, members: group.members, createdBy: group.createdBy, lastMsg, lastTime });
             }
             groupChats.sort((a,b) => (b.lastTime?.getTime?.() || 0) - (a.lastTime?.getTime?.() || 0));
@@ -870,9 +916,8 @@
         const friendsListDiv = document.getElementById('friendsForGroupList');
         const friendIds = userData.friends || [];
         const selectedFriends = new Set();
-        if(friendIds.length === 0) {
-            friendsListDiv.innerHTML = '<div style="text-align: center; padding: 20px;">Нет друзей</div>';
-        } else {
+        if(friendIds.length === 0) friendsListDiv.innerHTML = '<div style="text-align: center; padding: 20px;">Нет друзей</div>';
+        else {
             friendsListDiv.innerHTML = '';
             for(const id of friendIds) {
                 const userDoc = await db.collection('users').doc(id).get();
@@ -960,12 +1005,14 @@
             const isReceived = userData.friendRequests?.received?.includes(user.id);
             const div = document.createElement('div');
             div.className = 'person-item';
-            div.innerHTML = `<div class="person-info"><div class="person-avatar">${getInitials(user.firstName, user.lastName)}${user.isVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : ''}</div><div class="person-name">${user.firstName} ${user.lastName}${user.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div></div><div class="action-btns"><button class="action-btn write" data-chat="${user.id}">💬</button>${!isFriend && !isSent && !isReceived ? `<button class="action-btn add" data-add="${user.id}">➕</button>` : ''}${isSent ? '<button class="action-btn pending" disabled>⏳ Запрос</button>' : ''}${isReceived ? `<button class="action-btn add" data-accept="${user.id}" style="background:#28a745">✅ Принять</button>` : ''}${isFriend ? `<button class="action-btn remove" data-remove="${user.id}">🗑️</button>` : ''}</div>`;
+            div.innerHTML = `<div class="person-info"><div class="person-avatar">${getInitials(user.firstName, user.lastName)}${user.isVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : ''}</div><div class="person-name">${user.firstName} ${user.lastName}${user.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div></div><div class="action-btns"><button class="action-btn write" data-chat="${user.id}">💬</button><button class="action-btn call" data-call="${user.id}" data-name="${user.firstName} ${user.lastName}"><i class="fas fa-phone"></i></button>${!isFriend && !isSent && !isReceived ? `<button class="action-btn add" data-add="${user.id}">➕</button>` : ''}${isSent ? '<button class="action-btn pending" disabled>⏳ Запрос</button>' : ''}${isReceived ? `<button class="action-btn add" data-accept="${user.id}" style="background:#28a745">✅ Принять</button>` : ''}${isFriend ? `<button class="action-btn remove" data-remove="${user.id}">🗑️</button>` : ''}</div>`;
             const writeBtn = div.querySelector('[data-chat]');
+            const callBtn = div.querySelector('[data-call]');
             const addBtn = div.querySelector('[data-add]');
             const acceptBtn = div.querySelector('[data-accept]');
             const removeBtn = div.querySelector('[data-remove]');
             if(writeBtn) writeBtn.onclick = () => openChat({ type: 'private', id: user.id, firstName: user.firstName, lastName: user.lastName, isVerified: user.isVerified });
+            if(callBtn) callBtn.onclick = () => startCall(user.id, `${user.firstName} ${user.lastName}`, 'audio');
             if(addBtn) addBtn.onclick = () => sendFriendRequest(user.id, user.firstName, user.lastName);
             if(acceptBtn) acceptBtn.onclick = () => acceptFriendRequest(user.id);
             if(removeBtn) removeBtn.onclick = () => removeFriend(user.id);
@@ -1130,9 +1177,19 @@
                 if(!userData.friendRequests) await db.collection('users').doc(user.uid).update({ friendRequests: { sent: [], received: [] } });
                 if(userData.isVerified === undefined) await db.collection('users').doc(user.uid).update({ isVerified: false });
             }
+            // Инициализируем Peer
+            peer = new Peer(currentUser.uid);
+            peer.on('open', (id) => console.log('Peer готов:', id));
+            peer.on('call', (call) => {
+                if (callUserId === call.peer) {
+                    call.answer(localStream);
+                    setupCall(call, false);
+                }
+            });
             renderApp();
         } else {
             if(messagesUnsubscribe) messagesUnsubscribe();
+            if (peer) peer.destroy();
             currentUser = null;
             userData = null;
             renderAuth();
