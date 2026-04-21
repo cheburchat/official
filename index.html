@@ -17,8 +17,6 @@
             --accent: #ff7b2c;
             --accent-hover: #e6691a;
             --card-radius: 20px;
-            --text-contrast: 1;
-            --disable-hover-animation: 0;
         }
         
         /* ========== ТЕМЫ ========== */
@@ -36,8 +34,6 @@
             --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
             --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
             --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
-            --glass-text: #1a1a1a;
-            --glass-text-secondary: #65676b;
         }
         
         body[data-theme="dark"] {
@@ -54,43 +50,65 @@
             --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
             --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
             --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
-            --glass-text: #e4e6eb;
-            --glass-text-secondary: #b0b3b8;
         }
         
-        body[data-theme="glass"] {
-            --bg-page: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            --bg-surface: rgba(20, 20, 40, 0.65);
-            --bg-element: rgba(30, 30, 50, 0.5);
-            --text: #ffffff;
-            --text-secondary: rgba(255,255,255,0.85);
-            --border: rgba(255,255,255,0.2);
-            --my-msg: rgba(255,123,44,0.9);
+        /* МАТОВОЕ СТЕКЛО (светлый пастельный градиент) */
+        body[data-theme="glass-light"] {
+            --bg-page: linear-gradient(135deg, #e8edf2 0%, #e66bfa 50%, #fbacf3 100%);
+            --bg-surface: rgba(255, 255, 255, 0.65);
+            --bg-element: rgba(255, 255, 255, 0.45);
+            --text: #2d2d2d;
+            --text-secondary: #555555;
+            --border: rgba(255, 255, 255, 0.5);
+            --my-msg: rgba(255, 123, 44, 0.9);
             --my-msg-text: white;
-            --other-msg: rgba(255,255,255,0.15);
-            --other-msg-text: white;
+            --other-msg: rgba(255, 255, 255, 0.55);
+            --other-msg-text: #2d2d2d;
+            --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+            --shadow-lg: 0 16px 40px rgba(0,0,0,0.12);
+        }
+        
+        /* ТЁМНОЕ МАТОВОЕ СТЕКЛО (тёмный градиент) */
+        body[data-theme="glass-dark"] {
+            --bg-page: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            --bg-surface: rgba(20, 25, 45, 0.7);
+            --bg-element: rgba(30, 35, 55, 0.5);
+            --text: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.85);
+            --border: rgba(255, 255, 255, 0.15);
+            --my-msg: rgba(255, 123, 44, 0.9);
+            --my-msg-text: white;
+            --other-msg: rgba(255, 255, 255, 0.12);
+            --other-msg-text: #ffffff;
             --shadow-sm: 0 8px 32px rgba(0,0,0,0.2);
             --shadow-md: 0 8px 32px rgba(0,0,0,0.25);
             --shadow-lg: 0 8px 32px rgba(0,0,0,0.3);
-            --glass-text: #ffffff;
-            --glass-text-secondary: rgba(255,255,255,0.8);
         }
         
-        /* Контрастность текста */
+        /* Регулировка контрастности текста */
         body[data-text-contrast="light"] {
             --text: #333333 !important;
             --text-secondary: #666666 !important;
             --other-msg-text: #333333 !important;
-            --glass-text: #333333 !important;
-            --glass-text-secondary: #666666 !important;
         }
         
         body[data-text-contrast="dark"] {
             --text: #ffffff !important;
-            --text-secondary: #cccccc !important;
+            --text-secondary: #dddddd !important;
             --other-msg-text: #ffffff !important;
-            --glass-text: #ffffff !important;
-            --glass-text-secondary: #cccccc !important;
+        }
+        
+        body[data-theme="glass-light"][data-text-contrast="dark"] {
+            --text: #1a1a1a !important;
+            --text-secondary: #444444 !important;
+            --other-msg-text: #1a1a1a !important;
+        }
+        
+        body[data-theme="glass-dark"][data-text-contrast="light"] {
+            --text: #1a1a1a !important;
+            --text-secondary: #444444 !important;
+            --other-msg-text: #1a1a1a !important;
         }
         
         /* Отключение анимаций при наведении */
@@ -100,39 +118,56 @@
         body[data-disable-hover="true"] .track-card:hover,
         body[data-disable-hover="true"] .nav-item:hover,
         body[data-disable-hover="true"] .post-action-btn:hover,
-        body[data-disable-hover="true"] button:hover {
+        body[data-disable-hover="true"] button:hover,
+        body[data-disable-hover="true"] .reaction-item:hover,
+        body[data-disable-hover="true"] .color-btn:hover,
+        body[data-disable-hover="true"] .theme-preset:hover,
+        body[data-disable-hover="true"] .radius-preset:hover,
+        body[data-disable-hover="true"] .contrast-preset:hover,
+        body[data-disable-hover="true"] .mobile-nav-item:hover {
             transform: none !important;
             transition: none !important;
         }
         
-        body[data-disable-hover="true"] .reaction-item:hover,
-        body[data-disable-hover="true"] .color-btn:hover,
-        body[data-disable-hover="true"] .theme-preset:hover,
-        body[data-disable-hover="true"] .radius-preset:hover {
-            transform: none !important;
-        }
-        
         body { background: var(--bg-page); color: var(--text); }
         
-        /* Стеклянный эффект для всех элементов в glass-теме */
-        body[data-theme="glass"] .sidebar,
-        body[data-theme="glass"] .chats-view,
-        body[data-theme="glass"] .chat-header,
-        body[data-theme="glass"] .feed-header,
-        body[data-theme="glass"] .music-header,
-        body[data-theme="glass"] .people-view,
-        body[data-theme="glass"] .settings-view,
-        body[data-theme="glass"] .admin-view,
-        body[data-theme="glass"] .mobile-bottom-nav,
-        body[data-theme="glass"] .input-area,
-        body[data-theme="glass"] .post-card,
-        body[data-theme="glass"] .track-card,
-        body[data-theme="glass"] .person-item,
-        body[data-theme="glass"] .chat-item,
-        body[data-theme="glass"] .profile-view,
-        body[data-theme="glass"] .create-post-card,
-        body[data-theme="glass"] .modal,
-        body[data-theme="glass"] .message-bubble {
+        /* Стеклянные эффекты для обеих стеклянных тем */
+        body[data-theme="glass-light"] .sidebar,
+        body[data-theme="glass-light"] .chats-view,
+        body[data-theme="glass-light"] .chat-header,
+        body[data-theme="glass-light"] .feed-header,
+        body[data-theme="glass-light"] .music-header,
+        body[data-theme="glass-light"] .people-view,
+        body[data-theme="glass-light"] .settings-view,
+        body[data-theme="glass-light"] .admin-view,
+        body[data-theme="glass-light"] .mobile-bottom-nav,
+        body[data-theme="glass-light"] .input-area,
+        body[data-theme="glass-light"] .post-card,
+        body[data-theme="glass-light"] .track-card,
+        body[data-theme="glass-light"] .person-item,
+        body[data-theme="glass-light"] .chat-item,
+        body[data-theme="glass-light"] .profile-view,
+        body[data-theme="glass-light"] .create-post-card,
+        body[data-theme="glass-light"] .modal,
+        body[data-theme="glass-light"] .message-bubble,
+        body[data-theme="glass-dark"] .sidebar,
+        body[data-theme="glass-dark"] .chats-view,
+        body[data-theme="glass-dark"] .chat-header,
+        body[data-theme="glass-dark"] .feed-header,
+        body[data-theme="glass-dark"] .music-header,
+        body[data-theme="glass-dark"] .people-view,
+        body[data-theme="glass-dark"] .settings-view,
+        body[data-theme="glass-dark"] .admin-view,
+        body[data-theme="glass-dark"] .mobile-bottom-nav,
+        body[data-theme="glass-dark"] .input-area,
+        body[data-theme="glass-dark"] .post-card,
+        body[data-theme="glass-dark"] .track-card,
+        body[data-theme="glass-dark"] .person-item,
+        body[data-theme="glass-dark"] .chat-item,
+        body[data-theme="glass-dark"] .profile-view,
+        body[data-theme="glass-dark"] .create-post-card,
+        body[data-theme="glass-dark"] .modal,
+        body[data-theme="glass-dark"] .message-bubble {
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
             background: var(--bg-surface);
@@ -140,72 +175,114 @@
             box-shadow: var(--shadow-md);
         }
         
-        body[data-theme="glass"] .sidebar {
+        body[data-theme="glass-light"] .sidebar,
+        body[data-theme="glass-dark"] .sidebar {
             backdrop-filter: blur(25px) saturate(180%);
-            background: rgba(15, 25, 45, 0.5);
         }
         
-        body[data-theme="glass"] .post-text,
-        body[data-theme="glass"] .comment-text,
-        body[data-theme="glass"] .chat-last-msg,
-        body[data-theme="glass"] .message-bubble {
-            color: var(--glass-text);
+        body[data-theme="glass-light"] .sidebar {
+            background: rgba(255, 255, 255, 0.75);
         }
         
-        body[data-theme="glass"] .post-author-name,
-        body[data-theme="glass"] .chat-name,
-        body[data-theme="glass"] .person-name,
-        body[data-theme="glass"] .track-title,
-        body[data-theme="glass"] .section-title,
-        body[data-theme="glass"] .profile-name {
-            color: var(--glass-text);
+        body[data-theme="glass-dark"] .sidebar {
+            background: rgba(15, 20, 35, 0.6);
         }
         
-        body[data-theme="glass"] .post-time,
-        body[data-theme="glass"] .comment-time,
-        body[data-theme="glass"] .chat-time,
-        body[data-theme="glass"] .track-artist,
-        body[data-theme="glass"] .profile-email,
-        body[data-theme="glass"] .stat-label {
-            color: var(--glass-text-secondary);
+        /* Текст в стеклянных темах */
+        body[data-theme="glass-light"] .post-text,
+        body[data-theme="glass-light"] .comment-text,
+        body[data-theme="glass-light"] .chat-last-msg,
+        body[data-theme="glass-light"] .message-bubble,
+        body[data-theme="glass-light"] .post-author-name,
+        body[data-theme="glass-light"] .chat-name,
+        body[data-theme="glass-light"] .person-name,
+        body[data-theme="glass-light"] .track-title,
+        body[data-theme="glass-light"] .section-title,
+        body[data-theme="glass-light"] .profile-name,
+        body[data-theme="glass-dark"] .post-text,
+        body[data-theme="glass-dark"] .comment-text,
+        body[data-theme="glass-dark"] .chat-last-msg,
+        body[data-theme="glass-dark"] .message-bubble,
+        body[data-theme="glass-dark"] .post-author-name,
+        body[data-theme="glass-dark"] .chat-name,
+        body[data-theme="glass-dark"] .person-name,
+        body[data-theme="glass-dark"] .track-title,
+        body[data-theme="glass-dark"] .section-title,
+        body[data-theme="glass-dark"] .profile-name {
+            color: var(--text);
         }
         
-        body[data-theme="glass"] .post-action-btn,
-        body[data-theme="glass"] .comment-like-btn {
-            color: var(--glass-text-secondary);
+        body[data-theme="glass-light"] .post-time,
+        body[data-theme="glass-light"] .comment-time,
+        body[data-theme="glass-light"] .chat-time,
+        body[data-theme="glass-light"] .track-artist,
+        body[data-theme="glass-light"] .profile-email,
+        body[data-theme="glass-light"] .stat-label,
+        body[data-theme="glass-dark"] .post-time,
+        body[data-theme="glass-dark"] .comment-time,
+        body[data-theme="glass-dark"] .chat-time,
+        body[data-theme="glass-dark"] .track-artist,
+        body[data-theme="glass-dark"] .profile-email,
+        body[data-theme="glass-dark"] .stat-label {
+            color: var(--text-secondary);
         }
         
-        body[data-theme="glass"] .post-action-btn:hover,
-        body[data-theme="glass"] .comment-like-btn:hover {
-            background: rgba(255,255,255,0.2);
+        body[data-theme="glass-light"] .post-action-btn,
+        body[data-theme="glass-light"] .comment-like-btn,
+        body[data-theme="glass-dark"] .post-action-btn,
+        body[data-theme="glass-dark"] .comment-like-btn {
+            color: var(--text-secondary);
         }
         
-        body[data-theme="glass"] .post-action-btn.liked,
-        body[data-theme="glass"] .comment-like-btn.liked {
+        body[data-theme="glass-light"] .post-action-btn:hover,
+        body[data-theme="glass-light"] .comment-like-btn:hover,
+        body[data-theme="glass-dark"] .post-action-btn:hover,
+        body[data-theme="glass-dark"] .comment-like-btn:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        body[data-theme="glass-light"] .post-action-btn.liked,
+        body[data-theme="glass-light"] .comment-like-btn.liked,
+        body[data-theme="glass-dark"] .post-action-btn.liked,
+        body[data-theme="glass-dark"] .comment-like-btn.liked {
             color: #ff6b6b;
         }
         
-        body[data-theme="glass"] .post-card:hover,
-        body[data-theme="glass"] .chat-item:hover,
-        body[data-theme="glass"] .person-item:hover {
-            background: rgba(255,255,255,0.2);
+        body[data-theme="glass-light"] .post-card:hover,
+        body[data-theme="glass-light"] .chat-item:hover,
+        body[data-theme="glass-light"] .person-item:hover,
+        body[data-theme="glass-dark"] .post-card:hover,
+        body[data-theme="glass-dark"] .chat-item:hover,
+        body[data-theme="glass-dark"] .person-item:hover {
+            background: rgba(0, 0, 0, 0.08);
         }
         
-        body[data-theme="glass"] .nav-item:hover,
-        body[data-theme="glass"] .nav-item.active {
-            background: rgba(255,255,255,0.2);
+        body[data-theme="glass-light"] .nav-item:hover,
+        body[data-theme="glass-light"] .nav-item.active,
+        body[data-theme="glass-dark"] .nav-item:hover,
+        body[data-theme="glass-dark"] .nav-item.active {
+            background: rgba(0, 0, 0, 0.1);
         }
         
-        body[data-theme="glass"] .add-comment input {
-            background: rgba(0,0,0,0.3);
+        body[data-theme="glass-light"] .add-comment input {
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--text);
+        }
+        
+        body[data-theme="glass-dark"] .add-comment input {
+            background: rgba(0, 0, 0, 0.3);
             color: white;
         }
         
-        body[data-theme="glass"] .add-comment input::placeholder {
-            color: rgba(255,255,255,0.6);
+        body[data-theme="glass-light"] .add-comment input::placeholder {
+            color: rgba(0, 0, 0, 0.5);
         }
         
-        /* Применение акцентного цвета */
+        body[data-theme="glass-dark"] .add-comment input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        /* Акцентный цвет */
         .logo, .nav-item.active, .nav-item:hover, .create-group-btn, 
         .post-action-btn.liked, .comment-like-btn.liked,
         .action-btn.write, .profile-btn.primary, .input-area button,
@@ -456,7 +533,7 @@
         .settings-list { padding: 20px; overflow-y: auto; }
         .settings-section { margin-bottom: 28px; }
         .settings-section-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-        .theme-presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+        .theme-presets { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
         .theme-preset { background: var(--bg-element); border-radius: 20px; padding: 16px; cursor: pointer; text-align: center; transition: all 0.2s; border: 2px solid transparent; }
         .theme-preset:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
         .theme-preset.active { border-color: var(--accent); background: var(--bg-surface); }
@@ -773,7 +850,7 @@
     function scrollToBottom() { const el = document.getElementById('messagesArea'); if(el) setTimeout(() => el.scrollTop = el.scrollHeight, 100); }
     function getChatId(a, b) { return [a, b].sort().join('_'); }
 
-    // ========== КОНТЕКСТНОЕ МЕНЮ (без изменений) ==========
+    // ========== КОНТЕКСТНОЕ МЕНЮ ==========
     function hideContextMenu() {
         document.getElementById('contextMenu')?.classList.remove('active');
         document.getElementById('mobileContextOverlay')?.classList.remove('active');
@@ -1774,10 +1851,15 @@
                                 <div class="preset-name">Тёмная</div>
                                 <div class="preset-desc">Ночной режим</div>
                             </div>
-                            <div class="theme-preset ${savedTheme === 'glass' ? 'active' : ''}" data-theme="glass">
-                                <div class="preset-icon">🔮</div>
-                                <div class="preset-name">Liquid Glass</div>
-                                <div class="preset-desc">Стеклянный эффект</div>
+                            <div class="theme-preset ${savedTheme === 'glass-light' ? 'active' : ''}" data-theme="glass-light">
+                                <div class="preset-icon">🌸</div>
+                                <div class="preset-name">Матовое стекло</div>
+                                <div class="preset-desc">Светлый градиент</div>
+                            </div>
+                            <div class="theme-preset ${savedTheme === 'glass-dark' ? 'active' : ''}" data-theme="glass-dark">
+                                <div class="preset-icon">🌌</div>
+                                <div class="preset-name">Тёмное матовое стекло</div>
+                                <div class="preset-desc">Тёмный градиент</div>
                             </div>
                         </div>
                     </div>
