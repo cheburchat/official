@@ -43,7 +43,7 @@
         
         /* Профиль */
         .profile-view { height: 100%; overflow-y: auto; background: var(--bg-surface); padding-bottom: 80px; }
-        .profile-header { position: relative; background: linear-gradient(135deg, var(--accent), var(--accent-hover)); height: 140px; flex-shrink: 0; }
+        .profile-header { position: relative; background: linear-gradient(135deg, var(--accent), var(--accent-hover)); height: 100px; flex-shrink: 0; }
         .profile-avatar-large { position: absolute; bottom: -50px; left: 20px; width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--bg-surface); background: var(--accent); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 40px; cursor: pointer; }
         .profile-info { padding: 60px 20px 20px 20px; }
         .profile-name { font-size: 24px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -59,8 +59,12 @@
         .profile-section { padding: 0 20px 20px 20px; }
         .section-title { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
         
+        /* Лента новостей */
+        .feed-header { background: linear-gradient(135deg, var(--accent), var(--accent-hover)); padding: 16px 20px; }
+        .feed-header h2 { font-size: 24px; font-weight: 700; color: white; }
+        
         /* Посты */
-        .posts-feed { display: flex; flex-direction: column; gap: 16px; }
+        .posts-feed { display: flex; flex-direction: column; gap: 16px; padding: 16px; }
         .post-card { background: var(--bg-surface); border-radius: 20px; padding: 16px; border: 1px solid var(--border); }
         .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; cursor: pointer; }
         .post-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; flex-shrink: 0; }
@@ -257,9 +261,6 @@
         .mobile-nav-item i { font-size: 22px; }
         .mobile-nav-item.active { color: var(--accent); background: var(--bg-element); }
         
-        /* Стиль для заголовка ленты новостей */
-        .feed-header-title { position: absolute; bottom: -30px; left: 20px; font-size: 28px; font-weight: 700; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-        
         @media (max-width: 768px) { .sidebar { display: none; } .mobile-bottom-nav { display: flex; } .message { max-width: 85%; } }
         @media (min-width: 769px) { .back-btn { display: flex !important; } }
     </style>
@@ -380,7 +381,7 @@
     function scrollToBottom() { const el = document.getElementById('messagesArea'); if(el) setTimeout(() => el.scrollTop = el.scrollHeight, 100); }
     function getChatId(a, b) { return [a, b].sort().join('_'); }
 
-    // ========== КОНТЕКСТНОЕ МЕНЮ (ОБЯЗАТЕЛЬНО) ==========
+    // ========== КОНТЕКСТНОЕ МЕНЮ ==========
     function hideContextMenu() {
         document.getElementById('contextMenu')?.classList.remove('active');
         document.getElementById('mobileContextOverlay')?.classList.remove('active');
@@ -624,14 +625,10 @@
         
         document.getElementById('mainContent').innerHTML = `
             <div class="profile-view">
-                <div class="profile-header" style="height: 100px;">
-                    <div class="feed-header-title">Лента новостей</div>
+                <div class="feed-header">
+                    <h2>Лента новостей</h2>
                 </div>
-                <div class="profile-info" style="padding-top: 30px;">
-                    <div class="profile-section" style="padding: 0;">
-                        ${postsHtml}
-                    </div>
-                </div>
+                ${postsHtml}
             </div>
         `;
         
