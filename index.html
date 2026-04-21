@@ -20,6 +20,7 @@
             --shadow-intensity: 0.08;
         }
         
+        /* СТАНДАРТНАЯ ТЕМА */
         body[data-theme="default"] {
             --bg-page: #f0f2f5;
             --bg-surface: rgba(255, 255, 255, var(--card-opacity));
@@ -36,6 +37,7 @@
             --shadow-lg: 0 8px 24px rgba(0,0,0,var(--shadow-intensity));
         }
         
+        /* ТЁМНАЯ ТЕМА */
         body[data-theme="dark"] {
             --bg-page: #121212;
             --bg-surface: rgba(30, 30, 30, var(--card-opacity));
@@ -52,6 +54,7 @@
             --shadow-lg: 0 8px 24px rgba(0,0,0,var(--shadow-intensity));
         }
         
+        /* МАТОВОЕ СТЕКЛО (светлый пастельный градиент) */
         body[data-theme="glass-light"] {
             --bg-page: linear-gradient(135deg, #e8edf2 0%, #e66bfa 50%, #fbacf3 100%);
             --bg-surface: rgba(255, 255, 255, var(--card-opacity));
@@ -68,6 +71,7 @@
             --shadow-lg: 0 16px 40px rgba(0,0,0,var(--shadow-intensity));
         }
         
+        /* ТЁМНОЕ МАТОВОЕ СТЕКЛО (тёмный градиент) */
         body[data-theme="glass-dark"] {
             --bg-page: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             --bg-surface: rgba(20, 25, 45, var(--card-opacity));
@@ -84,30 +88,27 @@
             --shadow-lg: 0 8px 32px rgba(0,0,0,var(--shadow-intensity));
         }
         
+        /* КОНТРАСТНОСТЬ ТЕКСТА - работает для всех тем */
         body[data-text-contrast="light"] {
-            --text: #333333 !important;
-            --text-secondary: #666666 !important;
-            --other-msg-text: #333333 !important;
+            --text: #1a1a1a !important;
+            --text-secondary: #555555 !important;
+            --other-msg-text: #1a1a1a !important;
         }
         
         body[data-text-contrast="dark"] {
             --text: #ffffff !important;
-            --text-secondary: #dddddd !important;
+            --text-secondary: #cccccc !important;
             --other-msg-text: #ffffff !important;
         }
         
+        /* Переопределение для светлой стеклянной темы при тёмной контрастности */
         body[data-theme="glass-light"][data-text-contrast="dark"] {
             --text: #1a1a1a !important;
             --text-secondary: #444444 !important;
             --other-msg-text: #1a1a1a !important;
         }
         
-        body[data-theme="glass-dark"][data-text-contrast="light"] {
-            --text: #1a1a1a !important;
-            --text-secondary: #444444 !important;
-            --other-msg-text: #1a1a1a !important;
-        }
-        
+        /* Отключение анимаций */
         body[data-disable-hover="true"] * {
             transition: none !important;
             animation: none !important;
@@ -160,6 +161,7 @@
             background: var(--bg-surface);
         }
         
+        /* Стеклянные эффекты */
         body[data-theme="glass-light"] .sidebar,
         body[data-theme="glass-light"] .chats-view,
         body[data-theme="glass-light"] .chat-header,
@@ -198,107 +200,10 @@
             backdrop-filter: blur(25px) saturate(180%);
         }
         
-        body[data-theme="glass-light"] .sidebar {
-            background: rgba(255, 255, 255, 0.8);
-        }
+        body[data-theme="glass-light"] .sidebar { background: rgba(255, 255, 255, 0.8); }
+        body[data-theme="glass-dark"] .sidebar { background: rgba(15, 20, 35, 0.6); }
         
-        body[data-theme="glass-dark"] .sidebar {
-            background: rgba(15, 20, 35, 0.6);
-        }
-        
-        body[data-theme="glass-light"] .post-text,
-        body[data-theme="glass-light"] .comment-text,
-        body[data-theme="glass-light"] .chat-last-msg,
-        body[data-theme="glass-light"] .message-bubble,
-        body[data-theme="glass-light"] .post-author-name,
-        body[data-theme="glass-light"] .chat-name,
-        body[data-theme="glass-light"] .person-name,
-        body[data-theme="glass-light"] .track-title,
-        body[data-theme="glass-light"] .section-title,
-        body[data-theme="glass-light"] .profile-name,
-        body[data-theme="glass-dark"] .post-text,
-        body[data-theme="glass-dark"] .comment-text,
-        body[data-theme="glass-dark"] .chat-last-msg,
-        body[data-theme="glass-dark"] .message-bubble,
-        body[data-theme="glass-dark"] .post-author-name,
-        body[data-theme="glass-dark"] .chat-name,
-        body[data-theme="glass-dark"] .person-name,
-        body[data-theme="glass-dark"] .track-title,
-        body[data-theme="glass-dark"] .section-title,
-        body[data-theme="glass-dark"] .profile-name {
-            color: var(--text);
-        }
-        
-        body[data-theme="glass-light"] .post-time,
-        body[data-theme="glass-light"] .comment-time,
-        body[data-theme="glass-light"] .chat-time,
-        body[data-theme="glass-light"] .track-artist,
-        body[data-theme="glass-light"] .profile-email,
-        body[data-theme="glass-light"] .stat-label,
-        body[data-theme="glass-dark"] .post-time,
-        body[data-theme="glass-dark"] .comment-time,
-        body[data-theme="glass-dark"] .chat-time,
-        body[data-theme="glass-dark"] .track-artist,
-        body[data-theme="glass-dark"] .profile-email,
-        body[data-theme="glass-dark"] .stat-label {
-            color: var(--text-secondary);
-        }
-        
-        body[data-theme="glass-light"] .post-action-btn,
-        body[data-theme="glass-light"] .comment-like-btn,
-        body[data-theme="glass-dark"] .post-action-btn,
-        body[data-theme="glass-dark"] .comment-like-btn {
-            color: var(--text-secondary);
-        }
-        
-        body[data-theme="glass-light"] .post-action-btn:hover,
-        body[data-theme="glass-light"] .comment-like-btn:hover,
-        body[data-theme="glass-dark"] .post-action-btn:hover,
-        body[data-theme="glass-dark"] .comment-like-btn:hover {
-            background: rgba(0, 0, 0, 0.1);
-        }
-        
-        body[data-theme="glass-light"] .post-action-btn.liked,
-        body[data-theme="glass-light"] .comment-like-btn.liked,
-        body[data-theme="glass-dark"] .post-action-btn.liked,
-        body[data-theme="glass-dark"] .comment-like-btn.liked {
-            color: #ff6b6b;
-        }
-        
-        body[data-theme="glass-light"] .post-card:hover,
-        body[data-theme="glass-light"] .chat-item:hover,
-        body[data-theme="glass-light"] .person-item:hover,
-        body[data-theme="glass-dark"] .post-card:hover,
-        body[data-theme="glass-dark"] .chat-item:hover,
-        body[data-theme="glass-dark"] .person-item:hover {
-            background: rgba(0, 0, 0, 0.08);
-        }
-        
-        body[data-theme="glass-light"] .nav-item:hover,
-        body[data-theme="glass-light"] .nav-item.active,
-        body[data-theme="glass-dark"] .nav-item:hover,
-        body[data-theme="glass-dark"] .nav-item.active {
-            background: rgba(0, 0, 0, 0.1);
-        }
-        
-        body[data-theme="glass-light"] .add-comment input {
-            background: rgba(0, 0, 0, 0.1);
-            color: var(--text);
-        }
-        
-        body[data-theme="glass-dark"] .add-comment input {
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
-        }
-        
-        body[data-theme="glass-light"] .add-comment input::placeholder {
-            color: rgba(0, 0, 0, 0.5);
-        }
-        
-        body[data-theme="glass-dark"] .add-comment input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-        
+        /* Общие стили */
         .logo, .nav-item.active, .nav-item:hover, .create-group-btn, 
         .post-action-btn.liked, .comment-like-btn.liked,
         .action-btn.write, .profile-btn.primary, .input-area button,
@@ -324,6 +229,7 @@
             border-radius: var(--card-radius);
         }
         
+        /* Auth */
         .auth-container { height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); padding: 16px; }
         .auth-card { background: var(--bg-surface); padding: 40px 32px; width: 100%; max-width: 420px; text-align: center; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
         .auth-card h1 { color: var(--accent); margin-bottom: 8px; font-size: 36px; font-weight: 800; }
@@ -336,6 +242,7 @@
         .verify-msg { background: #fff3cd; color: #856404; padding: 12px; border-radius: 16px; margin: 16px 0; font-size: 14px; }
         .hidden { display: none !important; }
         
+        /* App layout */
         .app { display: flex; height: 100vh; background: var(--bg-page); }
         .sidebar { width: 280px; background: var(--bg-surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; height: 100vh; transition: all 0.2s; }
         .logo { padding: 20px 20px 16px; font-size: 24px; font-weight: 800; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
@@ -361,11 +268,11 @@
         
         .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--bg-page); }
         
+        /* Чаты */
         .chats-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); transition: all 0.2s; }
         .chats-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding-top: max(16px, env(safe-area-inset-top)); }
         .chats-header h2 { font-size: 24px; font-weight: 700; color: var(--text); }
         .create-group-btn { border: none; padding: 8px 16px; border-radius: 24px; color: white; cursor: pointer; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-        .create-group-btn:hover { filter: brightness(0.95); transform: scale(1.02); }
         .chats-search { padding: 12px 16px; border-bottom: 1px solid var(--border); }
         .chats-search input { width: 100%; padding: 10px 16px; border: none; background: var(--bg-element); border-radius: 24px; font-size: 15px; outline: none; color: var(--text); }
         .chats-list { flex: 1; overflow-y: auto; }
@@ -381,6 +288,7 @@
         .chat-time { font-size: 11px; color: var(--text-secondary); flex-shrink: 0; }
         .empty-chats { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
         
+        /* Chat window */
         .chat-window { display: flex; flex-direction: column; height: 100%; background: var(--bg-page); }
         .chat-header { padding: 12px 16px; background: var(--bg-surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; flex-shrink: 0; padding-top: max(12px, env(safe-area-inset-top)); transition: all 0.2s; }
         .back-btn { background: none; border: none; font-size: 22px; cursor: pointer; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text); transition: 0.2s; }
@@ -446,8 +354,9 @@
         .attach-btn { background: var(--bg-element); border: none; width: 48px; height: 48px; border-radius: 50%; color: var(--text); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .attach-btn:hover { background: var(--accent); color: white; }
         
+        /* Feed */
         .feed-header { background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); padding: 16px 20px; padding-top: max(16px, env(safe-area-inset-top)); }
-        .feed-header h2 { font-size: 24px; font-weight: 700; color: white; }
+        .feed-header h2 { font-size: 24px; font-weight: 700; color: white !important; }
         .posts-feed { display: flex; flex-direction: column; gap: 16px; padding: 16px; }
         .post-card { background: var(--bg-surface); padding: 16px; border: 1px solid var(--border); position: relative; transition: all 0.2s; box-shadow: var(--shadow-sm); }
         .post-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
@@ -475,25 +384,14 @@
         .add-comment { display: flex; gap: 10px; margin-top: 12px; }
         .add-comment input { flex: 1; padding: 10px 14px; border: 1px solid var(--border); border-radius: 24px; background: var(--bg-element); color: var(--text); font-size: 13px; outline: none; }
         .add-comment button { border: none; padding: 8px 16px; border-radius: 24px; color: white; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; }
-        .add-comment button:hover { filter: brightness(0.95); }
         
         .create-post-card { background: var(--bg-surface); padding: 16px; border: 1px solid var(--border); margin-bottom: 16px; }
         .create-post-input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 20px; background: var(--bg-element); color: var(--text); font-size: 14px; resize: vertical; font-family: inherit; margin-bottom: 12px; }
         .create-post-btn { border: none; padding: 8px 20px; border-radius: 24px; color: white; cursor: pointer; font-size: 14px; font-weight: 600; transition: 0.2s; }
-        .create-post-btn:hover { filter: brightness(0.95); }
         
+        /* Profile */
         .profile-view { height: 100%; overflow-y: auto; background: var(--bg-surface); padding-bottom: 80px; }
-        .settings-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
-        .settings-list { padding: 20px; overflow-y: auto; padding-bottom: 100px; }
-        
-        @media (max-width: 768px) {
-            .profile-view { padding-bottom: 90px; }
-            .settings-list { padding-bottom: 100px; }
-            .people-view { padding-bottom: 80px; }
-            .music-view { padding-bottom: 80px; }
-        }
-        
-        .profile-header { position: relative; background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); height: 100px; flex-shrink: 0; margin-top: env(safe-area-inset-top); }
+        .profile-header { position: relative; background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); height: 100px; flex-shrink: 0; margin-top: env(safe-area-inset-top); border-radius: var(--card-radius) var(--card-radius) 0 0; }
         .profile-avatar-large { position: absolute; bottom: -50px; left: 20px; width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--bg-surface); background: var(--accent); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 40px; cursor: pointer; position: relative; transition: 0.2s; }
         .profile-avatar-large:hover { opacity: 0.9; transform: scale(1.02); }
         .profile-info { padding: 60px 20px 20px 20px; }
@@ -513,9 +411,10 @@
         .profile-section { padding: 0 20px 20px 20px; }
         .section-title { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
         
-        .music-view { height: 100%; overflow-y: auto; background: var(--bg-surface); }
+        /* Music */
+        .music-view { height: 100%; overflow-y: auto; background: var(--bg-surface); padding-bottom: 80px; }
         .music-header { background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); padding: 16px 20px; padding-top: max(16px, env(safe-area-inset-top)); }
-        .music-header h2 { font-size: 24px; font-weight: 700; color: white; }
+        .music-header h2 { font-size: 24px; font-weight: 700; color: white !important; }
         .music-list { display: flex; flex-direction: column; gap: 12px; padding: 16px; }
         .track-card { background: var(--bg-surface); padding: 16px; border: 1px solid var(--border); transition: all 0.2s; box-shadow: var(--shadow-sm); }
         .track-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
@@ -524,7 +423,8 @@
         .track-artist { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
         .track-player audio { width: 100%; border-radius: 40px; height: 40px; }
         
-        .people-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
+        /* People */
+        .people-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); padding-bottom: 80px; }
         .people-header { padding: 16px 20px; border-bottom: 1px solid var(--border); padding-top: max(16px, env(safe-area-inset-top)); }
         .people-header h2 { font-size: 24px; font-weight: 700; color: var(--text); }
         .people-search { padding: 12px 16px; border-bottom: 1px solid var(--border); }
@@ -545,45 +445,53 @@
         .action-btn.remove:hover { opacity: 0.9; }
         .action-btn.pending { background: var(--bg-element); color: var(--text-secondary); cursor: default; }
         
+        /* Settings */
+        .settings-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
+        .settings-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; padding-top: max(16px, env(safe-area-inset-top)); }
+        .settings-header h2 { font-size: 24px; font-weight: 700; color: var(--text); flex: 1; }
+        .settings-list { padding: 20px; overflow-y: auto; padding-bottom: 100px; }
+        
         .theme-presets { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
-        @media (min-width: 768px) {
-            .theme-presets { grid-template-columns: repeat(2, 1fr); }
-        }
         .theme-preset { background: var(--bg-element); border-radius: 20px; padding: 16px; cursor: pointer; text-align: center; transition: all 0.2s; border: 2px solid transparent; }
         .theme-preset:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
         .theme-preset.active { border-color: var(--accent); background: var(--bg-surface); }
         .preset-icon { font-size: 32px; margin-bottom: 8px; }
-        .preset-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .preset-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
         .preset-desc { font-size: 11px; color: var(--text-secondary); }
         
         .color-palette { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
         .color-btn { width: 48px; height: 48px; border-radius: 50%; cursor: pointer; transition: all 0.2s; border: 3px solid transparent; }
         .color-btn:hover { transform: scale(1.1); }
         .color-btn.active { border-color: var(--text); box-shadow: 0 0 0 2px var(--bg-surface); }
+        
         .radius-presets { display: flex; gap: 12px; margin-bottom: 20px; }
         .radius-preset { flex: 1; background: var(--bg-element); border-radius: 20px; padding: 12px; text-align: center; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
         .radius-preset.active { border-color: var(--accent); background: var(--bg-surface); }
-        .radius-preset i { font-size: 24px; margin-bottom: 8px; display: block; }
+        .radius-preset i { font-size: 24px; margin-bottom: 8px; display: block; color: var(--text); }
+        .radius-preset div { color: var(--text); font-size: 12px; }
+        
         .contrast-presets { display: flex; gap: 12px; margin-bottom: 20px; }
         .contrast-preset { flex: 1; background: var(--bg-element); border-radius: 20px; padding: 12px; text-align: center; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
         .contrast-preset.active { border-color: var(--accent); background: var(--bg-surface); }
-        .contrast-preset i { font-size: 24px; margin-bottom: 8px; display: block; }
-        .opacity-slider { margin-bottom: 20px; }
-        .opacity-slider label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--text); }
-        .opacity-slider input { width: 100%; cursor: pointer; }
-        .shadow-slider { margin-bottom: 20px; }
-        .shadow-slider label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--text); }
-        .shadow-slider input { width: 100%; cursor: pointer; }
+        .contrast-preset i { font-size: 24px; margin-bottom: 8px; display: block; color: var(--text); }
+        .contrast-preset div { color: var(--text); font-size: 12px; }
+        
+        .opacity-slider, .shadow-slider { margin-bottom: 20px; }
+        .opacity-slider label, .shadow-slider label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--text); }
+        .opacity-slider input, .shadow-slider input { width: 100%; cursor: pointer; }
+        
         .hover-toggle { display: flex; align-items: center; justify-content: space-between; background: var(--bg-element); border-radius: 20px; padding: 12px 16px; margin-bottom: 20px; cursor: pointer; }
-        .hover-toggle span { font-weight: 500; }
+        .hover-toggle span { font-weight: 500; color: var(--text); }
         .toggle-switch { width: 50px; height: 26px; background: var(--border); border-radius: 13px; position: relative; transition: 0.2s; }
         .toggle-switch.active { background: var(--accent); }
         .toggle-switch::after { content: ''; position: absolute; width: 22px; height: 22px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.2s; }
         .toggle-switch.active::after { left: 26px; }
+        
         .reset-btn { width: 100%; padding: 14px; background: var(--bg-element); border: 1px solid var(--border); border-radius: 16px; cursor: pointer; font-weight: 600; color: var(--text); transition: 0.2s; margin-top: 20px; }
         .reset-btn:hover { background: var(--border); }
         
-        .admin-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
+        /* Admin */
+        .admin-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); padding-bottom: 80px; }
         .admin-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; padding-top: max(16px, env(safe-area-inset-top)); }
         .admin-header h2 { font-size: 24px; font-weight: 700; color: var(--text); flex: 1; }
         .admin-stats { display: flex; gap: 16px; padding: 16px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
@@ -598,8 +506,8 @@
         .admin-user-name { font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
         .admin-user-email { font-size: 12px; color: var(--text-secondary); }
         .official-post-btn { background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 16px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
-        .official-post-btn:hover { opacity: 0.9; transform: translateY(-1px); }
         
+        /* Modals */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
         .modal-overlay.active { display: flex; }
         .modal { background: var(--bg-surface); border-radius: 28px; width: 320px; max-width: 90%; text-align: center; overflow: hidden; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
@@ -621,13 +529,13 @@
         .group-member-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); }
         .group-member-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; position: relative; }
         .remove-member-btn { background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 12px; transition: 0.2s; }
-        .remove-member-btn:hover { opacity: 0.9; }
         .add-member-section { margin: 16px 0; padding-top: 16px; border-top: 1px solid var(--border); }
         .add-member-select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 16px; background: var(--bg-element); color: var(--text); margin-bottom: 12px; }
         .danger-btn { background: #dc3545; color: white; border: none; padding: 12px; border-radius: 16px; cursor: pointer; width: 100%; margin-top: 8px; font-weight: 600; transition: 0.2s; }
         .danger-btn:hover { opacity: 0.9; }
         .leave-btn { background: #ffc107; color: #1a1a1a; }
         
+        /* Mobile */
         .mobile-bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-surface); border-top: 1px solid var(--border); padding: 8px 20px 12px; justify-content: space-around; z-index: 100; transition: transform 0.3s ease; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
         .mobile-bottom-nav.hidden { transform: translateY(100%); }
         .mobile-nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; font-size: 11px; color: var(--text-secondary); cursor: pointer; padding: 8px; border-radius: 12px; transition: 0.2s; }
@@ -635,7 +543,7 @@
         .mobile-nav-item.active { color: var(--accent); background: var(--bg-element); }
         
         .mobile-submenu-modal .modal { max-width: 280px; }
-        .mobile-submenu-item { padding: 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; border-bottom: 1px solid var(--border); transition: 0.2s; }
+        .mobile-submenu-item { padding: 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; border-bottom: 1px solid var(--border); transition: 0.2s; color: var(--text); }
         .mobile-submenu-item:last-child { border-bottom: none; }
         .mobile-submenu-item:hover { background: var(--bg-element); }
         .mobile-submenu-item i { width: 24px; font-size: 18px; }
@@ -644,6 +552,8 @@
             .sidebar { display: none; } 
             .mobile-bottom-nav { display: flex; } 
             .message { max-width: 85%; }
+            .profile-view, .music-view, .people-view, .admin-view { padding-bottom: 80px; }
+            .settings-list { padding-bottom: 100px; }
         }
         @media (min-width: 769px) { 
             .back-btn { display: flex !important; }
@@ -653,78 +563,14 @@
 <body data-theme="default">
 <div id="app"></div>
 
-<div id="reactionsModal" class="modal-overlay reactions-modal">
-    <div class="modal">
-        <div class="modal-header">Выберите реакцию</div>
-        <div class="modal-body">
-            <div class="reactions-grid">
-                <div class="reaction-option" data-reaction="❤️"><span class="reaction-emoji-big">❤️</span><span class="reaction-name">Сердце</span></div>
-                <div class="reaction-option" data-reaction="👍"><span class="reaction-emoji-big">👍</span><span class="reaction-name">Класс</span></div>
-                <div class="reaction-option" data-reaction="🔥"><span class="reaction-emoji-big">🔥</span><span class="reaction-name">Огонь</span></div>
-                <div class="reaction-option" data-reaction="😂"><span class="reaction-emoji-big">😂</span><span class="reaction-name">Смех</span></div>
-                <div class="reaction-option" data-reaction="😮"><span class="reaction-emoji-big">😮</span><span class="reaction-name">Удивление</span></div>
-                <div class="reaction-option" data-reaction="😢"><span class="reaction-emoji-big">😢</span><span class="reaction-name">Грусть</span></div>
-                <div class="reaction-option" data-reaction="😡"><span class="reaction-emoji-big">😡</span><span class="reaction-name">Злость</span></div>
-            </div>
-        </div>
-        <div class="modal-buttons"><button class="confirm" id="closeReactionsModal">Отмена</button></div>
-    </div>
-</div>
-
+<!-- Modals (all modals remain unchanged) -->
+<div id="reactionsModal" class="modal-overlay reactions-modal"><div class="modal"><div class="modal-header">Выберите реакцию</div><div class="modal-body"><div class="reactions-grid"><div class="reaction-option" data-reaction="❤️"><span class="reaction-emoji-big">❤️</span><span class="reaction-name">Сердце</span></div><div class="reaction-option" data-reaction="👍"><span class="reaction-emoji-big">👍</span><span class="reaction-name">Класс</span></div><div class="reaction-option" data-reaction="🔥"><span class="reaction-emoji-big">🔥</span><span class="reaction-name">Огонь</span></div><div class="reaction-option" data-reaction="😂"><span class="reaction-emoji-big">😂</span><span class="reaction-name">Смех</span></div><div class="reaction-option" data-reaction="😮"><span class="reaction-emoji-big">😮</span><span class="reaction-name">Удивление</span></div><div class="reaction-option" data-reaction="😢"><span class="reaction-emoji-big">😢</span><span class="reaction-name">Грусть</span></div><div class="reaction-option" data-reaction="😡"><span class="reaction-emoji-big">😡</span><span class="reaction-name">Злость</span></div></div></div><div class="modal-buttons"><button class="confirm" id="closeReactionsModal">Отмена</button></div></div></div>
 <div id="mobileContextOverlay" class="mobile-context-overlay"></div>
-<div id="mobileContextMenu" class="mobile-context-menu">
-    <div class="mobile-context-title">Действия с сообщением</div>
-    <div class="mobile-context-buttons">
-        <button class="mobile-context-btn" id="mobileReactionBtn"><i class="fas fa-smile"></i> Реакция</button>
-        <button class="mobile-context-btn delete" id="mobileDeleteBtn"><i class="fas fa-trash"></i> Удалить</button>
-    </div>
-</div>
-
-<div id="createGroupModal" class="modal-overlay create-group-modal">
-    <div class="modal">
-        <div class="modal-header">Создание беседы</div>
-        <div class="modal-body">
-            <input type="text" id="groupName" placeholder="Название беседы">
-            <div class="friend-list-select" id="friendsForGroupList">Загрузка...</div>
-            <div class="selected-friends" id="selectedFriendsList"></div>
-        </div>
-        <div class="modal-buttons"><button class="confirm" id="confirmCreateGroup">Создать</button><button id="cancelCreateGroup">Отмена</button></div>
-    </div>
-</div>
-
-<div id="groupManageModal" class="modal-overlay group-manage-modal">
-    <div class="modal">
-        <div class="modal-header" id="groupManageTitle">Управление беседой</div>
-        <div class="modal-body">
-            <div class="group-members-list" id="groupMembersList"></div>
-            <div class="add-member-section"><select id="addMemberSelect" class="add-member-select"><option value="">Выберите друга</option></select><button id="addMemberBtn" class="action-btn add" style="width:100%">➕ Добавить</button></div>
-            <button id="leaveGroupBtn" class="danger-btn leave-btn">🚪 Выйти из беседы</button>
-            <button id="deleteGroupBtn" class="danger-btn">🗑️ Удалить беседу</button>
-        </div>
-        <div class="modal-buttons"><button class="confirm" id="closeGroupManageBtn">Закрыть</button></div>
-    </div>
-</div>
-
-<div id="mobileSubmenuModal" class="modal-overlay mobile-submenu-modal">
-    <div class="modal">
-        <div class="modal-header">Прочее</div>
-        <div class="modal-body" style="padding: 0;">
-            <div class="mobile-submenu-item" data-sub="people"><i class="fas fa-users"></i> Люди</div>
-            <div class="mobile-submenu-item" data-sub="music"><i class="fas fa-music"></i> Музыка</div>
-            <div class="mobile-submenu-item" data-sub="settings"><i class="fas fa-cog"></i> Настройки</div>
-            <div id="adminSubmenuItem" class="mobile-submenu-item" data-sub="admin" style="display: none;"><i class="fas fa-shield-alt"></i> Админ панель</div>
-        </div>
-        <div class="modal-buttons"><button class="confirm" id="closeSubmenuModal">Закрыть</button></div>
-    </div>
-</div>
-
-<div id="modal" class="modal-overlay">
-    <div class="modal">
-        <div class="modal-header" id="modalTitle">Уведомление</div>
-        <div class="modal-body" id="modalMessage">Сообщение</div>
-        <div class="modal-buttons"><button class="confirm" id="modalConfirm">OK</button></div>
-    </div>
-</div>
+<div id="mobileContextMenu" class="mobile-context-menu"><div class="mobile-context-title">Действия с сообщением</div><div class="mobile-context-buttons"><button class="mobile-context-btn" id="mobileReactionBtn"><i class="fas fa-smile"></i> Реакция</button><button class="mobile-context-btn delete" id="mobileDeleteBtn"><i class="fas fa-trash"></i> Удалить</button></div></div>
+<div id="createGroupModal" class="modal-overlay create-group-modal"><div class="modal"><div class="modal-header">Создание беседы</div><div class="modal-body"><input type="text" id="groupName" placeholder="Название беседы"><div class="friend-list-select" id="friendsForGroupList">Загрузка...</div><div class="selected-friends" id="selectedFriendsList"></div></div><div class="modal-buttons"><button class="confirm" id="confirmCreateGroup">Создать</button><button id="cancelCreateGroup">Отмена</button></div></div></div>
+<div id="groupManageModal" class="modal-overlay group-manage-modal"><div class="modal"><div class="modal-header" id="groupManageTitle">Управление беседой</div><div class="modal-body"><div class="group-members-list" id="groupMembersList"></div><div class="add-member-section"><select id="addMemberSelect" class="add-member-select"><option value="">Выберите друга</option></select><button id="addMemberBtn" class="action-btn add" style="width:100%">➕ Добавить</button></div><button id="leaveGroupBtn" class="danger-btn leave-btn">🚪 Выйти из беседы</button><button id="deleteGroupBtn" class="danger-btn">🗑️ Удалить беседу</button></div><div class="modal-buttons"><button class="confirm" id="closeGroupManageBtn">Закрыть</button></div></div></div>
+<div id="mobileSubmenuModal" class="modal-overlay mobile-submenu-modal"><div class="modal"><div class="modal-header">Прочее</div><div class="modal-body" style="padding: 0;"><div class="mobile-submenu-item" data-sub="people"><i class="fas fa-users"></i> Люди</div><div class="mobile-submenu-item" data-sub="music"><i class="fas fa-music"></i> Музыка</div><div class="mobile-submenu-item" data-sub="settings"><i class="fas fa-cog"></i> Настройки</div><div id="adminSubmenuItem" class="mobile-submenu-item" data-sub="admin" style="display: none;"><i class="fas fa-shield-alt"></i> Админ панель</div></div><div class="modal-buttons"><button class="confirm" id="closeSubmenuModal">Закрыть</button></div></div></div>
+<div id="modal" class="modal-overlay"><div class="modal"><div class="modal-header" id="modalTitle">Уведомление</div><div class="modal-body" id="modalMessage">Сообщение</div><div class="modal-buttons"><button class="confirm" id="modalConfirm">OK</button></div></div></div>
 
 <script>
     const firebaseConfig = {
@@ -934,31 +780,12 @@
         if (isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
         const tracks = await loadTracks();
         let tracksHtml = '<div class="music-list">';
-        if (tracks.length === 0) {
-            tracksHtml += '<div class="track-card" style="text-align: center; padding: 40px;"><i class="fas fa-music" style="font-size: 48px; opacity: 0.5; margin-bottom: 16px;"></i><p>Нет треков</p><p style="font-size: 13px;">Музыка будет добавлена позже</p></div>';
-        }
+        if (tracks.length === 0) tracksHtml += '<div class="track-card" style="text-align: center; padding: 40px;"><i class="fas fa-music" style="font-size: 48px; opacity: 0.5; margin-bottom: 16px;"></i><p>Нет треков</p></div>';
         for (const track of tracks) {
-            tracksHtml += `
-                <div class="track-card">
-                    <div class="track-info">
-                        <div class="track-title">${escapeHtml(track.title)}</div>
-                        <div class="track-artist">${escapeHtml(track.artist)}</div>
-                    </div>
-                    <div class="track-player">
-                        <audio controls src="${track.url}" preload="metadata"></audio>
-                    </div>
-                </div>
-            `;
+            tracksHtml += `<div class="track-card"><div class="track-info"><div class="track-title">${escapeHtml(track.title)}</div><div class="track-artist">${escapeHtml(track.artist)}</div></div><div class="track-player"><audio controls src="${track.url}" preload="metadata"></audio></div></div>`;
         }
         tracksHtml += '</div>';
-        document.getElementById('mainContent').innerHTML = `
-            <div class="music-view">
-                <div class="music-header">
-                    <h2>Музыка</h2>
-                </div>
-                ${tracksHtml}
-            </div>
-        `;
+        document.getElementById('mainContent').innerHTML = `<div class="music-view"><div class="music-header"><h2>Музыка</h2></div>${tracksHtml}</div>`;
         if (isMobile) updateMobileNav('more');
     }
 
@@ -984,12 +811,7 @@
     async function deletePost(postId, postUserId) {
         if (postUserId !== currentUser.uid && !isAdmin) return;
         showModal('Подтверждение', 'Удалить этот пост?', async () => {
-            try {
-                await db.collection('posts').doc(postId).delete();
-                showModal('Успех', 'Пост удалён');
-                if (currentView === 'profile') showProfileView(viewedProfileUserId);
-                else if (currentView === 'feed') showFeedView();
-            } catch(e) { showModal('Ошибка', e.message); }
+            try { await db.collection('posts').doc(postId).delete(); showModal('Успех', 'Пост удалён'); if (currentView === 'profile') showProfileView(viewedProfileUserId); else if (currentView === 'feed') showFeedView(); } catch(e) { showModal('Ошибка', e.message); }
         });
     }
 
@@ -997,11 +819,8 @@
         const postRef = db.collection('posts').doc(postId);
         const post = (await postRef.get()).data();
         const likes = post.likes || [];
-        if (likes.includes(currentUser.uid)) {
-            await postRef.update({ likes: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) });
-        } else {
-            await postRef.update({ likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid) });
-        }
+        if (likes.includes(currentUser.uid)) await postRef.update({ likes: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) });
+        else await postRef.update({ likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid) });
         if (currentView === 'profile') showProfileView(viewedProfileUserId);
         else if (currentView === 'feed') showFeedView();
     }
@@ -1014,11 +833,8 @@
         if (commentIndex !== -1) {
             const comment = comments[commentIndex];
             const likes = comment.likes || [];
-            if (likes.includes(currentUser.uid)) {
-                comment.likes = likes.filter(id => id !== currentUser.uid);
-            } else {
-                comment.likes = [...likes, currentUser.uid];
-            }
+            if (likes.includes(currentUser.uid)) comment.likes = likes.filter(id => id !== currentUser.uid);
+            else comment.likes = [...likes, currentUser.uid];
             comments[commentIndex] = comment;
             await postRef.update({ comments: comments });
         }
@@ -1038,9 +854,7 @@
             likes: [],
             createdAt: new Date().toISOString()
         };
-        await db.collection('posts').doc(postId).update({
-            comments: firebase.firestore.FieldValue.arrayUnion(comment)
-        });
+        await db.collection('posts').doc(postId).update({ comments: firebase.firestore.FieldValue.arrayUnion(comment) });
         if (currentView === 'profile') showProfileView(viewedProfileUserId);
         else if (currentView === 'feed') showFeedView();
     }
@@ -1059,97 +873,23 @@
         if (isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
         const posts = await loadPosts();
         let postsHtml = '<div class="posts-feed">';
-        if (posts.length === 0) {
-            postsHtml += '<div class="post-card" style="text-align: center; padding: 40px;"><i class="fas fa-newspaper" style="font-size: 48px; opacity: 0.5; margin-bottom: 16px;"></i><p>Нет постов</p><p style="font-size: 13px;">Создайте свой первый пост!</p></div>';
-        }
+        if (posts.length === 0) postsHtml += '<div class="post-card" style="text-align: center; padding: 40px;"><i class="fas fa-newspaper" style="font-size: 48px; opacity: 0.5; margin-bottom: 16px;"></i><p>Нет постов</p></div>';
         for (const post of posts) {
             const postDate = new Date(post.createdAt).toLocaleString();
             const likes = post.likes || [];
             const comments = post.comments || [];
             const isLiked = likes.includes(currentUser.uid);
             const canDelete = (post.userId === currentUser.uid) || isAdmin;
-            postsHtml += `
-                <div class="post-card" data-post-id="${post.id}">
-                    ${canDelete ? `<button class="post-delete-btn" data-action="delete" data-post="${post.id}" data-user="${post.userId}"><i class="fas fa-trash"></i></button>` : ''}
-                    <div class="post-header" data-user-id="${post.userId === 'official' ? null : post.userId}">
-                        <div class="post-avatar" style="${post.userAvatar ? `background-image: url('${post.userAvatar}'); background-size: cover; background-position: center;` : ''}">${!post.userAvatar ? getInitials(post.userName?.split(' ')[0], post.userName?.split(' ')[1] || '') : ''}${post.isOfficial ? '<div class="verified-badge" style="background: #fbbf24;"><i class="fas fa-star"></i></div>' : (post.userVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : '')}</div>
-                        <div>
-                            <div class="post-author-name">${escapeHtml(post.userName)} ${post.isOfficial ? '<i class="fas fa-star" style="color: #fbbf24;"></i>' : (post.userVerified ? '<i class="fas fa-check-circle verified-icon" style="font-size: 12px;"></i>' : '')}</div>
-                            <div class="post-time">${postDate}</div>
-                        </div>
-                    </div>
-                    <div class="post-text">${escapeHtml(post.text)}</div>
-                    <div class="post-actions">
-                        <button class="post-action-btn ${isLiked ? 'liked' : ''}" data-action="like" data-post="${post.id}"><i class="fas fa-heart"></i> ${likes.length > 0 ? likes.length : ''}</button>
-                        <button class="post-action-btn" data-action="comment" data-post="${post.id}"><i class="fas fa-comment"></i> ${comments.length > 0 ? comments.length : ''}</button>
-                    </div>
-                    <div class="comments-section" id="comments-${post.id}" style="display: none;">
-                        ${comments.map(c => `
-                            <div class="comment-item">
-                                <div class="comment-avatar" style="${c.userAvatar ? `background-image: url('${c.userAvatar}'); background-size: cover; background-position: center;` : ''}">${!c.userAvatar ? getInitials(c.userName?.split(' ')[0], c.userName?.split(' ')[1] || '') : ''}${c.userVerified ? '<div class="verified-badge" style="width: 14px; height: 14px; font-size: 7px;"><i class="fas fa-check"></i></div>' : ''}</div>
-                                <div class="comment-content">
-                                    <div class="comment-author">${escapeHtml(c.userName)} ${c.userVerified ? '<i class="fas fa-check-circle verified-icon" style="font-size: 10px;"></i>' : ''}</div>
-                                    <div class="comment-text">${escapeHtml(c.text)}</div>
-                                    <div class="comment-footer">
-                                        <div class="comment-time">${new Date(c.createdAt).toLocaleString()}</div>
-                                        <button class="comment-like-btn ${c.likes?.includes(currentUser.uid) ? 'liked' : ''}" data-post="${post.id}" data-comment="${c.id}"><i class="fas fa-heart"></i> ${c.likes?.length || 0}</button>
-                                    </div>
-                                </div>
-                            </div>
-                        `).join('')}
-                        <div class="add-comment">
-                            <input type="text" id="comment-input-${post.id}" placeholder="Написать комментарий...">
-                            <button data-post="${post.id}" class="submit-comment-btn">Отправить</button>
-                        </div>
-                    </div>
-                </div>
-            `;
+            postsHtml += `<div class="post-card" data-post-id="${post.id}">${canDelete ? `<button class="post-delete-btn" data-action="delete" data-post="${post.id}" data-user="${post.userId}"><i class="fas fa-trash"></i></button>` : ''}<div class="post-header" data-user-id="${post.userId === 'official' ? null : post.userId}"><div class="post-avatar" style="${post.userAvatar ? `background-image: url('${post.userAvatar}'); background-size: cover; background-position: center;` : ''}">${!post.userAvatar ? getInitials(post.userName?.split(' ')[0], post.userName?.split(' ')[1] || '') : ''}${post.isOfficial ? '<div class="verified-badge" style="background: #fbbf24;"><i class="fas fa-star"></i></div>' : (post.userVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : '')}</div><div><div class="post-author-name">${escapeHtml(post.userName)} ${post.isOfficial ? '<i class="fas fa-star" style="color: #fbbf24;"></i>' : (post.userVerified ? '<i class="fas fa-check-circle verified-icon" style="font-size: 12px;"></i>' : '')}</div><div class="post-time">${postDate}</div></div></div><div class="post-text">${escapeHtml(post.text)}</div><div class="post-actions"><button class="post-action-btn ${isLiked ? 'liked' : ''}" data-action="like" data-post="${post.id}"><i class="fas fa-heart"></i> ${likes.length > 0 ? likes.length : ''}</button><button class="post-action-btn" data-action="comment" data-post="${post.id}"><i class="fas fa-comment"></i> ${comments.length > 0 ? comments.length : ''}</button></div><div class="comments-section" id="comments-${post.id}" style="display: none;">${comments.map(c => `<div class="comment-item"><div class="comment-avatar" style="${c.userAvatar ? `background-image: url('${c.userAvatar}'); background-size: cover; background-position: center;` : ''}">${!c.userAvatar ? getInitials(c.userName?.split(' ')[0], c.userName?.split(' ')[1] || '') : ''}${c.userVerified ? '<div class="verified-badge" style="width: 14px; height: 14px; font-size: 7px;"><i class="fas fa-check"></i></div>' : ''}</div><div class="comment-content"><div class="comment-author">${escapeHtml(c.userName)} ${c.userVerified ? '<i class="fas fa-check-circle verified-icon" style="font-size: 10px;"></i>' : ''}</div><div class="comment-text">${escapeHtml(c.text)}</div><div class="comment-footer"><div class="comment-time">${new Date(c.createdAt).toLocaleString()}</div><button class="comment-like-btn ${c.likes?.includes(currentUser.uid) ? 'liked' : ''}" data-post="${post.id}" data-comment="${c.id}"><i class="fas fa-heart"></i> ${c.likes?.length || 0}</button></div></div></div>`).join('')}<div class="add-comment"><input type="text" id="comment-input-${post.id}" placeholder="Написать комментарий..."><button data-post="${post.id}" class="submit-comment-btn">Отправить</button></div></div></div>`;
         }
         postsHtml += '</div>';
-        document.getElementById('mainContent').innerHTML = `
-            <div class="profile-view">
-                <div class="feed-header">
-                    <h2>Лента новостей</h2>
-                </div>
-                ${postsHtml}
-            </div>
-        `;
-        document.querySelectorAll('.post-header').forEach(header => {
-            const userId = header.dataset.userId;
-            if (userId && userId !== 'null') {
-                header.addEventListener('click', () => showProfileView(userId));
-            }
-        });
-        document.querySelectorAll('.post-action-btn[data-action="like"]').forEach(btn => {
-            btn.addEventListener('click', (e) => { e.stopPropagation(); toggleLike(btn.dataset.post); });
-        });
-        document.querySelectorAll('.post-action-btn[data-action="comment"]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const commentsDiv = document.getElementById(`comments-${btn.dataset.post}`);
-                commentsDiv.style.display = commentsDiv.style.display === 'none' ? 'block' : 'none';
-            });
-        });
-        document.querySelectorAll('.post-delete-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                deletePost(btn.dataset.post, btn.dataset.user);
-            });
-        });
-        document.querySelectorAll('.submit-comment-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const postId = btn.dataset.post;
-                const input = document.getElementById(`comment-input-${postId}`);
-                addComment(postId, input.value);
-                input.value = '';
-            });
-        });
-        document.querySelectorAll('.comment-like-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggleCommentLike(btn.dataset.post, btn.dataset.comment);
-            });
-        });
+        document.getElementById('mainContent').innerHTML = `<div class="profile-view"><div class="feed-header"><h2>Лента новостей</h2></div>${postsHtml}</div>`;
+        document.querySelectorAll('.post-header').forEach(header => { const userId = header.dataset.userId; if (userId && userId !== 'null') header.addEventListener('click', () => showProfileView(userId)); });
+        document.querySelectorAll('.post-action-btn[data-action="like"]').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); toggleLike(btn.dataset.post); }); });
+        document.querySelectorAll('.post-action-btn[data-action="comment"]').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); const commentsDiv = document.getElementById(`comments-${btn.dataset.post}`); commentsDiv.style.display = commentsDiv.style.display === 'none' ? 'block' : 'none'; }); });
+        document.querySelectorAll('.post-delete-btn').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); deletePost(btn.dataset.post, btn.dataset.user); }); });
+        document.querySelectorAll('.submit-comment-btn').forEach(btn => { btn.addEventListener('click', () => { const postId = btn.dataset.post; const input = document.getElementById(`comment-input-${postId}`); addComment(postId, input.value); input.value = ''; }); });
+        document.querySelectorAll('.comment-like-btn').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); toggleCommentLike(btn.dataset.post, btn.dataset.comment); }); });
         if (isMobile) updateMobileNav('feed');
     }
 
@@ -1166,124 +906,30 @@
         const avatarStyle = profileData.avatarUrl ? `background-image: url('${profileData.avatarUrl}'); background-size: cover; background-position: center;` : '';
         const posts = await loadPosts(targetUserId);
         let postsHtml = '<div class="posts-feed">';
-        if (isOwnProfile) {
-            postsHtml += `
-                <div class="create-post-card">
-                    <textarea id="newPostText" class="create-post-input" rows="3" placeholder="Что у вас нового?"></textarea>
-                    <button class="create-post-btn" id="submitPostBtn">✏️ Опубликовать</button>
-                </div>
-            `;
-        }
+        if (isOwnProfile) postsHtml += `<div class="create-post-card"><textarea id="newPostText" class="create-post-input" rows="3" placeholder="Что у вас нового?"></textarea><button class="create-post-btn" id="submitPostBtn">✏️ Опубликовать</button></div>`;
         for (const post of posts) {
             const postDate = new Date(post.createdAt).toLocaleString();
             const likes = post.likes || [];
             const comments = post.comments || [];
             const isLiked = likes.includes(currentUser.uid);
             const canDelete = (post.userId === currentUser.uid) || isAdmin;
-            postsHtml += `
-                <div class="post-card" data-post-id="${post.id}">
-                    ${canDelete ? `<button class="post-delete-btn" data-action="delete" data-post="${post.id}" data-user="${post.userId}"><i class="fas fa-trash"></i></button>` : ''}
-                    <div class="post-header">
-                        <div class="post-avatar" style="${post.userAvatar ? `background-image: url('${post.userAvatar}'); background-size: cover; background-position: center;` : ''}">${!post.userAvatar ? getInitials(post.userName?.split(' ')[0], post.userName?.split(' ')[1] || '') : ''}${post.isOfficial ? '<div class="verified-badge" style="background: #fbbf24;"><i class="fas fa-star"></i></div>' : (post.userVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : '')}</div>
-                        <div>
-                            <div class="post-author-name">${escapeHtml(post.userName)} ${post.isOfficial ? '<i class="fas fa-star" style="color: #fbbf24;"></i>' : (post.userVerified ? '<i class="fas fa-check-circle verified-icon" style="font-size: 12px;"></i>' : '')}</div>
-                            <div class="post-time">${postDate}</div>
-                        </div>
-                    </div>
-                    <div class="post-text">${escapeHtml(post.text)}</div>
-                    <div class="post-actions">
-                        <button class="post-action-btn ${isLiked ? 'liked' : ''}" data-action="like" data-post="${post.id}"><i class="fas fa-heart"></i> ${likes.length > 0 ? likes.length : ''}</button>
-                        <button class="post-action-btn" data-action="comment" data-post="${post.id}"><i class="fas fa-comment"></i> ${comments.length > 0 ? comments.length : ''}</button>
-                    </div>
-                    <div class="comments-section" id="comments-${post.id}" style="display: none;">
-                        ${comments.map(c => `
-                            <div class="comment-item">
-                                <div class="comment-avatar" style="${c.userAvatar ? `background-image: url('${c.userAvatar}'); background-size: cover; background-position: center;` : ''}">${!c.userAvatar ? getInitials(c.userName?.split(' ')[0], c.userName?.split(' ')[1] || '') : ''}${c.userVerified ? '<div class="verified-badge" style="width: 14px; height: 14px; font-size: 7px;"><i class="fas fa-check"></i></div>' : ''}</div>
-                                <div class="comment-content">
-                                    <div class="comment-author">${escapeHtml(c.userName)} ${c.userVerified ? '<i class="fas fa-check-circle verified-icon" style="font-size: 10px;"></i>' : ''}</div>
-                                    <div class="comment-text">${escapeHtml(c.text)}</div>
-                                    <div class="comment-footer">
-                                        <div class="comment-time">${new Date(c.createdAt).toLocaleString()}</div>
-                                        <button class="comment-like-btn ${c.likes?.includes(currentUser.uid) ? 'liked' : ''}" data-post="${post.id}" data-comment="${c.id}"><i class="fas fa-heart"></i> ${c.likes?.length || 0}</button>
-                                    </div>
-                                </div>
-                            </div>
-                        `).join('')}
-                        <div class="add-comment">
-                            <input type="text" id="comment-input-${post.id}" placeholder="Написать комментарий...">
-                            <button data-post="${post.id}" class="submit-comment-btn">Отправить</button>
-                        </div>
-                    </div>
-                </div>
-            `;
+            postsHtml += `<div class="post-card" data-post-id="${post.id}">${canDelete ? `<button class="post-delete-btn" data-action="delete" data-post="${post.id}" data-user="${post.userId}"><i class="fas fa-trash"></i></button>` : ''}<div class="post-header"><div class="post-avatar" style="${post.userAvatar ? `background-image: url('${post.userAvatar}'); background-size: cover; background-position: center;` : ''}">${!post.userAvatar ? getInitials(post.userName?.split(' ')[0], post.userName?.split(' ')[1] || '') : ''}${post.isOfficial ? '<div class="verified-badge" style="background: #fbbf24;"><i class="fas fa-star"></i></div>' : (post.userVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : '')}</div><div><div class="post-author-name">${escapeHtml(post.userName)} ${post.isOfficial ? '<i class="fas fa-star" style="color: #fbbf24;"></i>' : (post.userVerified ? '<i class="fas fa-check-circle verified-icon" style="font-size: 12px;"></i>' : '')}</div><div class="post-time">${postDate}</div></div></div><div class="post-text">${escapeHtml(post.text)}</div><div class="post-actions"><button class="post-action-btn ${isLiked ? 'liked' : ''}" data-action="like" data-post="${post.id}"><i class="fas fa-heart"></i> ${likes.length > 0 ? likes.length : ''}</button><button class="post-action-btn" data-action="comment" data-post="${post.id}"><i class="fas fa-comment"></i> ${comments.length > 0 ? comments.length : ''}</button></div><div class="comments-section" id="comments-${post.id}" style="display: none;">${comments.map(c => `<div class="comment-item"><div class="comment-avatar" style="${c.userAvatar ? `background-image: url('${c.userAvatar}'); background-size: cover; background-position: center;` : ''}">${!c.userAvatar ? getInitials(c.userName?.split(' ')[0], c.userName?.split(' ')[1] || '') : ''}${c.userVerified ? '<div class="verified-badge" style="width: 14px; height: 14px; font-size: 7px;"><i class="fas fa-check"></i></div>' : ''}</div><div class="comment-content"><div class="comment-author">${escapeHtml(c.userName)} ${c.userVerified ? '<i class="fas fa-check-circle verified-icon" style="font-size: 10px;"></i>' : ''}</div><div class="comment-text">${escapeHtml(c.text)}</div><div class="comment-footer"><div class="comment-time">${new Date(c.createdAt).toLocaleString()}</div><button class="comment-like-btn ${c.likes?.includes(currentUser.uid) ? 'liked' : ''}" data-post="${post.id}" data-comment="${c.id}"><i class="fas fa-heart"></i> ${c.likes?.length || 0}</button></div></div></div>`).join('')}<div class="add-comment"><input type="text" id="comment-input-${post.id}" placeholder="Написать комментарий..."><button data-post="${post.id}" class="submit-comment-btn">Отправить</button></div></div></div>`;
         }
         postsHtml += '</div>';
-        document.getElementById('mainContent').innerHTML = `
-            <div class="profile-view">
-                <div class="profile-header">
-                    <div class="profile-avatar-large" style="${avatarStyle}" id="changeAvatarProfileBtn">${!profileData.avatarUrl ? getInitials(profileData.firstName, profileData.lastName) : ''}${profileData.isVerified ? '<div class="verified-badge" style="width: 24px; height: 24px; font-size: 12px; bottom: -5px; right: -5px;"><i class="fas fa-check"></i></div>' : ''}</div>
-                </div>
-                <div class="profile-info">
-                    <div class="profile-name">${profileData.firstName} ${profileData.lastName}${profileData.isVerified ? ' <i class="fas fa-check-circle verified-icon"></i>' : ''}</div>
-                    <div class="profile-email">${profileData.email}</div>
-                    <div class="profile-stats">
-                        <div class="stat"><div class="stat-value">${friendsCount}</div><div class="stat-label">друзей</div></div>
-                        <div class="stat"><div class="stat-value">${posts.length}</div><div class="stat-label">записей</div></div>
-                    </div>
-                    ${isOwnProfile ? `
-                        <div class="profile-actions">
-                            <button class="profile-btn secondary" id="changeAvatarBtn"><i class="fas fa-camera"></i> Сменить аватар</button>
-                        </div>
-                    ` : ''}
-                </div>
-                <div class="profile-section">
-                    <div class="section-title"><i class="fas fa-newspaper"></i> Записи</div>
-                    ${postsHtml}
-                </div>
-            </div>
-        `;
+        document.getElementById('mainContent').innerHTML = `<div class="profile-view"><div class="profile-header"><div class="profile-avatar-large" style="${avatarStyle}" id="changeAvatarProfileBtn">${!profileData.avatarUrl ? getInitials(profileData.firstName, profileData.lastName) : ''}${profileData.isVerified ? '<div class="verified-badge" style="width: 24px; height: 24px; font-size: 12px; bottom: -5px; right: -5px;"><i class="fas fa-check"></i></div>' : ''}</div></div><div class="profile-info"><div class="profile-name">${profileData.firstName} ${profileData.lastName}${profileData.isVerified ? ' <i class="fas fa-check-circle verified-icon"></i>' : ''}</div><div class="profile-email">${profileData.email}</div><div class="profile-stats"><div class="stat"><div class="stat-value">${friendsCount}</div><div class="stat-label">друзей</div></div><div class="stat"><div class="stat-value">${posts.length}</div><div class="stat-label">записей</div></div></div>${isOwnProfile ? `<div class="profile-actions"><button class="profile-btn secondary" id="changeAvatarBtn"><i class="fas fa-camera"></i> Сменить аватар</button></div>` : ''}</div><div class="profile-section"><div class="section-title"><i class="fas fa-newspaper"></i> Записи</div>${postsHtml}</div></div>`;
         if (isOwnProfile) {
             document.getElementById('changeAvatarProfileBtn')?.addEventListener('click', changeAvatar);
             document.getElementById('changeAvatarBtn')?.addEventListener('click', changeAvatar);
-            document.getElementById('submitPostBtn')?.addEventListener('click', () => {
-                const text = document.getElementById('newPostText').value;
-                createPost(text, false);
-            });
+            document.getElementById('submitPostBtn')?.addEventListener('click', () => { const text = document.getElementById('newPostText').value; createPost(text, false); });
         }
-        document.querySelectorAll('.post-action-btn[data-action="like"]').forEach(btn => {
-            btn.addEventListener('click', (e) => { e.stopPropagation(); toggleLike(btn.dataset.post); });
-        });
-        document.querySelectorAll('.post-action-btn[data-action="comment"]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const commentsDiv = document.getElementById(`comments-${btn.dataset.post}`);
-                commentsDiv.style.display = commentsDiv.style.display === 'none' ? 'block' : 'none';
-            });
-        });
-        document.querySelectorAll('.post-delete-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                deletePost(btn.dataset.post, btn.dataset.user);
-            });
-        });
-        document.querySelectorAll('.submit-comment-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const postId = btn.dataset.post;
-                const input = document.getElementById(`comment-input-${postId}`);
-                addComment(postId, input.value);
-                input.value = '';
-            });
-        });
-        document.querySelectorAll('.comment-like-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggleCommentLike(btn.dataset.post, btn.dataset.comment);
-            });
-        });
+        document.querySelectorAll('.post-action-btn[data-action="like"]').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); toggleLike(btn.dataset.post); }); });
+        document.querySelectorAll('.post-action-btn[data-action="comment"]').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); const commentsDiv = document.getElementById(`comments-${btn.dataset.post}`); commentsDiv.style.display = commentsDiv.style.display === 'none' ? 'block' : 'none'; }); });
+        document.querySelectorAll('.post-delete-btn').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); deletePost(btn.dataset.post, btn.dataset.user); }); });
+        document.querySelectorAll('.submit-comment-btn').forEach(btn => { btn.addEventListener('click', () => { const postId = btn.dataset.post; const input = document.getElementById(`comment-input-${postId}`); addComment(postId, input.value); input.value = ''; }); });
+        document.querySelectorAll('.comment-like-btn').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); toggleCommentLike(btn.dataset.post, btn.dataset.comment); }); });
         if (isMobile) updateMobileNav('profile');
     }
 
-    // Функции чатов (сокращенно, но рабочие)
     async function loadChatsList() {
         if(!currentUser) return;
         try {
@@ -1347,31 +993,10 @@
         const avatarUrl = !isGroup ? chat.avatarUrl : null;
         const avatarStyle = avatarUrl ? `background-image: url('${avatarUrl}'); background-size: cover; background-position: center;` : '';
         const avatarContent = !isGroup && !avatarUrl ? getInitials(chat.firstName, chat.lastName) : (isGroup ? '<i class="fas fa-users"></i>' : '');
-        document.getElementById('mainContent').innerHTML = `
-            <div class="chat-window">
-                <div class="chat-header">
-                    <button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i></button>
-                    <div class="chat-header-avatar ${isGroup ? 'group-avatar' : ''}" style="${avatarStyle}">${avatarContent}${!isGroup && chat.isVerified ? '<div class="verified-badge" style="bottom: -2px; right: -2px; width: 14px; height: 14px; font-size: 8px;"><i class="fas fa-check"></i></div>' : ''}</div>
-                    <div class="chat-header-info">
-                        <div class="chat-header-name" ${!isGroup ? `data-user-id="${chat.id}"` : ''}>${isGroup ? escapeHtml(chat.name) : `${escapeHtml(chat.firstName)} ${escapeHtml(chat.lastName)}`}${!isGroup && chat.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div>
-                        ${isGroup && chat.members ? `<div class="chat-header-members" id="groupManageBtn">${chat.members.length} участников</div>` : ''}
-                    </div>
-                </div>
-                <div class="messages-area" id="messagesArea"></div>
-                <div class="input-area">
-                    <input type="text" id="messageInput" placeholder="Сообщение...">
-                    <button class="attach-btn" id="attachBtn"><i class="fas fa-paperclip"></i></button>
-                    <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
-                </div>
-            </div>
-        `;
+        document.getElementById('mainContent').innerHTML = `<div class="chat-window"><div class="chat-header"><button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i></button><div class="chat-header-avatar ${isGroup ? 'group-avatar' : ''}" style="${avatarStyle}">${avatarContent}${!isGroup && chat.isVerified ? '<div class="verified-badge" style="bottom: -2px; right: -2px; width: 14px; height: 14px; font-size: 8px;"><i class="fas fa-check"></i></div>' : ''}</div><div class="chat-header-info"><div class="chat-header-name" ${!isGroup ? `data-user-id="${chat.id}"` : ''}>${isGroup ? escapeHtml(chat.name) : `${escapeHtml(chat.firstName)} ${escapeHtml(chat.lastName)}`}${!isGroup && chat.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div>${isGroup && chat.members ? `<div class="chat-header-members" id="groupManageBtn">${chat.members.length} участников</div>` : ''}</div></div><div class="messages-area" id="messagesArea"></div><div class="input-area"><input type="text" id="messageInput" placeholder="Сообщение..."><button class="attach-btn" id="attachBtn"><i class="fas fa-paperclip"></i></button><button id="sendBtn"><i class="fas fa-paper-plane"></i></button></div></div>`;
         document.getElementById('backBtn').onclick = () => { if(isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); } currentChat = null; showChatsView(); };
         if (isGroup && document.getElementById('groupManageBtn')) document.getElementById('groupManageBtn').onclick = showGroupManage;
-        if (!isGroup) {
-            const nameEl = document.querySelector('.chat-header-name');
-            if (nameEl) nameEl.style.cursor = 'pointer';
-            nameEl?.addEventListener('click', () => showProfileView(chat.id));
-        }
+        if (!isGroup) { const nameEl = document.querySelector('.chat-header-name'); if (nameEl) nameEl.style.cursor = 'pointer'; nameEl?.addEventListener('click', () => showProfileView(chat.id)); }
         document.getElementById('sendBtn').onclick = sendTextMessage;
         document.getElementById('attachBtn').onclick = openFilePicker;
         document.getElementById('messageInput').onkeypress = (e) => { if(e.key === 'Enter') sendTextMessage(); };
@@ -1438,16 +1063,7 @@
                 if (isMy && currentChat.type === 'private') readStatusHtml = msg.read ? `<span class="read-status read"><i class="fas fa-check-double"></i></span>` : `<span class="read-status delivered"><i class="fas fa-check"></i></span>`;
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `message ${isMy ? 'my' : 'other'}`;
-                messageDiv.innerHTML = `
-                    ${!isMy ? `<div class="message-sender" data-user-id="${msg.userId}"><div class="sender-avatar" style="background-image: url('${msg.userAvatar || ''}'); background-size: cover; background-position: center; ${!msg.userAvatar ? 'background: var(--accent); display: flex; align-items: center; justify-content: center;' : ''}">${!msg.userAvatar ? getInitials(msg.userName?.split(' ')[0], msg.userName?.split(' ')[1] || '') : ''}</div>${escapeHtml(msg.userName || 'Пользователь')}</div>` : ''}
-                    ${mediaHtml}
-                    ${msg.text ? `<div class="message-bubble">${escapeHtml(msg.text)}</div>` : ''}
-                    <div class="message-footer">
-                        <span class="message-time">${ts.toLocaleDateString()} в ${ts.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
-                        ${readStatusHtml}
-                    </div>
-                    ${reactionsHtml}
-                `;
+                messageDiv.innerHTML = `${!isMy ? `<div class="message-sender" data-user-id="${msg.userId}"><div class="sender-avatar" style="background-image: url('${msg.userAvatar || ''}'); background-size: cover; background-position: center; ${!msg.userAvatar ? 'background: var(--accent); display: flex; align-items: center; justify-content: center;' : ''}">${!msg.userAvatar ? getInitials(msg.userName?.split(' ')[0], msg.userName?.split(' ')[1] || '') : ''}</div>${escapeHtml(msg.userName || 'Пользователь')}</div>` : ''}${mediaHtml}${msg.text ? `<div class="message-bubble">${escapeHtml(msg.text)}</div>` : ''}<div class="message-footer"><span class="message-time">${ts.toLocaleDateString()} в ${ts.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>${readStatusHtml}</div>${reactionsHtml}`;
                 messageDiv.querySelectorAll('.reaction-item').forEach(el => { el.onclick = (e) => { e.stopPropagation(); addReaction(el.dataset.msg, el.dataset.reaction); }; });
                 const clickableElement = messageDiv.querySelector('.message-bubble') || messageDiv.querySelector('.media-container');
                 if (clickableElement) {
@@ -1456,10 +1072,7 @@
                     clickableElement.addEventListener('touchstart', (e) => { const now = Date.now(); if (now - lastTap < 300) { e.preventDefault(); showContextMenu(e, msgId, isMy); } lastTap = now; });
                 }
                 const senderEl = messageDiv.querySelector('.message-sender');
-                if (senderEl && !isMy) {
-                    senderEl.style.cursor = 'pointer';
-                    senderEl.addEventListener('click', () => showProfileView(msg.userId));
-                }
+                if (senderEl && !isMy) { senderEl.style.cursor = 'pointer'; senderEl.addEventListener('click', () => showProfileView(msg.userId)); }
                 container.appendChild(messageDiv);
             });
             scrollToBottom();
@@ -1472,10 +1085,7 @@
         formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
         if (file.type.startsWith('video/')) formData.append('resource_type', 'video');
         const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${file.type.startsWith('video/') ? 'video' : 'image'}/upload`;
-        fetch(url, { method: 'POST', body: formData })
-            .then(res => res.json())
-            .then(data => { if (data.secure_url) onSuccess(data.secure_url, data.resource_type); else onError(data.error?.message || 'Ошибка загрузки'); })
-            .catch(err => onError(err.message));
+        fetch(url, { method: 'POST', body: formData }).then(res => res.json()).then(data => { if (data.secure_url) onSuccess(data.secure_url, data.resource_type); else onError(data.error?.message || 'Ошибка загрузки'); }).catch(err => onError(err.message));
     }
 
     function sendMediaFile(file) {
@@ -1539,25 +1149,21 @@
     }
 
     async function addMemberToGroup(userId, firstName, lastName) {
-        try { await db.collection('groups').doc(currentChat.id).update({ members: firebase.firestore.FieldValue.arrayUnion(userId) }); showModal('Успех', `${firstName} ${lastName} добавлен(а) в беседу`); loadChatsList(); } 
-        catch(e) { showModal('Ошибка', e.message); }
+        try { await db.collection('groups').doc(currentChat.id).update({ members: firebase.firestore.FieldValue.arrayUnion(userId) }); showModal('Успех', `${firstName} ${lastName} добавлен(а) в беседу`); loadChatsList(); } catch(e) { showModal('Ошибка', e.message); }
     }
 
     async function removeMemberFromGroup(userId, firstName, lastName) {
         showModal('Подтверждение', `Удалить ${firstName} ${lastName} из беседы?`, async () => {
-            try { await db.collection('groups').doc(currentChat.id).update({ members: firebase.firestore.FieldValue.arrayRemove(userId) }); showModal('Успех', `${firstName} ${lastName} удалён(а) из беседы`); loadChatsList(); if (currentChat && currentChat.id) showGroupManage(); } 
-            catch(e) { showModal('Ошибка', e.message); }
+            try { await db.collection('groups').doc(currentChat.id).update({ members: firebase.firestore.FieldValue.arrayRemove(userId) }); showModal('Успех', `${firstName} ${lastName} удалён(а) из беседы`); loadChatsList(); if (currentChat && currentChat.id) showGroupManage(); } catch(e) { showModal('Ошибка', e.message); }
         });
     }
 
     async function leaveGroup() {
-        try { await db.collection('groups').doc(currentChat.id).update({ members: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) }); showModal('Успех', 'Вы вышли из беседы'); currentChat = null; loadChatsList(); } 
-        catch(e) { showModal('Ошибка', e.message); }
+        try { await db.collection('groups').doc(currentChat.id).update({ members: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) }); showModal('Успех', 'Вы вышли из беседы'); currentChat = null; loadChatsList(); } catch(e) { showModal('Ошибка', e.message); }
     }
 
     async function deleteGroup() {
-        try { const messagesSnap = await db.collection('messages').where('groupId', '==', currentChat.id).get(); const batch = db.batch(); messagesSnap.forEach(doc => batch.delete(doc.ref)); await batch.commit(); await db.collection('groups').doc(currentChat.id).delete(); showModal('Успех', 'Беседа удалена'); currentChat = null; loadChatsList(); } 
-        catch(e) { showModal('Ошибка', e.message); }
+        try { const messagesSnap = await db.collection('messages').where('groupId', '==', currentChat.id).get(); const batch = db.batch(); messagesSnap.forEach(doc => batch.delete(doc.ref)); await batch.commit(); await db.collection('groups').doc(currentChat.id).delete(); showModal('Успех', 'Беседа удалена'); currentChat = null; loadChatsList(); } catch(e) { showModal('Ошибка', e.message); }
     }
 
     function showChatsView() {
@@ -1617,12 +1223,7 @@
             const members = [currentUser.uid];
             selected.forEach(cb => members.push(cb.value));
             if(members.length < 2) { showModal('Ошибка', 'Выберите хотя бы одного друга'); return; }
-            try {
-                await db.collection('groups').add({ name: groupName, members, createdBy: currentUser.uid, createdAt: new Date().toISOString() });
-                showModal('Успех', 'Беседа создана!');
-                modal.classList.remove('active');
-                loadChatsList();
-            } catch(e) { showModal('Ошибка', e.message); }
+            try { await db.collection('groups').add({ name: groupName, members, createdBy: currentUser.uid, createdAt: new Date().toISOString() }); showModal('Успех', 'Беседа создана!'); modal.classList.remove('active'); loadChatsList(); } catch(e) { showModal('Ошибка', e.message); }
         };
         document.getElementById('cancelCreateGroup').onclick = () => modal.classList.remove('active');
     }
@@ -1710,12 +1311,7 @@
     function setTheme(theme) {
         document.body.setAttribute('data-theme', theme);
         localStorage.setItem('cheburchat_theme', theme);
-        if (currentView === 'settings') {
-            document.querySelectorAll('.theme-preset').forEach(p => {
-                if (p.dataset.theme === theme) p.classList.add('active');
-                else p.classList.remove('active');
-            });
-        }
+        if (currentView === 'settings') { document.querySelectorAll('.theme-preset').forEach(p => { if (p.dataset.theme === theme) p.classList.add('active'); else p.classList.remove('active'); }); }
     }
     
     function setAccentColor(color) {
@@ -1724,81 +1320,44 @@
         document.documentElement.style.setProperty('--accent-hover', color);
         document.documentElement.style.setProperty('--my-msg', color);
         localStorage.setItem('cheburchat_accent', color);
-        if (currentView === 'settings') {
-            document.querySelectorAll('.color-btn').forEach(btn => {
-                if (btn.style.backgroundColor === color) btn.classList.add('active');
-                else btn.classList.remove('active');
-            });
-        }
+        if (currentView === 'settings') { document.querySelectorAll('.color-btn').forEach(btn => { if (btn.style.backgroundColor === color) btn.classList.add('active'); else btn.classList.remove('active'); }); }
     }
     
     function setRadius(radius) {
         currentRadius = radius;
         document.documentElement.style.setProperty('--card-radius', radius + 'px');
         localStorage.setItem('cheburchat_radius', radius);
-        if (currentView === 'settings') {
-            document.querySelectorAll('.radius-preset').forEach(p => {
-                if (parseInt(p.dataset.radius) === radius) p.classList.add('active');
-                else p.classList.remove('active');
-            });
-        }
+        if (currentView === 'settings') { document.querySelectorAll('.radius-preset').forEach(p => { if (parseInt(p.dataset.radius) === radius) p.classList.add('active'); else p.classList.remove('active'); }); }
     }
     
     function setTextContrast(contrast) {
         currentTextContrast = contrast;
-        if (contrast === 'normal') {
-            document.body.removeAttribute('data-text-contrast');
-        } else {
-            document.body.setAttribute('data-text-contrast', contrast);
-        }
+        if (contrast === 'normal') document.body.removeAttribute('data-text-contrast');
+        else document.body.setAttribute('data-text-contrast', contrast);
         localStorage.setItem('cheburchat_text_contrast', contrast);
-        if (currentView === 'settings') {
-            document.querySelectorAll('.contrast-preset').forEach(p => {
-                if (p.dataset.contrast === contrast) p.classList.add('active');
-                else p.classList.remove('active');
-            });
-        }
+        if (currentView === 'settings') { document.querySelectorAll('.contrast-preset').forEach(p => { if (p.dataset.contrast === contrast) p.classList.add('active'); else p.classList.remove('active'); }); }
     }
     
     function setDisableHover(disabled) {
         disableHover = disabled;
-        if (disabled) {
-            document.body.setAttribute('data-disable-hover', 'true');
-        } else {
-            document.body.removeAttribute('data-disable-hover');
-        }
+        if (disabled) document.body.setAttribute('data-disable-hover', 'true');
+        else document.body.removeAttribute('data-disable-hover');
         localStorage.setItem('cheburchat_disable_hover', disabled);
-        if (currentView === 'settings') {
-            const toggle = document.querySelector('.toggle-switch');
-            if (toggle) {
-                if (disabled) toggle.classList.add('active');
-                else toggle.classList.remove('active');
-            }
-        }
+        if (currentView === 'settings') { const toggle = document.querySelector('.toggle-switch'); if (toggle) { if (disabled) toggle.classList.add('active'); else toggle.classList.remove('active'); } }
     }
     
     function setOpacity(opacity) {
         currentOpacity = opacity;
         document.documentElement.style.setProperty('--card-opacity', opacity);
         localStorage.setItem('cheburchat_opacity', opacity);
-        if (currentView === 'settings') {
-            const slider = document.getElementById('opacitySlider');
-            if (slider) slider.value = opacity;
-            const valueSpan = document.getElementById('opacityValue');
-            if (valueSpan) valueSpan.textContent = Math.round(opacity * 100) + '%';
-        }
+        if (currentView === 'settings') { const slider = document.getElementById('opacitySlider'); if (slider) slider.value = opacity; const valueSpan = document.getElementById('opacityValue'); if (valueSpan) valueSpan.textContent = Math.round(opacity * 100) + '%'; }
     }
     
     function setShadow(shadow) {
         currentShadow = shadow;
         document.documentElement.style.setProperty('--shadow-intensity', shadow);
         localStorage.setItem('cheburchat_shadow', shadow);
-        if (currentView === 'settings') {
-            const slider = document.getElementById('shadowSlider');
-            if (slider) slider.value = shadow;
-            const valueSpan = document.getElementById('shadowValue');
-            if (valueSpan) valueSpan.textContent = Math.round(shadow * 100) + '%';
-        }
+        if (currentView === 'settings') { const slider = document.getElementById('shadowSlider'); if (slider) slider.value = shadow; const valueSpan = document.getElementById('shadowValue'); if (valueSpan) valueSpan.textContent = Math.round(shadow * 100) + '%'; }
     }
     
     function resetAllSettings() {
@@ -1837,79 +1396,15 @@
         const savedDisableHoverFlag = localStorage.getItem('cheburchat_disable_hover') === 'true';
         const savedOpacity = parseFloat(localStorage.getItem('cheburchat_opacity')) || 1;
         const savedShadow = parseFloat(localStorage.getItem('cheburchat_shadow')) || 0.08;
-        document.getElementById('mainContent').innerHTML = `
-            <div class="settings-view">
-                <div class="settings-header">
-                    <button class="back-btn" id="settingsBackBtn"><i class="fas fa-arrow-left"></i></button>
-                    <h2>Оформление</h2>
-                </div>
-                <div class="settings-list">
-                    <div class="settings-section">
-                        <div class="settings-section-title"><i class="fas fa-palette"></i> Тема</div>
-                        <div class="theme-presets">
-                            <div class="theme-preset ${savedTheme === 'default' ? 'active' : ''}" data-theme="default"><div class="preset-icon">🌞</div><div class="preset-name">Стандартная</div><div class="preset-desc">Светлая тема</div></div>
-                            <div class="theme-preset ${savedTheme === 'dark' ? 'active' : ''}" data-theme="dark"><div class="preset-icon">🌙</div><div class="preset-name">Тёмная</div><div class="preset-desc">Ночной режим</div></div>
-                            <div class="theme-preset ${savedTheme === 'glass-light' ? 'active' : ''}" data-theme="glass-light"><div class="preset-icon">🌸</div><div class="preset-name">Матовое стекло</div><div class="preset-desc">Светлый градиент</div></div>
-                            <div class="theme-preset ${savedTheme === 'glass-dark' ? 'active' : ''}" data-theme="glass-dark"><div class="preset-icon">🌌</div><div class="preset-name">Тёмное матовое стекло</div><div class="preset-desc">Тёмный градиент</div></div>
-                        </div>
-                    </div>
-                    <div class="settings-section">
-                        <div class="settings-section-title"><i class="fas fa-fill-drip"></i> Акцентный цвет</div>
-                        <div class="color-palette">
-                            <div class="color-btn" style="background: #ff7b2c;" data-color="#ff7b2c"></div>
-                            <div class="color-btn" style="background: #e91e63;" data-color="#e91e63"></div>
-                            <div class="color-btn" style="background: #9b59b6;" data-color="#9b59b6"></div>
-                            <div class="color-btn" style="background: #2d88ff;" data-color="#2d88ff"></div>
-                            <div class="color-btn" style="background: #27ae60;" data-color="#27ae60"></div>
-                            <div class="color-btn" style="background: #f39c12;" data-color="#f39c12"></div>
-                            <div class="color-btn" style="background: #34495e;" data-color="#34495e"></div>
-                            <div class="color-btn" style="background: #1a1a1a;" data-color="#1a1a1a"></div>
-                            <div class="color-btn" style="background: #ffffff; border:1px solid var(--border);" data-color="#ffffff"></div>
-                        </div>
-                    </div>
-                    <div class="settings-section">
-                        <div class="settings-section-title"><i class="fas fa-border-all"></i> Скругление углов</div>
-                        <div class="radius-presets">
-                            <div class="radius-preset ${currentRadius === 8 ? 'active' : ''}" data-radius="8"><i class="fas fa-square"></i><div>Малые (8px)</div></div>
-                            <div class="radius-preset ${currentRadius === 20 ? 'active' : ''}" data-radius="20"><i class="fas fa-border-all"></i><div>Средние (20px)</div></div>
-                            <div class="radius-preset ${currentRadius === 32 ? 'active' : ''}" data-radius="32"><i class="fas fa-circle"></i><div>Большие (32px)</div></div>
-                        </div>
-                    </div>
-                    <div class="settings-section">
-                        <div class="settings-section-title"><i class="fas fa-adjust"></i> Контрастность текста</div>
-                        <div class="contrast-presets">
-                            <div class="contrast-preset ${savedContrast === 'normal' ? 'active' : ''}" data-contrast="normal"><i class="fas fa-sun"></i><div>Обычная</div></div>
-                            <div class="contrast-preset ${savedContrast === 'light' ? 'active' : ''}" data-contrast="light"><i class="fas fa-sun"></i><div>Светлее</div></div>
-                            <div class="contrast-preset ${savedContrast === 'dark' ? 'active' : ''}" data-contrast="dark"><i class="fas fa-moon"></i><div>Темнее</div></div>
-                        </div>
-                    </div>
-                    <div class="settings-section">
-                        <div class="settings-section-title"><i class="fas fa-eye"></i> Прозрачность карточек</div>
-                        <div class="opacity-slider"><label>Прозрачность: <span id="opacityValue">${Math.round(savedOpacity * 100)}%</span></label><input type="range" id="opacitySlider" min="0.3" max="1" step="0.01" value="${savedOpacity}"></div>
-                    </div>
-                    <div class="settings-section">
-                        <div class="settings-section-title"><i class="fas fa-cloud-sun"></i> Интенсивность теней</div>
-                        <div class="shadow-slider"><label>Тени: <span id="shadowValue">${Math.round(savedShadow * 100)}%</span></label><input type="range" id="shadowSlider" min="0" max="0.3" step="0.01" value="${savedShadow}"></div>
-                    </div>
-                    <div class="settings-section">
-                        <div class="settings-section-title"><i class="fas fa-gamepad"></i> Анимации</div>
-                        <div class="hover-toggle" id="hoverToggleBtn"><span>Отключить анимации при наведении</span><div class="toggle-switch ${savedDisableHoverFlag ? 'active' : ''}"></div></div>
-                    </div>
-                    <button class="reset-btn" id="resetSettingsBtn">Сбросить все настройки</button>
-                </div>
-            </div>
-        `;
+        document.getElementById('mainContent').innerHTML = `<div class="settings-view"><div class="settings-header"><button class="back-btn" id="settingsBackBtn"><i class="fas fa-arrow-left"></i></button><h2>Оформление</h2></div><div class="settings-list"><div class="settings-section"><div class="settings-section-title"><i class="fas fa-palette"></i> Тема</div><div class="theme-presets"><div class="theme-preset ${savedTheme === 'default' ? 'active' : ''}" data-theme="default"><div class="preset-icon">🌞</div><div class="preset-name">Стандартная</div><div class="preset-desc">Светлая тема</div></div><div class="theme-preset ${savedTheme === 'dark' ? 'active' : ''}" data-theme="dark"><div class="preset-icon">🌙</div><div class="preset-name">Тёмная</div><div class="preset-desc">Ночной режим</div></div><div class="theme-preset ${savedTheme === 'glass-light' ? 'active' : ''}" data-theme="glass-light"><div class="preset-icon">🌸</div><div class="preset-name">Матовое стекло</div><div class="preset-desc">Светлый градиент</div></div><div class="theme-preset ${savedTheme === 'glass-dark' ? 'active' : ''}" data-theme="glass-dark"><div class="preset-icon">🌌</div><div class="preset-name">Тёмное матовое стекло</div><div class="preset-desc">Тёмный градиент</div></div></div></div><div class="settings-section"><div class="settings-section-title"><i class="fas fa-fill-drip"></i> Акцентный цвет</div><div class="color-palette"><div class="color-btn" style="background: #ff7b2c;" data-color="#ff7b2c"></div><div class="color-btn" style="background: #e91e63;" data-color="#e91e63"></div><div class="color-btn" style="background: #9b59b6;" data-color="#9b59b6"></div><div class="color-btn" style="background: #2d88ff;" data-color="#2d88ff"></div><div class="color-btn" style="background: #27ae60;" data-color="#27ae60"></div><div class="color-btn" style="background: #f39c12;" data-color="#f39c12"></div><div class="color-btn" style="background: #34495e;" data-color="#34495e"></div><div class="color-btn" style="background: #1a1a1a;" data-color="#1a1a1a"></div><div class="color-btn" style="background: #ffffff; border:1px solid var(--border);" data-color="#ffffff"></div></div></div><div class="settings-section"><div class="settings-section-title"><i class="fas fa-border-all"></i> Скругление углов</div><div class="radius-presets"><div class="radius-preset ${currentRadius === 8 ? 'active' : ''}" data-radius="8"><i class="fas fa-square"></i><div>Малые (8px)</div></div><div class="radius-preset ${currentRadius === 20 ? 'active' : ''}" data-radius="20"><i class="fas fa-border-all"></i><div>Средние (20px)</div></div><div class="radius-preset ${currentRadius === 32 ? 'active' : ''}" data-radius="32"><i class="fas fa-circle"></i><div>Большие (32px)</div></div></div></div><div class="settings-section"><div class="settings-section-title"><i class="fas fa-adjust"></i> Контрастность текста</div><div class="contrast-presets"><div class="contrast-preset ${savedContrast === 'normal' ? 'active' : ''}" data-contrast="normal"><i class="fas fa-sun"></i><div>Обычная</div></div><div class="contrast-preset ${savedContrast === 'light' ? 'active' : ''}" data-contrast="light"><i class="fas fa-sun"></i><div>Светлее</div></div><div class="contrast-preset ${savedContrast === 'dark' ? 'active' : ''}" data-contrast="dark"><i class="fas fa-moon"></i><div>Темнее</div></div></div></div><div class="settings-section"><div class="settings-section-title"><i class="fas fa-eye"></i> Прозрачность карточек</div><div class="opacity-slider"><label>Прозрачность: <span id="opacityValue">${Math.round(savedOpacity * 100)}%</span></label><input type="range" id="opacitySlider" min="0.3" max="1" step="0.01" value="${savedOpacity}"></div></div><div class="settings-section"><div class="settings-section-title"><i class="fas fa-cloud-sun"></i> Интенсивность теней</div><div class="shadow-slider"><label>Тени: <span id="shadowValue">${Math.round(savedShadow * 100)}%</span></label><input type="range" id="shadowSlider" min="0" max="0.3" step="0.01" value="${savedShadow}"></div></div><div class="settings-section"><div class="settings-section-title"><i class="fas fa-gamepad"></i> Анимации</div><div class="hover-toggle" id="hoverToggleBtn"><span>Отключить анимации при наведении</span><div class="toggle-switch ${savedDisableHoverFlag ? 'active' : ''}"></div></div></div><button class="reset-btn" id="resetSettingsBtn">Сбросить все настройки</button></div></div>`;
         document.getElementById('settingsBackBtn').onclick = () => { if(currentChat) openChat(currentChat); else showChatsView(); };
         document.querySelectorAll('.theme-preset').forEach(preset => { preset.onclick = () => { const theme = preset.dataset.theme; setTheme(theme); document.querySelectorAll('.theme-preset').forEach(p => p.classList.remove('active')); preset.classList.add('active'); }; });
         document.querySelectorAll('.color-btn').forEach(btn => { btn.onclick = () => { const color = btn.dataset.color; setAccentColor(color); document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }; if (btn.dataset.color === currentAccentColor) btn.classList.add('active'); });
         document.querySelectorAll('.radius-preset').forEach(preset => { preset.onclick = () => { const radius = parseInt(preset.dataset.radius); setRadius(radius); document.querySelectorAll('.radius-preset').forEach(p => p.classList.remove('active')); preset.classList.add('active'); }; });
         document.querySelectorAll('.contrast-preset').forEach(preset => { preset.onclick = () => { const contrast = preset.dataset.contrast; setTextContrast(contrast); document.querySelectorAll('.contrast-preset').forEach(p => p.classList.remove('active')); preset.classList.add('active'); }; });
-        const opacitySlider = document.getElementById('opacitySlider');
-        if (opacitySlider) { opacitySlider.oninput = (e) => { const val = parseFloat(e.target.value); setOpacity(val); if(document.getElementById('opacityValue')) document.getElementById('opacityValue').textContent = Math.round(val * 100) + '%'; }; }
-        const shadowSlider = document.getElementById('shadowSlider');
-        if (shadowSlider) { shadowSlider.oninput = (e) => { const val = parseFloat(e.target.value); setShadow(val); if(document.getElementById('shadowValue')) document.getElementById('shadowValue').textContent = Math.round(val * 100) + '%'; }; }
-        const hoverToggle = document.getElementById('hoverToggleBtn');
-        if (hoverToggle) { hoverToggle.onclick = () => { setDisableHover(!disableHover); const toggle = hoverToggle.querySelector('.toggle-switch'); if (toggle) { if (disableHover) toggle.classList.add('active'); else toggle.classList.remove('active'); } }; }
+        const opacitySlider = document.getElementById('opacitySlider'); if (opacitySlider) { opacitySlider.oninput = (e) => { const val = parseFloat(e.target.value); setOpacity(val); if(document.getElementById('opacityValue')) document.getElementById('opacityValue').textContent = Math.round(val * 100) + '%'; }; }
+        const shadowSlider = document.getElementById('shadowSlider'); if (shadowSlider) { shadowSlider.oninput = (e) => { const val = parseFloat(e.target.value); setShadow(val); if(document.getElementById('shadowValue')) document.getElementById('shadowValue').textContent = Math.round(val * 100) + '%'; }; }
+        const hoverToggle = document.getElementById('hoverToggleBtn'); if (hoverToggle) { hoverToggle.onclick = () => { setDisableHover(!disableHover); const toggle = hoverToggle.querySelector('.toggle-switch'); if (toggle) { if (disableHover) toggle.classList.add('active'); else toggle.classList.remove('active'); } }; }
         document.getElementById('resetSettingsBtn').onclick = () => { resetAllSettings(); };
         if(isMobile) updateMobileNav('more');
     }
@@ -1966,16 +1461,7 @@
     function showAdminView() {
         currentView = 'admin';
         if(isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
-        document.getElementById('mainContent').innerHTML = `
-            <div class="admin-view">
-                <div class="admin-header"><button class="back-btn" id="adminBackBtn"><i class="fas fa-arrow-left"></i></button><h2>Админ панель</h2></div>
-                <div class="admin-stats"><div class="admin-stat-card"><div class="admin-stat-value" id="totalUsersCount">0</div><div class="admin-stat-label">Всего пользователей</div></div><div class="admin-stat-card"><div class="admin-stat-value" id="verifiedUsersCount">0</div><div class="admin-stat-label">С галочкой</div></div></div>
-                <div class="create-post-card" style="margin: 16px;"><textarea id="officialPostText" class="create-post-input" rows="3" placeholder="Официальный пост от имени ЧЕБУРЧАТ..."></textarea><button class="official-post-btn" id="submitOfficialPostBtn"><i class="fas fa-star"></i> Опубликовать официальный пост</button></div>
-                <div class="create-post-card" style="margin: 16px;"><input type="text" id="trackArtist" placeholder="Исполнитель"><input type="text" id="trackTitle" placeholder="Название трека"><input type="file" id="trackFile" accept="audio/*"><button class="official-post-btn" id="addTrackBtn" style="margin-top: 12px;"><i class="fas fa-plus"></i> Добавить трек</button></div>
-                <div class="admin-list" id="adminTracksContainer">Загрузка...</div>
-                <div class="admin-list" id="adminUsersContainer">Загрузка...</div>
-            </div>
-        `;
+        document.getElementById('mainContent').innerHTML = `<div class="admin-view"><div class="admin-header"><button class="back-btn" id="adminBackBtn"><i class="fas fa-arrow-left"></i></button><h2>Админ панель</h2></div><div class="admin-stats"><div class="admin-stat-card"><div class="admin-stat-value" id="totalUsersCount">0</div><div class="admin-stat-label">Всего пользователей</div></div><div class="admin-stat-card"><div class="admin-stat-value" id="verifiedUsersCount">0</div><div class="admin-stat-label">С галочкой</div></div></div><div class="create-post-card" style="margin: 16px;"><textarea id="officialPostText" class="create-post-input" rows="3" placeholder="Официальный пост от имени ЧЕБУРЧАТ..."></textarea><button class="official-post-btn" id="submitOfficialPostBtn"><i class="fas fa-star"></i> Опубликовать официальный пост</button></div><div class="create-post-card" style="margin: 16px;"><input type="text" id="trackArtist" placeholder="Исполнитель"><input type="text" id="trackTitle" placeholder="Название трека"><input type="file" id="trackFile" accept="audio/*"><button class="official-post-btn" id="addTrackBtn" style="margin-top: 12px;"><i class="fas fa-plus"></i> Добавить трек</button></div><div class="admin-list" id="adminTracksContainer">Загрузка...</div><div class="admin-list" id="adminUsersContainer">Загрузка...</div></div>`;
         document.getElementById('adminBackBtn').onclick = () => { if(currentChat) openChat(currentChat); else showChatsView(); };
         document.getElementById('submitOfficialPostBtn').onclick = () => { const text = document.getElementById('officialPostText').value; createPost(text, true); document.getElementById('officialPostText').value = ''; };
         document.getElementById('addTrackBtn').onclick = () => { const artist = document.getElementById('trackArtist').value; const title = document.getElementById('trackTitle').value; const file = document.getElementById('trackFile').files[0]; if (!artist || !title || !file) { showModal('Ошибка', 'Заполните все поля и выберите файл'); return; } addTrack(artist, title, file); document.getElementById('trackArtist').value = ''; document.getElementById('trackTitle').value = ''; document.getElementById('trackFile').value = ''; };
@@ -1990,16 +1476,7 @@
         if (isAdmin) adminItem.style.display = 'flex';
         else adminItem.style.display = 'none';
         modal.classList.add('active');
-        document.querySelectorAll('.mobile-submenu-item[data-sub]').forEach(el => {
-            el.onclick = () => {
-                modal.classList.remove('active');
-                const sub = el.dataset.sub;
-                if (sub === 'people') showPeopleView();
-                else if (sub === 'music') showMusicView();
-                else if (sub === 'settings') showSettingsView();
-                else if (sub === 'admin') showAdminView();
-            };
-        });
+        document.querySelectorAll('.mobile-submenu-item[data-sub]').forEach(el => { el.onclick = () => { modal.classList.remove('active'); const sub = el.dataset.sub; if (sub === 'people') showPeopleView(); else if (sub === 'music') showMusicView(); else if (sub === 'settings') showSettingsView(); else if (sub === 'admin') showAdminView(); }; });
         document.getElementById('closeSubmenuModal').onclick = () => modal.classList.remove('active');
     }
 
@@ -2012,23 +1489,7 @@
         if(!currentUser.emailVerified) { renderEmailVerifyScreen(); return; }
         isAdmin = currentUser.email === 'sad.spotty@gmail.com';
         const avatarStyle = userData.avatarUrl ? `background-image: url('${userData.avatarUrl}'); background-size: cover; background-position: center;` : '';
-        document.getElementById('app').innerHTML = `
-            <div class="app">
-                <div class="sidebar">
-                    <div class="logo">ЧЕБУРЧАТ</div>
-                    <div class="sidebar-section">
-                        <div class="nav-item active" data-nav="chats"><i class="fas fa-comments"></i> Чаты</div>
-                        <div class="nav-item" data-nav="feed"><i class="fas fa-newspaper"></i> Новости</div>
-                        <div class="nav-item" data-nav="profile"><i class="fas fa-user-circle"></i> Профиль</div>
-                        <div class="nav-item has-submenu" data-nav="more"><i class="fas fa-ellipsis-h"></i> Прочее<div class="sub-menu"><div class="nav-item" data-sub="people"><i class="fas fa-users"></i> Люди</div><div class="nav-item" data-sub="music"><i class="fas fa-music"></i> Музыка</div><div class="nav-item" data-sub="settings"><i class="fas fa-cog"></i> Настройки</div>${isAdmin ? '<div class="nav-item" data-sub="admin"><i class="fas fa-shield-alt"></i> Админ панель</div>' : ''}</div></div>
-                    </div>
-                    <div class="user-info-sidebar" id="profileBtn"><div class="avatar-wrapper"><div class="avatar" style="${avatarStyle}">${!userData.avatarUrl ? getInitials(userData.firstName, userData.lastName) : ''}</div>${userData.isVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : ''}</div><div><strong>${userData.firstName} ${userData.lastName}</strong>${userData.isVerified ? ' <i class="fas fa-check-circle verified-icon" style="font-size:12px"></i>' : ''}</div></div>
-                    <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</button>
-                </div>
-                <div class="main" id="mainContent"></div>
-                <div class="mobile-bottom-nav"><button class="mobile-nav-item active" data-nav="chats"><i class="fas fa-comments"></i><span>Чаты</span></button><button class="mobile-nav-item" data-nav="feed"><i class="fas fa-newspaper"></i><span>Новости</span></button><button class="mobile-nav-item" data-nav="profile"><i class="fas fa-user-circle"></i><span>Профиль</span></button><button class="mobile-nav-item" data-nav="more"><i class="fas fa-ellipsis-h"></i><span>Прочее</span></button></div>
-            </div>
-        `;
+        document.getElementById('app').innerHTML = `<div class="app"><div class="sidebar"><div class="logo">ЧЕБУРЧАТ</div><div class="sidebar-section"><div class="nav-item active" data-nav="chats"><i class="fas fa-comments"></i> Чаты</div><div class="nav-item" data-nav="feed"><i class="fas fa-newspaper"></i> Новости</div><div class="nav-item" data-nav="profile"><i class="fas fa-user-circle"></i> Профиль</div><div class="nav-item has-submenu" data-nav="more"><i class="fas fa-ellipsis-h"></i> Прочее<div class="sub-menu"><div class="nav-item" data-sub="people"><i class="fas fa-users"></i> Люди</div><div class="nav-item" data-sub="music"><i class="fas fa-music"></i> Музыка</div><div class="nav-item" data-sub="settings"><i class="fas fa-cog"></i> Настройки</div>${isAdmin ? '<div class="nav-item" data-sub="admin"><i class="fas fa-shield-alt"></i> Админ панель</div>' : ''}</div></div></div><div class="user-info-sidebar" id="profileBtn"><div class="avatar-wrapper"><div class="avatar" style="${avatarStyle}">${!userData.avatarUrl ? getInitials(userData.firstName, userData.lastName) : ''}</div>${userData.isVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : ''}</div><div><strong>${userData.firstName} ${userData.lastName}</strong>${userData.isVerified ? ' <i class="fas fa-check-circle verified-icon" style="font-size:12px"></i>' : ''}</div></div><button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</button></div><div class="main" id="mainContent"></div><div class="mobile-bottom-nav"><button class="mobile-nav-item active" data-nav="chats"><i class="fas fa-comments"></i><span>Чаты</span></button><button class="mobile-nav-item" data-nav="feed"><i class="fas fa-newspaper"></i><span>Новости</span></button><button class="mobile-nav-item" data-nav="profile"><i class="fas fa-user-circle"></i><span>Профиль</span></button><button class="mobile-nav-item" data-nav="more"><i class="fas fa-ellipsis-h"></i><span>Прочее</span></button></div></div>`;
         const moreNav = document.querySelector('.nav-item[data-nav="more"]');
         const subMenu = moreNav?.querySelector('.sub-menu');
         if (moreNav && subMenu) {
@@ -2063,9 +1524,7 @@
     }
 
     function renderAuth() {
-        document.getElementById('app').innerHTML = `
-            <div class="auth-container"><div class="auth-card"><h1>ЧЕБУРЧАТ</h1><div class="auth-subtitle">Социальная сеть для своих</div><div id="loginView"><input type="email" id="loginEmail" placeholder="Email"><input type="password" id="loginPassword" placeholder="Пароль"><button id="doLoginBtn">Войти</button><div class="toggle-auth" id="showRegisterBtn">Нет аккаунта? Зарегистрироваться</div></div><div id="registerView" class="hidden"><input type="text" id="regFirstName" placeholder="Имя"><input type="text" id="regLastName" placeholder="Фамилия"><input type="email" id="regEmail" placeholder="Email"><input type="password" id="regPassword" placeholder="Пароль (мин. 6)"><button id="doRegisterBtn">Зарегистрироваться</button><div class="toggle-auth" id="showLoginBtn">Уже есть аккаунт? Войти</div></div></div></div>
-        `;
+        document.getElementById('app').innerHTML = `<div class="auth-container"><div class="auth-card"><h1>ЧЕБУРЧАТ</h1><div class="auth-subtitle">Социальная сеть для своих</div><div id="loginView"><input type="email" id="loginEmail" placeholder="Email"><input type="password" id="loginPassword" placeholder="Пароль"><button id="doLoginBtn">Войти</button><div class="toggle-auth" id="showRegisterBtn">Нет аккаунта? Зарегистрироваться</div></div><div id="registerView" class="hidden"><input type="text" id="regFirstName" placeholder="Имя"><input type="text" id="regLastName" placeholder="Фамилия"><input type="email" id="regEmail" placeholder="Email"><input type="password" id="regPassword" placeholder="Пароль (мин. 6)"><button id="doRegisterBtn">Зарегистрироваться</button><div class="toggle-auth" id="showLoginBtn">Уже есть аккаунт? Войти</div></div></div></div>`;
         document.getElementById('doLoginBtn').onclick = handleLogin;
         document.getElementById('showRegisterBtn').onclick = () => { document.getElementById('loginView').classList.add('hidden'); document.getElementById('registerView').classList.remove('hidden'); };
         document.getElementById('showLoginBtn').onclick = () => { document.getElementById('registerView').classList.add('hidden'); document.getElementById('loginView').classList.remove('hidden'); };
