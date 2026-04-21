@@ -17,6 +17,7 @@
             --accent: #ff7b2c;
             --accent-hover: #e6691a;
             --card-radius: 20px;
+            --card-opacity: 1;
         }
         
         /* ========== ТЕМЫ ========== */
@@ -55,14 +56,14 @@
         /* МАТОВОЕ СТЕКЛО (светлый пастельный градиент) */
         body[data-theme="glass-light"] {
             --bg-page: linear-gradient(135deg, #e8edf2 0%, #e66bfa 50%, #fbacf3 100%);
-            --bg-surface: rgba(255, 255, 255, 0.65);
-            --bg-element: rgba(255, 255, 255, 0.45);
+            --bg-surface: rgba(255, 255, 255, 0.7);
+            --bg-element: rgba(255, 255, 255, 0.5);
             --text: #2d2d2d;
             --text-secondary: #555555;
             --border: rgba(255, 255, 255, 0.5);
             --my-msg: rgba(255, 123, 44, 0.9);
             --my-msg-text: white;
-            --other-msg: rgba(255, 255, 255, 0.55);
+            --other-msg: rgba(255, 255, 255, 0.6);
             --other-msg-text: #2d2d2d;
             --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
             --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
@@ -86,7 +87,7 @@
             --shadow-lg: 0 8px 32px rgba(0,0,0,0.3);
         }
         
-        /* Регулировка контрастности текста */
+        /* Регулировка контрастности текста - работает для всех тем */
         body[data-text-contrast="light"] {
             --text: #333333 !important;
             --text-secondary: #666666 !important;
@@ -99,6 +100,7 @@
             --other-msg-text: #ffffff !important;
         }
         
+        /* Переопределение для стеклянных тем при контрастности */
         body[data-theme="glass-light"][data-text-contrast="dark"] {
             --text: #1a1a1a !important;
             --text-secondary: #444444 !important;
@@ -111,7 +113,22 @@
             --other-msg-text: #1a1a1a !important;
         }
         
-        /* Отключение анимаций при наведении */
+        /* Прозрачность карточек */
+        body {
+            --card-opacity-value: var(--card-opacity);
+        }
+        
+        .post-card, .chat-item, .person-item, .track-card, .create-post-card {
+            background: var(--bg-surface);
+            opacity: var(--card-opacity-value);
+        }
+        
+        /* Отключение анимаций при наведении - глобально */
+        body[data-disable-hover="true"] * {
+            transition: none !important;
+            animation: none !important;
+        }
+        
         body[data-disable-hover="true"] .post-card:hover,
         body[data-disable-hover="true"] .chat-item:hover,
         body[data-disable-hover="true"] .person-item:hover,
@@ -124,9 +141,33 @@
         body[data-disable-hover="true"] .theme-preset:hover,
         body[data-disable-hover="true"] .radius-preset:hover,
         body[data-disable-hover="true"] .contrast-preset:hover,
-        body[data-disable-hover="true"] .mobile-nav-item:hover {
+        body[data-disable-hover="true"] .mobile-nav-item:hover,
+        body[data-disable-hover="true"] .create-group-btn:hover,
+        body[data-disable-hover="true"] .action-btn.write:hover,
+        body[data-disable-hover="true"] .profile-btn.primary:hover,
+        body[data-disable-hover="true"] .input-area button:hover,
+        body[data-disable-hover="true"] .official-post-btn:hover,
+        body[data-disable-hover="true"] .submit-comment-btn:hover,
+        body[data-disable-hover="true"] .add-comment button:hover,
+        body[data-disable-hover="true"] .back-btn:hover,
+        body[data-disable-hover="true"] .attach-btn:hover {
             transform: none !important;
-            transition: none !important;
+            background: none !important;
+            filter: none !important;
+            opacity: 1 !important;
+        }
+        
+        body[data-disable-hover="true"] .post-card:hover,
+        body[data-disable-hover="true"] .chat-item:hover,
+        body[data-disable-hover="true"] .person-item:hover {
+            background: var(--bg-surface) !important;
+        }
+        
+        body[data-disable-hover="true"] .theme-preset:hover,
+        body[data-disable-hover="true"] .radius-preset:hover,
+        body[data-disable-hover="true"] .contrast-preset:hover {
+            transform: none !important;
+            box-shadow: none !important;
         }
         
         body { background: var(--bg-page); color: var(--text); }
@@ -142,12 +183,7 @@
         body[data-theme="glass-light"] .admin-view,
         body[data-theme="glass-light"] .mobile-bottom-nav,
         body[data-theme="glass-light"] .input-area,
-        body[data-theme="glass-light"] .post-card,
-        body[data-theme="glass-light"] .track-card,
-        body[data-theme="glass-light"] .person-item,
-        body[data-theme="glass-light"] .chat-item,
         body[data-theme="glass-light"] .profile-view,
-        body[data-theme="glass-light"] .create-post-card,
         body[data-theme="glass-light"] .modal,
         body[data-theme="glass-light"] .message-bubble,
         body[data-theme="glass-dark"] .sidebar,
@@ -160,12 +196,7 @@
         body[data-theme="glass-dark"] .admin-view,
         body[data-theme="glass-dark"] .mobile-bottom-nav,
         body[data-theme="glass-dark"] .input-area,
-        body[data-theme="glass-dark"] .post-card,
-        body[data-theme="glass-dark"] .track-card,
-        body[data-theme="glass-dark"] .person-item,
-        body[data-theme="glass-dark"] .chat-item,
         body[data-theme="glass-dark"] .profile-view,
-        body[data-theme="glass-dark"] .create-post-card,
         body[data-theme="glass-dark"] .modal,
         body[data-theme="glass-dark"] .message-bubble {
             backdrop-filter: blur(20px) saturate(180%);
@@ -181,7 +212,7 @@
         }
         
         body[data-theme="glass-light"] .sidebar {
-            background: rgba(255, 255, 255, 0.75);
+            background: rgba(255, 255, 255, 0.8);
         }
         
         body[data-theme="glass-dark"] .sidebar {
@@ -533,13 +564,19 @@
         .settings-list { padding: 20px; overflow-y: auto; }
         .settings-section { margin-bottom: 28px; }
         .settings-section-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-        .theme-presets { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+        
+        /* Темы в сетке 2x2 на ПК, но стеклянные темы будут на новой строке */
+        .theme-presets { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+        @media (min-width: 768px) {
+            .theme-presets { grid-template-columns: repeat(2, 1fr); }
+        }
         .theme-preset { background: var(--bg-element); border-radius: 20px; padding: 16px; cursor: pointer; text-align: center; transition: all 0.2s; border: 2px solid transparent; }
         .theme-preset:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
         .theme-preset.active { border-color: var(--accent); background: var(--bg-surface); }
         .preset-icon { font-size: 32px; margin-bottom: 8px; }
         .preset-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
         .preset-desc { font-size: 11px; color: var(--text-secondary); }
+        
         .color-palette { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
         .color-btn { width: 48px; height: 48px; border-radius: 50%; cursor: pointer; transition: all 0.2s; border: 3px solid transparent; }
         .color-btn:hover { transform: scale(1.1); }
@@ -552,6 +589,9 @@
         .contrast-preset { flex: 1; background: var(--bg-element); border-radius: 20px; padding: 12px; text-align: center; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
         .contrast-preset.active { border-color: var(--accent); background: var(--bg-surface); }
         .contrast-preset i { font-size: 24px; margin-bottom: 8px; display: block; }
+        .opacity-slider { margin-bottom: 20px; }
+        .opacity-slider label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--text); }
+        .opacity-slider input { width: 100%; cursor: pointer; }
         .hover-toggle { display: flex; align-items: center; justify-content: space-between; background: var(--bg-element); border-radius: 20px; padding: 12px 16px; margin-bottom: 20px; cursor: pointer; }
         .hover-toggle span { font-weight: 500; }
         .toggle-switch { width: 50px; height: 26px; background: var(--border); border-radius: 13px; position: relative; transition: 0.2s; }
@@ -738,6 +778,7 @@
     let currentRadius = 20;
     let currentTextContrast = 'normal';
     let disableHover = false;
+    let currentOpacity = 1;
 
     // ========== НАСТРОЙКИ ТЕМЫ ==========
     function setTheme(theme) {
@@ -810,12 +851,25 @@
         }
     }
     
+    function setOpacity(opacity) {
+        currentOpacity = opacity;
+        document.documentElement.style.setProperty('--card-opacity', opacity);
+        localStorage.setItem('cheburchat_opacity', opacity);
+        if (currentView === 'settings') {
+            const slider = document.getElementById('opacitySlider');
+            if (slider) slider.value = opacity;
+            const valueSpan = document.getElementById('opacityValue');
+            if (valueSpan) valueSpan.textContent = Math.round(opacity * 100) + '%';
+        }
+    }
+    
     function resetAllSettings() {
         setTheme('default');
         setAccentColor('#ff7b2c');
         setRadius(20);
         setTextContrast('normal');
         setDisableHover(false);
+        setOpacity(1);
         location.reload();
     }
     
@@ -825,11 +879,13 @@
         const savedRadius = parseInt(localStorage.getItem('cheburchat_radius')) || 20;
         const savedContrast = localStorage.getItem('cheburchat_text_contrast') || 'normal';
         const savedDisableHover = localStorage.getItem('cheburchat_disable_hover') === 'true';
+        const savedOpacity = parseFloat(localStorage.getItem('cheburchat_opacity')) || 1;
         setTheme(savedTheme);
         setAccentColor(savedAccent);
         setRadius(savedRadius);
         setTextContrast(savedContrast);
         setDisableHover(savedDisableHover);
+        setOpacity(savedOpacity);
     }
 
     // ========== ОСТАЛЬНЫЕ ФУНКЦИИ (сохранены без изменений) ==========
@@ -1830,6 +1886,7 @@
         const savedTheme = localStorage.getItem('cheburchat_theme') || 'default';
         const savedContrast = localStorage.getItem('cheburchat_text_contrast') || 'normal';
         const savedDisableHoverFlag = localStorage.getItem('cheburchat_disable_hover') === 'true';
+        const savedOpacity = parseFloat(localStorage.getItem('cheburchat_opacity')) || 1;
         
         document.getElementById('mainContent').innerHTML = `
             <div class="settings-view">
@@ -1912,6 +1969,13 @@
                         </div>
                     </div>
                     <div class="settings-section">
+                        <div class="settings-section-title"><i class="fas fa-eye"></i> Прозрачность карточек</div>
+                        <div class="opacity-slider">
+                            <label>Прозрачность: <span id="opacityValue">${Math.round(savedOpacity * 100)}%</span></label>
+                            <input type="range" id="opacitySlider" min="0.3" max="1" step="0.01" value="${savedOpacity}">
+                        </div>
+                    </div>
+                    <div class="settings-section">
                         <div class="settings-section-title"><i class="fas fa-gamepad"></i> Анимации</div>
                         <div class="hover-toggle" id="hoverToggleBtn">
                             <span>Отключить анимации при наведении</span>
@@ -1965,6 +2029,17 @@
                 preset.classList.add('active');
             };
         });
+        
+        // Ползунок прозрачности
+        const opacitySlider = document.getElementById('opacitySlider');
+        const opacityValue = document.getElementById('opacityValue');
+        if (opacitySlider) {
+            opacitySlider.oninput = (e) => {
+                const val = parseFloat(e.target.value);
+                setOpacity(val);
+                if (opacityValue) opacityValue.textContent = Math.round(val * 100) + '%';
+            };
+        }
         
         // Переключатель анимаций
         const hoverToggle = document.getElementById('hoverToggleBtn');
