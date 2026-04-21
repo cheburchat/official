@@ -12,7 +12,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; height: 100vh; overflow: hidden; transition: background 0.2s, color 0.2s; }
         
-        /* ========== БАЗОВЫЕ ПЕРЕМЕННЫЕ ========== */
         :root {
             --accent: #ff7b2c;
             --accent-hover: #e6691a;
@@ -21,7 +20,6 @@
             --shadow-intensity: 0.08;
         }
         
-        /* ========== ТЕМЫ ========== */
         body[data-theme="default"] {
             --bg-page: #f0f2f5;
             --bg-surface: rgba(255, 255, 255, var(--card-opacity));
@@ -54,7 +52,6 @@
             --shadow-lg: 0 8px 24px rgba(0,0,0,var(--shadow-intensity));
         }
         
-        /* МАТОВОЕ СТЕКЛО (светлый пастельный градиент) */
         body[data-theme="glass-light"] {
             --bg-page: linear-gradient(135deg, #e8edf2 0%, #e66bfa 50%, #fbacf3 100%);
             --bg-surface: rgba(255, 255, 255, var(--card-opacity));
@@ -71,7 +68,6 @@
             --shadow-lg: 0 16px 40px rgba(0,0,0,var(--shadow-intensity));
         }
         
-        /* ТЁМНОЕ МАТОВОЕ СТЕКЛО (тёмный градиент) */
         body[data-theme="glass-dark"] {
             --bg-page: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             --bg-surface: rgba(20, 25, 45, var(--card-opacity));
@@ -88,7 +84,6 @@
             --shadow-lg: 0 8px 32px rgba(0,0,0,var(--shadow-intensity));
         }
         
-        /* Регулировка контрастности текста - работает для всех тем */
         body[data-text-contrast="light"] {
             --text: #333333 !important;
             --text-secondary: #666666 !important;
@@ -101,7 +96,6 @@
             --other-msg-text: #ffffff !important;
         }
         
-        /* Переопределение для стеклянных тем при контрастности */
         body[data-theme="glass-light"][data-text-contrast="dark"] {
             --text: #1a1a1a !important;
             --text-secondary: #444444 !important;
@@ -114,7 +108,6 @@
             --other-msg-text: #1a1a1a !important;
         }
         
-        /* Отключение анимаций при наведении - глобально */
         body[data-disable-hover="true"] * {
             transition: none !important;
             animation: none !important;
@@ -163,12 +156,10 @@
         
         body { background: var(--bg-page); color: var(--text); }
         
-        /* Карточки используют прозрачный фон через rgba */
-        .post-card, .chat-item, .person-item, .track-card, .create-post-card, .comment-item {
+        .post-card, .chat-item, .person-item, .track-card, .create-post-card {
             background: var(--bg-surface);
         }
         
-        /* Стеклянные эффекты для обеих стеклянных тем */
         body[data-theme="glass-light"] .sidebar,
         body[data-theme="glass-light"] .chats-view,
         body[data-theme="glass-light"] .chat-header,
@@ -215,7 +206,6 @@
             background: rgba(15, 20, 35, 0.6);
         }
         
-        /* Текст в стеклянных темах */
         body[data-theme="glass-light"] .post-text,
         body[data-theme="glass-light"] .comment-text,
         body[data-theme="glass-light"] .chat-last-msg,
@@ -309,7 +299,6 @@
             color: rgba(255, 255, 255, 0.6);
         }
         
-        /* Акцентный цвет */
         .logo, .nav-item.active, .nav-item:hover, .create-group-btn, 
         .post-action-btn.liked, .comment-like-btn.liked,
         .action-btn.write, .profile-btn.primary, .input-area button,
@@ -328,7 +317,6 @@
             background: var(--accent-hover);
         }
         
-        /* Скругления */
         .sidebar, .chats-view, .chat-header, .feed-header, .music-header,
         .people-view, .settings-view, .admin-view, .post-card, .track-card,
         .person-item, .chat-item, .profile-view, .create-post-card,
@@ -336,7 +324,6 @@
             border-radius: var(--card-radius);
         }
         
-        /* Auth */
         .auth-container { height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); padding: 16px; }
         .auth-card { background: var(--bg-surface); padding: 40px 32px; width: 100%; max-width: 420px; text-align: center; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
         .auth-card h1 { color: var(--accent); margin-bottom: 8px; font-size: 36px; font-weight: 800; }
@@ -374,7 +361,6 @@
         
         .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--bg-page); }
         
-        /* Чаты */
         .chats-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); transition: all 0.2s; }
         .chats-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding-top: max(16px, env(safe-area-inset-top)); }
         .chats-header h2 { font-size: 24px; font-weight: 700; color: var(--text); }
@@ -460,7 +446,6 @@
         .attach-btn { background: var(--bg-element); border: none; width: 48px; height: 48px; border-radius: 50%; color: var(--text); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .attach-btn:hover { background: var(--accent); color: white; }
         
-        /* Лента новостей */
         .feed-header { background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); padding: 16px 20px; padding-top: max(16px, env(safe-area-inset-top)); }
         .feed-header h2 { font-size: 24px; font-weight: 700; color: white; }
         .posts-feed { display: flex; flex-direction: column; gap: 16px; padding: 16px; }
@@ -497,10 +482,7 @@
         .create-post-btn { border: none; padding: 8px 20px; border-radius: 24px; color: white; cursor: pointer; font-size: 14px; font-weight: 600; transition: 0.2s; }
         .create-post-btn:hover { filter: brightness(0.95); }
         
-        /* Профиль - добавляем отступ снизу для мобильных устройств */
         .profile-view { height: 100%; overflow-y: auto; background: var(--bg-surface); padding-bottom: 80px; }
-        
-        /* Настройки - добавляем отступ снизу для мобильных устройств */
         .settings-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
         .settings-list { padding: 20px; overflow-y: auto; padding-bottom: 100px; }
         
@@ -531,7 +513,6 @@
         .profile-section { padding: 0 20px 20px 20px; }
         .section-title { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
         
-        /* Музыка */
         .music-view { height: 100%; overflow-y: auto; background: var(--bg-surface); }
         .music-header { background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); padding: 16px 20px; padding-top: max(16px, env(safe-area-inset-top)); }
         .music-header h2 { font-size: 24px; font-weight: 700; color: white; }
@@ -543,7 +524,6 @@
         .track-artist { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
         .track-player audio { width: 100%; border-radius: 40px; height: 40px; }
         
-        /* Люди */
         .people-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
         .people-header { padding: 16px 20px; border-bottom: 1px solid var(--border); padding-top: max(16px, env(safe-area-inset-top)); }
         .people-header h2 { font-size: 24px; font-weight: 700; color: var(--text); }
@@ -565,12 +545,6 @@
         .action-btn.remove:hover { opacity: 0.9; }
         .action-btn.pending { background: var(--bg-element); color: var(--text-secondary); cursor: default; }
         
-        /* Настройки */
-        .settings-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
-        .settings-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; padding-top: max(16px, env(safe-area-inset-top)); }
-        .settings-header h2 { font-size: 24px; font-weight: 700; color: var(--text); flex: 1; }
-        
-        /* Темы в сетке 2x2 на ПК, но стеклянные темы будут на новой строке */
         .theme-presets { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
         @media (min-width: 768px) {
             .theme-presets { grid-template-columns: repeat(2, 1fr); }
@@ -609,7 +583,6 @@
         .reset-btn { width: 100%; padding: 14px; background: var(--bg-element); border: 1px solid var(--border); border-radius: 16px; cursor: pointer; font-weight: 600; color: var(--text); transition: 0.2s; margin-top: 20px; }
         .reset-btn:hover { background: var(--border); }
         
-        /* Админка */
         .admin-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
         .admin-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; padding-top: max(16px, env(safe-area-inset-top)); }
         .admin-header h2 { font-size: 24px; font-weight: 700; color: var(--text); flex: 1; }
@@ -680,7 +653,6 @@
 <body data-theme="default">
 <div id="app"></div>
 
-<!-- Модалки -->
 <div id="reactionsModal" class="modal-overlay reactions-modal">
     <div class="modal">
         <div class="modal-header">Выберите реакцию</div>
@@ -789,7 +761,952 @@
     let currentOpacity = 1;
     let currentShadow = 0.08;
 
-    // ========== НАСТРОЙКИ ТЕМЫ ==========
+    function showModal(title, message, onConfirm = null) {
+        const modal = document.getElementById('modal');
+        document.getElementById('modalTitle').textContent = title;
+        document.getElementById('modalMessage').textContent = message;
+        const confirmBtn = document.getElementById('modalConfirm');
+        confirmBtn.onclick = () => {
+            modal.classList.remove('active');
+            if (onConfirm) onConfirm();
+        };
+        modal.classList.add('active');
+    }
+
+    function getInitials(first, last) { return (first?.[0] || '?') + (last?.[0] || '?'); }
+    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m] || m)).replace(/\n/g,'<br>'); }
+    function scrollToBottom() { const el = document.getElementById('messagesArea'); if(el) setTimeout(() => el.scrollTop = el.scrollHeight, 100); }
+    function getChatId(a, b) { return [a, b].sort().join('_'); }
+
+    function hideContextMenu() {
+        document.getElementById('contextMenu')?.classList.remove('active');
+        document.getElementById('mobileContextOverlay')?.classList.remove('active');
+        document.getElementById('mobileContextMenu')?.classList.remove('active');
+    }
+
+    function showReactionsModal(messageId) {
+        const modal = document.getElementById('reactionsModal');
+        modal.classList.add('active');
+        document.querySelectorAll('#reactionsModal .reaction-option').forEach(el => {
+            el.onclick = () => { addReaction(messageId, el.dataset.reaction); modal.classList.remove('active'); };
+        });
+        document.getElementById('closeReactionsModal').onclick = () => modal.classList.remove('active');
+    }
+
+    async function addReaction(messageId, reaction) {
+        if (!messageId || !reaction) return;
+        const messageRef = db.collection('messages').doc(messageId);
+        const messageDoc = await messageRef.get();
+        if (!messageDoc.exists) return;
+        const reactions = messageDoc.data().reactions || {};
+        const userId = currentUser.uid;
+        if (reactions[userId] === reaction) delete reactions[userId];
+        else reactions[userId] = reaction;
+        await messageRef.update({ reactions: reactions });
+        hideContextMenu();
+    }
+
+    async function deleteMessage(messageId) {
+        showModal('Подтверждение', 'Удалить это сообщение?', async () => {
+            try { await db.collection('messages').doc(messageId).delete(); showModal('Успех', 'Сообщение удалено'); } 
+            catch(e) { showModal('Ошибка', e.message); }
+        });
+        hideContextMenu();
+    }
+
+    function showContextMenu(e, messageId, isMyMessage) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (isMobile) {
+            const mobileMenu = document.getElementById('mobileContextMenu');
+            const overlay = document.getElementById('mobileContextOverlay');
+            const deleteBtn = document.getElementById('mobileDeleteBtn');
+            const reactionBtn = document.getElementById('mobileReactionBtn');
+            deleteBtn.style.display = isMyMessage ? 'flex' : 'none';
+            reactionBtn.style.display = 'flex';
+            reactionBtn.onclick = () => { hideContextMenu(); showReactionsModal(messageId); };
+            deleteBtn.onclick = () => { if (isMyMessage) deleteMessage(messageId); hideContextMenu(); };
+            overlay.onclick = hideContextMenu;
+            overlay.classList.add('active');
+            mobileMenu.classList.add('active');
+        } else {
+            let menu = document.getElementById('contextMenu');
+            if (!menu) {
+                menu = document.createElement('div');
+                menu.id = 'contextMenu';
+                menu.className = 'context-menu';
+                menu.innerHTML = `<div id="contextReactionItem" class="context-menu-item"><i class="fas fa-smile"></i> Реакция</div><div id="contextDeleteItem" class="context-menu-item delete"><i class="fas fa-trash"></i> Удалить</div>`;
+                document.body.appendChild(menu);
+            }
+            const deleteItem = document.getElementById('contextDeleteItem');
+            const reactionItem = document.getElementById('contextReactionItem');
+            deleteItem.style.display = isMyMessage ? 'flex' : 'none';
+            let x = e.clientX, y = e.clientY;
+            if (x + 180 > window.innerWidth) x = window.innerWidth - 190;
+            if (y + 80 > window.innerHeight) y = window.innerHeight - 90;
+            menu.style.left = x + 'px';
+            menu.style.top = y + 'px';
+            menu.classList.add('active');
+            reactionItem.onclick = () => { menu.classList.remove('active'); showReactionsModal(messageId); };
+            deleteItem.onclick = () => { if (isMyMessage) deleteMessage(messageId); hideContextMenu(); };
+        }
+    }
+
+    function uploadAvatar(file) {
+        if (!file) return;
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+        formData.append('folder', 'avatars');
+        showModal('Загрузка', 'Обновление аватарки...');
+        fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(data => {
+                if (data.secure_url) {
+                    db.collection('users').doc(currentUser.uid).update({ avatarUrl: data.secure_url }).then(() => {
+                        userData.avatarUrl = data.secure_url;
+                        showModal('Успех', 'Аватарка обновлена!');
+                        if (currentView === 'profile') showProfileView(viewedProfileUserId);
+                        else if (currentView === 'chats') showChatsView();
+                        else if (currentView === 'people') showPeopleView();
+                        else if (currentView === 'feed') showFeedView();
+                        else if (currentView === 'music') showMusicView();
+                    }).catch(err => showModal('Ошибка', err.message));
+                } else showModal('Ошибка', data.error?.message || 'Ошибка загрузки');
+            }).catch(err => showModal('Ошибка', err.message));
+    }
+
+    function changeAvatar() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = (e) => { const file = e.target.files?.[0]; if (file) uploadAvatar(file); };
+        input.click();
+    }
+
+    async function loadTracks() {
+        const snapshot = await db.collection('tracks').orderBy('createdAt', 'desc').get();
+        const tracks = [];
+        snapshot.forEach(doc => tracks.push({ id: doc.id, ...doc.data() }));
+        return tracks;
+    }
+
+    async function addTrack(artist, title, file) {
+        if (!artist || !title || !file) return;
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+        formData.append('folder', 'music');
+        formData.append('resource_type', 'auto');
+        showModal('Загрузка', 'Загрузка трека...');
+        fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`, { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(data => {
+                if (data.secure_url) {
+                    db.collection('tracks').add({
+                        artist: artist.trim(),
+                        title: title.trim(),
+                        url: data.secure_url,
+                        addedBy: currentUser.uid,
+                        createdAt: new Date().toISOString()
+                    }).then(() => {
+                        showModal('Успех', 'Трек добавлен!');
+                        if (currentView === 'music') showMusicView();
+                        if (currentView === 'admin') loadAdminTracks();
+                    });
+                } else showModal('Ошибка', data.error?.message || 'Ошибка загрузки');
+            }).catch(err => showModal('Ошибка', err.message));
+    }
+
+    async function deleteTrack(trackId) {
+        showModal('Подтверждение', 'Удалить этот трек?', async () => {
+            try {
+                await db.collection('tracks').doc(trackId).delete();
+                showModal('Успех', 'Трек удалён');
+                if (currentView === 'music') showMusicView();
+                if (currentView === 'admin') loadAdminTracks();
+            } catch(e) { showModal('Ошибка', e.message); }
+        });
+    }
+
+    async function showMusicView() {
+        currentView = 'music';
+        if (isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
+        const tracks = await loadTracks();
+        let tracksHtml = '<div class="music-list">';
+        if (tracks.length === 0) {
+            tracksHtml += '<div class="track-card" style="text-align: center; padding: 40px;"><i class="fas fa-music" style="font-size: 48px; opacity: 0.5; margin-bottom: 16px;"></i><p>Нет треков</p><p style="font-size: 13px;">Музыка будет добавлена позже</p></div>';
+        }
+        for (const track of tracks) {
+            tracksHtml += `
+                <div class="track-card">
+                    <div class="track-info">
+                        <div class="track-title">${escapeHtml(track.title)}</div>
+                        <div class="track-artist">${escapeHtml(track.artist)}</div>
+                    </div>
+                    <div class="track-player">
+                        <audio controls src="${track.url}" preload="metadata"></audio>
+                    </div>
+                </div>
+            `;
+        }
+        tracksHtml += '</div>';
+        document.getElementById('mainContent').innerHTML = `
+            <div class="music-view">
+                <div class="music-header">
+                    <h2>Музыка</h2>
+                </div>
+                ${tracksHtml}
+            </div>
+        `;
+        if (isMobile) updateMobileNav('more');
+    }
+
+    async function createPost(text, isOfficial = false) {
+        if (!text.trim()) return;
+        await db.collection('posts').add({
+            userId: isOfficial ? 'official' : currentUser.uid,
+            userName: isOfficial ? 'ЧЕБУРЧАТ' : `${userData.firstName} ${userData.lastName}`,
+            userAvatar: isOfficial ? null : (userData.avatarUrl || null),
+            userVerified: isOfficial ? true : (userData.isVerified || false),
+            isOfficial: isOfficial,
+            text: text.trim(),
+            likes: [],
+            comments: [],
+            createdAt: new Date().toISOString()
+        });
+        showModal('Успех', isOfficial ? 'Официальный пост опубликован!' : 'Запись опубликована!');
+        if (currentView === 'profile') showProfileView(viewedProfileUserId);
+        else if (currentView === 'feed') showFeedView();
+        else if (currentView === 'admin') loadAdminStats();
+    }
+
+    async function deletePost(postId, postUserId) {
+        if (postUserId !== currentUser.uid && !isAdmin) return;
+        showModal('Подтверждение', 'Удалить этот пост?', async () => {
+            try {
+                await db.collection('posts').doc(postId).delete();
+                showModal('Успех', 'Пост удалён');
+                if (currentView === 'profile') showProfileView(viewedProfileUserId);
+                else if (currentView === 'feed') showFeedView();
+            } catch(e) { showModal('Ошибка', e.message); }
+        });
+    }
+
+    async function toggleLike(postId) {
+        const postRef = db.collection('posts').doc(postId);
+        const post = (await postRef.get()).data();
+        const likes = post.likes || [];
+        if (likes.includes(currentUser.uid)) {
+            await postRef.update({ likes: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) });
+        } else {
+            await postRef.update({ likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid) });
+        }
+        if (currentView === 'profile') showProfileView(viewedProfileUserId);
+        else if (currentView === 'feed') showFeedView();
+    }
+
+    async function toggleCommentLike(postId, commentId) {
+        const postRef = db.collection('posts').doc(postId);
+        const post = (await postRef.get()).data();
+        const comments = post.comments || [];
+        const commentIndex = comments.findIndex(c => c.id === commentId);
+        if (commentIndex !== -1) {
+            const comment = comments[commentIndex];
+            const likes = comment.likes || [];
+            if (likes.includes(currentUser.uid)) {
+                comment.likes = likes.filter(id => id !== currentUser.uid);
+            } else {
+                comment.likes = [...likes, currentUser.uid];
+            }
+            comments[commentIndex] = comment;
+            await postRef.update({ comments: comments });
+        }
+        if (currentView === 'profile') showProfileView(viewedProfileUserId);
+        else if (currentView === 'feed') showFeedView();
+    }
+
+    async function addComment(postId, text) {
+        if (!text.trim()) return;
+        const comment = {
+            id: Date.now().toString(),
+            userId: currentUser.uid,
+            userName: `${userData.firstName} ${userData.lastName}`,
+            userAvatar: userData.avatarUrl || null,
+            userVerified: userData.isVerified || false,
+            text: text.trim(),
+            likes: [],
+            createdAt: new Date().toISOString()
+        };
+        await db.collection('posts').doc(postId).update({
+            comments: firebase.firestore.FieldValue.arrayUnion(comment)
+        });
+        if (currentView === 'profile') showProfileView(viewedProfileUserId);
+        else if (currentView === 'feed') showFeedView();
+    }
+
+    async function loadPosts(userId = null) {
+        let query = db.collection('posts').orderBy('createdAt', 'desc');
+        if (userId) query = query.where('userId', '==', userId);
+        const snapshot = await query.get();
+        const posts = [];
+        snapshot.forEach(doc => posts.push({ id: doc.id, ...doc.data() }));
+        return posts;
+    }
+
+    async function showFeedView() {
+        currentView = 'feed';
+        if (isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
+        const posts = await loadPosts();
+        let postsHtml = '<div class="posts-feed">';
+        if (posts.length === 0) {
+            postsHtml += '<div class="post-card" style="text-align: center; padding: 40px;"><i class="fas fa-newspaper" style="font-size: 48px; opacity: 0.5; margin-bottom: 16px;"></i><p>Нет постов</p><p style="font-size: 13px;">Создайте свой первый пост!</p></div>';
+        }
+        for (const post of posts) {
+            const postDate = new Date(post.createdAt).toLocaleString();
+            const likes = post.likes || [];
+            const comments = post.comments || [];
+            const isLiked = likes.includes(currentUser.uid);
+            const canDelete = (post.userId === currentUser.uid) || isAdmin;
+            postsHtml += `
+                <div class="post-card" data-post-id="${post.id}">
+                    ${canDelete ? `<button class="post-delete-btn" data-action="delete" data-post="${post.id}" data-user="${post.userId}"><i class="fas fa-trash"></i></button>` : ''}
+                    <div class="post-header" data-user-id="${post.userId === 'official' ? null : post.userId}">
+                        <div class="post-avatar" style="${post.userAvatar ? `background-image: url('${post.userAvatar}'); background-size: cover; background-position: center;` : ''}">${!post.userAvatar ? getInitials(post.userName?.split(' ')[0], post.userName?.split(' ')[1] || '') : ''}${post.isOfficial ? '<div class="verified-badge" style="background: #fbbf24;"><i class="fas fa-star"></i></div>' : (post.userVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : '')}</div>
+                        <div>
+                            <div class="post-author-name">${escapeHtml(post.userName)} ${post.isOfficial ? '<i class="fas fa-star" style="color: #fbbf24;"></i>' : (post.userVerified ? '<i class="fas fa-check-circle verified-icon" style="font-size: 12px;"></i>' : '')}</div>
+                            <div class="post-time">${postDate}</div>
+                        </div>
+                    </div>
+                    <div class="post-text">${escapeHtml(post.text)}</div>
+                    <div class="post-actions">
+                        <button class="post-action-btn ${isLiked ? 'liked' : ''}" data-action="like" data-post="${post.id}"><i class="fas fa-heart"></i> ${likes.length > 0 ? likes.length : ''}</button>
+                        <button class="post-action-btn" data-action="comment" data-post="${post.id}"><i class="fas fa-comment"></i> ${comments.length > 0 ? comments.length : ''}</button>
+                    </div>
+                    <div class="comments-section" id="comments-${post.id}" style="display: none;">
+                        ${comments.map(c => `
+                            <div class="comment-item">
+                                <div class="comment-avatar" style="${c.userAvatar ? `background-image: url('${c.userAvatar}'); background-size: cover; background-position: center;` : ''}">${!c.userAvatar ? getInitials(c.userName?.split(' ')[0], c.userName?.split(' ')[1] || '') : ''}${c.userVerified ? '<div class="verified-badge" style="width: 14px; height: 14px; font-size: 7px;"><i class="fas fa-check"></i></div>' : ''}</div>
+                                <div class="comment-content">
+                                    <div class="comment-author">${escapeHtml(c.userName)} ${c.userVerified ? '<i class="fas fa-check-circle verified-icon" style="font-size: 10px;"></i>' : ''}</div>
+                                    <div class="comment-text">${escapeHtml(c.text)}</div>
+                                    <div class="comment-footer">
+                                        <div class="comment-time">${new Date(c.createdAt).toLocaleString()}</div>
+                                        <button class="comment-like-btn ${c.likes?.includes(currentUser.uid) ? 'liked' : ''}" data-post="${post.id}" data-comment="${c.id}"><i class="fas fa-heart"></i> ${c.likes?.length || 0}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                        <div class="add-comment">
+                            <input type="text" id="comment-input-${post.id}" placeholder="Написать комментарий...">
+                            <button data-post="${post.id}" class="submit-comment-btn">Отправить</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        postsHtml += '</div>';
+        document.getElementById('mainContent').innerHTML = `
+            <div class="profile-view">
+                <div class="feed-header">
+                    <h2>Лента новостей</h2>
+                </div>
+                ${postsHtml}
+            </div>
+        `;
+        document.querySelectorAll('.post-header').forEach(header => {
+            const userId = header.dataset.userId;
+            if (userId && userId !== 'null') {
+                header.addEventListener('click', () => showProfileView(userId));
+            }
+        });
+        document.querySelectorAll('.post-action-btn[data-action="like"]').forEach(btn => {
+            btn.addEventListener('click', (e) => { e.stopPropagation(); toggleLike(btn.dataset.post); });
+        });
+        document.querySelectorAll('.post-action-btn[data-action="comment"]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const commentsDiv = document.getElementById(`comments-${btn.dataset.post}`);
+                commentsDiv.style.display = commentsDiv.style.display === 'none' ? 'block' : 'none';
+            });
+        });
+        document.querySelectorAll('.post-delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                deletePost(btn.dataset.post, btn.dataset.user);
+            });
+        });
+        document.querySelectorAll('.submit-comment-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const postId = btn.dataset.post;
+                const input = document.getElementById(`comment-input-${postId}`);
+                addComment(postId, input.value);
+                input.value = '';
+            });
+        });
+        document.querySelectorAll('.comment-like-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleCommentLike(btn.dataset.post, btn.dataset.comment);
+            });
+        });
+        if (isMobile) updateMobileNav('feed');
+    }
+
+    async function showProfileView(userId = null) {
+        currentView = 'profile';
+        const targetUserId = userId || currentUser.uid;
+        viewedProfileUserId = targetUserId;
+        const isOwnProfile = targetUserId === currentUser.uid;
+        if (isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
+        const userDoc = await db.collection('users').doc(targetUserId).get();
+        if (!userDoc.exists) { showModal('Ошибка', 'Пользователь не найден'); showChatsView(); return; }
+        const profileData = userDoc.data();
+        const friendsCount = profileData.friends?.length || 0;
+        const avatarStyle = profileData.avatarUrl ? `background-image: url('${profileData.avatarUrl}'); background-size: cover; background-position: center;` : '';
+        const posts = await loadPosts(targetUserId);
+        let postsHtml = '<div class="posts-feed">';
+        if (isOwnProfile) {
+            postsHtml += `
+                <div class="create-post-card">
+                    <textarea id="newPostText" class="create-post-input" rows="3" placeholder="Что у вас нового?"></textarea>
+                    <button class="create-post-btn" id="submitPostBtn">✏️ Опубликовать</button>
+                </div>
+            `;
+        }
+        for (const post of posts) {
+            const postDate = new Date(post.createdAt).toLocaleString();
+            const likes = post.likes || [];
+            const comments = post.comments || [];
+            const isLiked = likes.includes(currentUser.uid);
+            const canDelete = (post.userId === currentUser.uid) || isAdmin;
+            postsHtml += `
+                <div class="post-card" data-post-id="${post.id}">
+                    ${canDelete ? `<button class="post-delete-btn" data-action="delete" data-post="${post.id}" data-user="${post.userId}"><i class="fas fa-trash"></i></button>` : ''}
+                    <div class="post-header">
+                        <div class="post-avatar" style="${post.userAvatar ? `background-image: url('${post.userAvatar}'); background-size: cover; background-position: center;` : ''}">${!post.userAvatar ? getInitials(post.userName?.split(' ')[0], post.userName?.split(' ')[1] || '') : ''}${post.isOfficial ? '<div class="verified-badge" style="background: #fbbf24;"><i class="fas fa-star"></i></div>' : (post.userVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : '')}</div>
+                        <div>
+                            <div class="post-author-name">${escapeHtml(post.userName)} ${post.isOfficial ? '<i class="fas fa-star" style="color: #fbbf24;"></i>' : (post.userVerified ? '<i class="fas fa-check-circle verified-icon" style="font-size: 12px;"></i>' : '')}</div>
+                            <div class="post-time">${postDate}</div>
+                        </div>
+                    </div>
+                    <div class="post-text">${escapeHtml(post.text)}</div>
+                    <div class="post-actions">
+                        <button class="post-action-btn ${isLiked ? 'liked' : ''}" data-action="like" data-post="${post.id}"><i class="fas fa-heart"></i> ${likes.length > 0 ? likes.length : ''}</button>
+                        <button class="post-action-btn" data-action="comment" data-post="${post.id}"><i class="fas fa-comment"></i> ${comments.length > 0 ? comments.length : ''}</button>
+                    </div>
+                    <div class="comments-section" id="comments-${post.id}" style="display: none;">
+                        ${comments.map(c => `
+                            <div class="comment-item">
+                                <div class="comment-avatar" style="${c.userAvatar ? `background-image: url('${c.userAvatar}'); background-size: cover; background-position: center;` : ''}">${!c.userAvatar ? getInitials(c.userName?.split(' ')[0], c.userName?.split(' ')[1] || '') : ''}${c.userVerified ? '<div class="verified-badge" style="width: 14px; height: 14px; font-size: 7px;"><i class="fas fa-check"></i></div>' : ''}</div>
+                                <div class="comment-content">
+                                    <div class="comment-author">${escapeHtml(c.userName)} ${c.userVerified ? '<i class="fas fa-check-circle verified-icon" style="font-size: 10px;"></i>' : ''}</div>
+                                    <div class="comment-text">${escapeHtml(c.text)}</div>
+                                    <div class="comment-footer">
+                                        <div class="comment-time">${new Date(c.createdAt).toLocaleString()}</div>
+                                        <button class="comment-like-btn ${c.likes?.includes(currentUser.uid) ? 'liked' : ''}" data-post="${post.id}" data-comment="${c.id}"><i class="fas fa-heart"></i> ${c.likes?.length || 0}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                        <div class="add-comment">
+                            <input type="text" id="comment-input-${post.id}" placeholder="Написать комментарий...">
+                            <button data-post="${post.id}" class="submit-comment-btn">Отправить</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        postsHtml += '</div>';
+        document.getElementById('mainContent').innerHTML = `
+            <div class="profile-view">
+                <div class="profile-header">
+                    <div class="profile-avatar-large" style="${avatarStyle}" id="changeAvatarProfileBtn">${!profileData.avatarUrl ? getInitials(profileData.firstName, profileData.lastName) : ''}${profileData.isVerified ? '<div class="verified-badge" style="width: 24px; height: 24px; font-size: 12px; bottom: -5px; right: -5px;"><i class="fas fa-check"></i></div>' : ''}</div>
+                </div>
+                <div class="profile-info">
+                    <div class="profile-name">${profileData.firstName} ${profileData.lastName}${profileData.isVerified ? ' <i class="fas fa-check-circle verified-icon"></i>' : ''}</div>
+                    <div class="profile-email">${profileData.email}</div>
+                    <div class="profile-stats">
+                        <div class="stat"><div class="stat-value">${friendsCount}</div><div class="stat-label">друзей</div></div>
+                        <div class="stat"><div class="stat-value">${posts.length}</div><div class="stat-label">записей</div></div>
+                    </div>
+                    ${isOwnProfile ? `
+                        <div class="profile-actions">
+                            <button class="profile-btn secondary" id="changeAvatarBtn"><i class="fas fa-camera"></i> Сменить аватар</button>
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="profile-section">
+                    <div class="section-title"><i class="fas fa-newspaper"></i> Записи</div>
+                    ${postsHtml}
+                </div>
+            </div>
+        `;
+        if (isOwnProfile) {
+            document.getElementById('changeAvatarProfileBtn')?.addEventListener('click', changeAvatar);
+            document.getElementById('changeAvatarBtn')?.addEventListener('click', changeAvatar);
+            document.getElementById('submitPostBtn')?.addEventListener('click', () => {
+                const text = document.getElementById('newPostText').value;
+                createPost(text, false);
+            });
+        }
+        document.querySelectorAll('.post-action-btn[data-action="like"]').forEach(btn => {
+            btn.addEventListener('click', (e) => { e.stopPropagation(); toggleLike(btn.dataset.post); });
+        });
+        document.querySelectorAll('.post-action-btn[data-action="comment"]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const commentsDiv = document.getElementById(`comments-${btn.dataset.post}`);
+                commentsDiv.style.display = commentsDiv.style.display === 'none' ? 'block' : 'none';
+            });
+        });
+        document.querySelectorAll('.post-delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                deletePost(btn.dataset.post, btn.dataset.user);
+            });
+        });
+        document.querySelectorAll('.submit-comment-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const postId = btn.dataset.post;
+                const input = document.getElementById(`comment-input-${postId}`);
+                addComment(postId, input.value);
+                input.value = '';
+            });
+        });
+        document.querySelectorAll('.comment-like-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleCommentLike(btn.dataset.post, btn.dataset.comment);
+            });
+        });
+        if (isMobile) updateMobileNav('profile');
+    }
+
+    // Функции чатов (сокращенно, но рабочие)
+    async function loadChatsList() {
+        if(!currentUser) return;
+        try {
+            const allMessages = await db.collection('messages').where('userId', '==', currentUser.uid).get();
+            const messagesTo = await db.collection('messages').where('toUserId', '==', currentUser.uid).get();
+            const chatUsers = new Map();
+            allMessages.forEach(doc => { const msg = doc.data(); if(msg.toUserId && msg.toUserId !== currentUser.uid && msg.chatType !== 'group') chatUsers.set(msg.toUserId, { lastMsg: msg.text || '📎 Медиа', lastTime: msg.timestamp }); });
+            messagesTo.forEach(doc => { const msg = doc.data(); if(msg.userId && msg.userId !== currentUser.uid && msg.chatType !== 'group') { const existing = chatUsers.get(msg.userId); if(!existing || (msg.timestamp && existing.lastTime?.toDate?.() < msg.timestamp.toDate())) chatUsers.set(msg.userId, { lastMsg: msg.text || '📎 Медиа', lastTime: msg.timestamp }); } });
+            const friendIds = userData.friends || [];
+            for(const id of friendIds) { if(!chatUsers.has(id)) { const userDoc = await db.collection('users').doc(id).get(); if(userDoc.exists) chatUsers.set(id, { lastMsg: 'Напишите первым', lastTime: null }); } }
+            const privateChats = [];
+            for(const [id, data] of chatUsers) {
+                const userDoc = await db.collection('users').doc(id).get();
+                if(userDoc.exists) { const u = userDoc.data(); privateChats.push({ type: 'private', id, firstName: u.firstName, lastName: u.lastName, avatarUrl: u.avatarUrl || null, isVerified: u.isVerified || false, lastMsg: data.lastMsg || 'Напишите первым', lastTime: data.lastTime, unreadCount: 0 }); }
+            }
+            const groupsSnapshot = await db.collection('groups').where('members', 'array-contains', currentUser.uid).get();
+            const groupChats = [];
+            for(const doc of groupsSnapshot.docs) {
+                const group = doc.data();
+                const lastMsgSnapshot = await db.collection('messages').where('groupId', '==', doc.id).orderBy('timestamp', 'desc').limit(1).get();
+                let lastMsg = 'Нет сообщений', lastTime = null;
+                if(!lastMsgSnapshot.empty) { const lastMsgData = lastMsgSnapshot.docs[0].data(); lastMsg = lastMsgData.text || '📎 Медиа'; lastTime = lastMsgData.timestamp?.toDate?.() || null; }
+                groupChats.push({ type: 'group', id: doc.id, name: group.name, members: group.members, createdBy: group.createdBy, lastMsg, lastTime });
+            }
+            groupChats.sort((a,b) => (b.lastTime?.getTime?.() || 0) - (a.lastTime?.getTime?.() || 0));
+            privateChats.sort((a,b) => (b.lastTime?.toDate?.()?.getTime() || 0) - (a.lastTime?.toDate?.()?.getTime() || 0));
+            chatsList = { private: privateChats, groups: groupChats };
+            renderChatsList();
+        } catch(e) { console.error(e); }
+    }
+
+    function renderChatsList(searchQuery = '') {
+        const container = document.getElementById('chatsListContainer');
+        if(!container) return;
+        let fp = chatsList.private || [], fg = chatsList.groups || [];
+        if(searchQuery) { const q = searchQuery.toLowerCase(); fp = fp.filter(c => `${c.firstName} ${c.lastName}`.toLowerCase().includes(q)); fg = fg.filter(g => g.name.toLowerCase().includes(q)); }
+        if(fp.length === 0 && fg.length === 0) { container.innerHTML = '<div class="empty-chats"><i class="fas fa-comments" style="font-size:48px;margin-bottom:16px;opacity:0.5"></i><p>Нет чатов</p><p style="font-size:13px">Начните общение или создайте беседу</p></div>'; return; }
+        container.innerHTML = '';
+        fg.forEach(chat => {
+            const div = document.createElement('div'); div.className = 'chat-item';
+            const timeStr = chat.lastTime ? new Date(chat.lastTime).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
+            div.innerHTML = `<div class="chat-avatar-wrapper"><div class="chat-avatar group-avatar"><i class="fas fa-users"></i></div></div><div class="chat-info"><div class="chat-name">${escapeHtml(chat.name)}<span class="group-icon"><i class="fas fa-users"></i></span></div><div class="chat-last-msg">${escapeHtml(chat.lastMsg.substring(0,50))}</div></div>${timeStr ? `<div class="chat-time">${timeStr}</div>` : ''}`;
+            div.onclick = () => openChat({ type: 'group', id: chat.id, name: chat.name, members: chat.members, createdBy: chat.createdBy });
+            container.appendChild(div);
+        });
+        fp.forEach(chat => {
+            const div = document.createElement('div'); div.className = 'chat-item';
+            const timeStr = chat.lastTime?.toDate?.() ? new Date(chat.lastTime.toDate()).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
+            const avatarStyle = chat.avatarUrl ? `background-image: url('${chat.avatarUrl}'); background-size: cover; background-position: center;` : '';
+            div.innerHTML = `<div class="chat-avatar-wrapper"><div class="chat-avatar" style="${avatarStyle}">${!chat.avatarUrl ? getInitials(chat.firstName, chat.lastName) : ''}${chat.isVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : ''}</div></div><div class="chat-info"><div class="chat-name">${chat.firstName} ${chat.lastName}${chat.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div><div class="chat-last-msg">${escapeHtml(chat.lastMsg.substring(0,50))}</div></div>${timeStr ? `<div class="chat-time">${timeStr}</div>` : ''}`;
+            div.onclick = () => openChat({ type: 'private', id: chat.id, firstName: chat.firstName, lastName: chat.lastName, avatarUrl: chat.avatarUrl, isVerified: chat.isVerified });
+            container.appendChild(div);
+        });
+    }
+
+    function openChat(chat) {
+        if(messagesUnsubscribe) messagesUnsubscribe();
+        currentChat = chat;
+        if(isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.add('hidden'); }
+        const isGroup = chat.type === 'group';
+        const avatarUrl = !isGroup ? chat.avatarUrl : null;
+        const avatarStyle = avatarUrl ? `background-image: url('${avatarUrl}'); background-size: cover; background-position: center;` : '';
+        const avatarContent = !isGroup && !avatarUrl ? getInitials(chat.firstName, chat.lastName) : (isGroup ? '<i class="fas fa-users"></i>' : '');
+        document.getElementById('mainContent').innerHTML = `
+            <div class="chat-window">
+                <div class="chat-header">
+                    <button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i></button>
+                    <div class="chat-header-avatar ${isGroup ? 'group-avatar' : ''}" style="${avatarStyle}">${avatarContent}${!isGroup && chat.isVerified ? '<div class="verified-badge" style="bottom: -2px; right: -2px; width: 14px; height: 14px; font-size: 8px;"><i class="fas fa-check"></i></div>' : ''}</div>
+                    <div class="chat-header-info">
+                        <div class="chat-header-name" ${!isGroup ? `data-user-id="${chat.id}"` : ''}>${isGroup ? escapeHtml(chat.name) : `${escapeHtml(chat.firstName)} ${escapeHtml(chat.lastName)}`}${!isGroup && chat.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div>
+                        ${isGroup && chat.members ? `<div class="chat-header-members" id="groupManageBtn">${chat.members.length} участников</div>` : ''}
+                    </div>
+                </div>
+                <div class="messages-area" id="messagesArea"></div>
+                <div class="input-area">
+                    <input type="text" id="messageInput" placeholder="Сообщение...">
+                    <button class="attach-btn" id="attachBtn"><i class="fas fa-paperclip"></i></button>
+                    <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        `;
+        document.getElementById('backBtn').onclick = () => { if(isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); } currentChat = null; showChatsView(); };
+        if (isGroup && document.getElementById('groupManageBtn')) document.getElementById('groupManageBtn').onclick = showGroupManage;
+        if (!isGroup) {
+            const nameEl = document.querySelector('.chat-header-name');
+            if (nameEl) nameEl.style.cursor = 'pointer';
+            nameEl?.addEventListener('click', () => showProfileView(chat.id));
+        }
+        document.getElementById('sendBtn').onclick = sendTextMessage;
+        document.getElementById('attachBtn').onclick = openFilePicker;
+        document.getElementById('messageInput').onkeypress = (e) => { if(e.key === 'Enter') sendTextMessage(); };
+        loadMessages();
+        setTimeout(() => { const ma = document.getElementById('messagesArea'); if(ma) ma.scrollTop = ma.scrollHeight; }, 100);
+    }
+
+    async function sendTextMessage() {
+        const input = document.getElementById('messageInput');
+        if(!input || !currentChat) return;
+        const text = input.value.trim();
+        if(!text) return;
+        input.value = '';
+        const messageData = { text: text, mediaUrl: null, userId: currentUser.uid, userName: `${userData.firstName} ${userData.lastName}`, userAvatar: userData.avatarUrl || null, timestamp: firebase.firestore.FieldValue.serverTimestamp(), chatType: currentChat.type, reactions: {} };
+        if (currentChat.type === 'private') { messageData.read = false; messageData.chatId = getChatId(currentUser.uid, currentChat.id); messageData.toUserId = currentChat.id; }
+        else { messageData.groupId = currentChat.id; await db.collection('groups').doc(currentChat.id).update({ lastMsg: text, lastTime: new Date().toISOString() }).catch(() => {}); }
+        await db.collection('messages').add(messageData);
+        scrollToBottom();
+        loadChatsList();
+    }
+
+    async function markMessagesAsRead(chat) {
+        if (!currentUser || chat.type !== 'private') return;
+        const chatId = getChatId(currentUser.uid, chat.id);
+        const query = db.collection('messages').where('chatId', '==', chatId).where('userId', '!=', currentUser.uid).where('read', '==', false);
+        const snapshot = await query.get();
+        const batch = db.batch();
+        snapshot.forEach(doc => batch.update(doc.ref, { read: true }));
+        await batch.commit();
+    }
+
+    function loadMessages() {
+        if(messagesUnsubscribe) messagesUnsubscribe();
+        if(!currentChat) return;
+        let query;
+        if (currentChat.type === 'private') query = db.collection('messages').where('chatId', '==', getChatId(currentUser.uid, currentChat.id));
+        else query = db.collection('messages').where('groupId', '==', currentChat.id);
+        messagesUnsubscribe = query.orderBy('timestamp', 'asc').onSnapshot(async (snapshot) => {
+            const container = document.getElementById('messagesArea');
+            if(!container) return;
+            container.innerHTML = '';
+            if (currentChat.type === 'private') await markMessagesAsRead(currentChat);
+            snapshot.forEach(doc => {
+                const msg = doc.data();
+                const msgId = doc.id;
+                const isMy = msg.userId === currentUser.uid;
+                const ts = msg.timestamp?.toDate?.() || new Date();
+                const reactions = msg.reactions || {};
+                let mediaHtml = '';
+                if (msg.mediaUrl) {
+                    if (msg.mediaType === 'image') mediaHtml = `<div class="media-container"><img src="${msg.mediaUrl}" class="message-image" onclick="window.open('${msg.mediaUrl}', '_blank')" loading="lazy"></div>`;
+                    else if (msg.mediaType === 'video') mediaHtml = `<div class="media-container"><video src="${msg.mediaUrl}" class="message-video" controls preload="metadata" playsinline></video></div>`;
+                }
+                const reactionGroups = {};
+                Object.values(reactions).forEach(r => { reactionGroups[r] = (reactionGroups[r] || 0) + 1; });
+                const myReactionValue = reactions[currentUser.uid];
+                let reactionsHtml = '';
+                if (Object.keys(reactionGroups).length > 0) {
+                    reactionsHtml = '<div class="reactions-bar">';
+                    for (const [emoji, count] of Object.entries(reactionGroups)) reactionsHtml += `<div class="reaction-item ${myReactionValue === emoji ? 'my-reaction' : ''}" data-msg="${msgId}" data-reaction="${emoji}"><span class="reaction-emoji">${emoji}</span>${count > 1 ? `<span class="reaction-count">${count}</span>` : ''}</div>`;
+                    reactionsHtml += '</div>';
+                }
+                let readStatusHtml = '';
+                if (isMy && currentChat.type === 'private') readStatusHtml = msg.read ? `<span class="read-status read"><i class="fas fa-check-double"></i></span>` : `<span class="read-status delivered"><i class="fas fa-check"></i></span>`;
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${isMy ? 'my' : 'other'}`;
+                messageDiv.innerHTML = `
+                    ${!isMy ? `<div class="message-sender" data-user-id="${msg.userId}"><div class="sender-avatar" style="background-image: url('${msg.userAvatar || ''}'); background-size: cover; background-position: center; ${!msg.userAvatar ? 'background: var(--accent); display: flex; align-items: center; justify-content: center;' : ''}">${!msg.userAvatar ? getInitials(msg.userName?.split(' ')[0], msg.userName?.split(' ')[1] || '') : ''}</div>${escapeHtml(msg.userName || 'Пользователь')}</div>` : ''}
+                    ${mediaHtml}
+                    ${msg.text ? `<div class="message-bubble">${escapeHtml(msg.text)}</div>` : ''}
+                    <div class="message-footer">
+                        <span class="message-time">${ts.toLocaleDateString()} в ${ts.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+                        ${readStatusHtml}
+                    </div>
+                    ${reactionsHtml}
+                `;
+                messageDiv.querySelectorAll('.reaction-item').forEach(el => { el.onclick = (e) => { e.stopPropagation(); addReaction(el.dataset.msg, el.dataset.reaction); }; });
+                const clickableElement = messageDiv.querySelector('.message-bubble') || messageDiv.querySelector('.media-container');
+                if (clickableElement) {
+                    clickableElement.addEventListener('contextmenu', (e) => { e.preventDefault(); showContextMenu(e, msgId, isMy); });
+                    let lastTap = 0;
+                    clickableElement.addEventListener('touchstart', (e) => { const now = Date.now(); if (now - lastTap < 300) { e.preventDefault(); showContextMenu(e, msgId, isMy); } lastTap = now; });
+                }
+                const senderEl = messageDiv.querySelector('.message-sender');
+                if (senderEl && !isMy) {
+                    senderEl.style.cursor = 'pointer';
+                    senderEl.addEventListener('click', () => showProfileView(msg.userId));
+                }
+                container.appendChild(messageDiv);
+            });
+            scrollToBottom();
+        });
+    }
+
+    function uploadFileToCloudinary(file, onSuccess, onError) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+        if (file.type.startsWith('video/')) formData.append('resource_type', 'video');
+        const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${file.type.startsWith('video/') ? 'video' : 'image'}/upload`;
+        fetch(url, { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(data => { if (data.secure_url) onSuccess(data.secure_url, data.resource_type); else onError(data.error?.message || 'Ошибка загрузки'); })
+            .catch(err => onError(err.message));
+    }
+
+    function sendMediaFile(file) {
+        if (!currentChat) { showModal('Ошибка', 'Сначала выберите чат'); return; }
+        if (!file) return;
+        const isVideo = file.type.startsWith('video/');
+        const fileSizeMB = file.size / (1024 * 1024);
+        if (fileSizeMB > 100) { showModal('Ошибка', 'Файл слишком большой. Максимум 100 МБ'); return; }
+        showModal('Загрузка', isVideo ? '🎬 Обработка видео...' : '📸 Отправка фото...');
+        uploadFileToCloudinary(file, (url, resourceType) => {
+            const messageData = { text: '', mediaUrl: url, mediaType: resourceType, userId: currentUser.uid, userName: `${userData.firstName} ${userData.lastName}`, userAvatar: userData.avatarUrl || null, timestamp: firebase.firestore.FieldValue.serverTimestamp(), chatType: currentChat.type, reactions: {} };
+            if (currentChat.type === 'private') { messageData.chatId = getChatId(currentUser.uid, currentChat.id); messageData.toUserId = currentChat.id; }
+            else messageData.groupId = currentChat.id;
+            db.collection('messages').add(messageData).then(() => { document.querySelector('.modal-overlay.active')?.classList.remove('active'); scrollToBottom(); loadChatsList(); }).catch(err => showModal('Ошибка', 'Ошибка отправки: ' + err.message));
+        }, (error) => showModal('Ошибка', 'Не удалось загрузить файл: ' + error));
+    }
+
+    function openFilePicker() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*,video/*';
+        input.onchange = (e) => { const file = e.target.files?.[0]; if (file) sendMediaFile(file); };
+        input.click();
+    }
+
+    async function showGroupManage() {
+        if (!currentChat || currentChat.type !== 'group') return;
+        const groupDoc = await db.collection('groups').doc(currentChat.id).get();
+        const group = groupDoc.data();
+        const isCreator = group.createdBy === currentUser.uid;
+        const members = [];
+        for (const memberId of group.members) { const userDoc = await db.collection('users').doc(memberId).get(); if (userDoc.exists) members.push({ id: memberId, ...userDoc.data() }); }
+        const friendIds = userData.friends || [];
+        const availableFriends = [];
+        for (const id of friendIds) { if (!group.members.includes(id)) { const userDoc = await db.collection('users').doc(id).get(); if (userDoc.exists) availableFriends.push({ id, ...userDoc.data() }); } }
+        const modal = document.getElementById('groupManageModal');
+        document.getElementById('groupManageTitle').textContent = `Управление: ${group.name}`;
+        const membersListDiv = document.getElementById('groupMembersList');
+        membersListDiv.innerHTML = '<div style="padding: 12px; font-weight: 600;">Участники:</div>';
+        for (const member of members) {
+            const isCreatorBadge = group.createdBy === member.id ? ' 👑' : '';
+            const avatarStyle = member.avatarUrl ? `background-image: url('${member.avatarUrl}'); background-size: cover; background-position: center;` : '';
+            const removeBtn = (isCreator && member.id !== currentUser.uid) ? `<button class="remove-member-btn" data-id="${member.id}">Удалить</button>` : '';
+            const div = document.createElement('div');
+            div.className = 'group-member-item';
+            div.innerHTML = `<div class="group-member-info"><div class="group-member-avatar" style="${avatarStyle}">${!member.avatarUrl ? getInitials(member.firstName, member.lastName) : ''}${member.isVerified ? '<div class="verified-badge" style="width: 14px; height: 14px; font-size: 7px;"><i class="fas fa-check"></i></div>' : ''}</div><div class="group-member-name">${member.firstName} ${member.lastName}${isCreatorBadge}</div></div>${removeBtn}`;
+            const removeBtnEl = div.querySelector('.remove-member-btn');
+            if (removeBtnEl) removeBtnEl.onclick = () => removeMemberFromGroup(member.id, member.firstName, member.lastName);
+            membersListDiv.appendChild(div);
+        }
+        const selectEl = document.getElementById('addMemberSelect');
+        selectEl.innerHTML = '<option value="">Выберите друга</option>';
+        for (const friend of availableFriends) selectEl.innerHTML += `<option value="${friend.id}">${friend.firstName} ${friend.lastName}</option>`;
+        document.getElementById('addMemberBtn').onclick = async () => { const friendId = selectEl.value; if (!friendId) { showModal('Ошибка', 'Выберите друга'); return; } const friend = availableFriends.find(f => f.id === friendId); await addMemberToGroup(friendId, friend.firstName, friend.lastName); modal.classList.remove('active'); showGroupManage(); };
+        document.getElementById('leaveGroupBtn').onclick = () => { showModal('Подтверждение', 'Выйти из беседы?', async () => { await leaveGroup(); modal.classList.remove('active'); showChatsView(); }); };
+        const deleteBtn = document.getElementById('deleteGroupBtn');
+        if (isCreator) { deleteBtn.style.display = 'block'; deleteBtn.onclick = () => { showModal('Подтверждение', 'Удалить беседу? Это необратимо.', async () => { await deleteGroup(); modal.classList.remove('active'); showChatsView(); }); }; }
+        else deleteBtn.style.display = 'none';
+        document.getElementById('closeGroupManageBtn').onclick = () => modal.classList.remove('active');
+        modal.classList.add('active');
+    }
+
+    async function addMemberToGroup(userId, firstName, lastName) {
+        try { await db.collection('groups').doc(currentChat.id).update({ members: firebase.firestore.FieldValue.arrayUnion(userId) }); showModal('Успех', `${firstName} ${lastName} добавлен(а) в беседу`); loadChatsList(); } 
+        catch(e) { showModal('Ошибка', e.message); }
+    }
+
+    async function removeMemberFromGroup(userId, firstName, lastName) {
+        showModal('Подтверждение', `Удалить ${firstName} ${lastName} из беседы?`, async () => {
+            try { await db.collection('groups').doc(currentChat.id).update({ members: firebase.firestore.FieldValue.arrayRemove(userId) }); showModal('Успех', `${firstName} ${lastName} удалён(а) из беседы`); loadChatsList(); if (currentChat && currentChat.id) showGroupManage(); } 
+            catch(e) { showModal('Ошибка', e.message); }
+        });
+    }
+
+    async function leaveGroup() {
+        try { await db.collection('groups').doc(currentChat.id).update({ members: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) }); showModal('Успех', 'Вы вышли из беседы'); currentChat = null; loadChatsList(); } 
+        catch(e) { showModal('Ошибка', e.message); }
+    }
+
+    async function deleteGroup() {
+        try { const messagesSnap = await db.collection('messages').where('groupId', '==', currentChat.id).get(); const batch = db.batch(); messagesSnap.forEach(doc => batch.delete(doc.ref)); await batch.commit(); await db.collection('groups').doc(currentChat.id).delete(); showModal('Успех', 'Беседа удалена'); currentChat = null; loadChatsList(); } 
+        catch(e) { showModal('Ошибка', e.message); }
+    }
+
+    function showChatsView() {
+        currentView = 'chats';
+        if(isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
+        document.getElementById('mainContent').innerHTML = `<div class="chats-view"><div class="chats-header"><h2>Чаты</h2><button class="create-group-btn" id="createGroupBtn"><i class="fas fa-plus"></i> Беседа</button></div><div class="chats-search"><input type="text" id="chatsSearchInput" placeholder="Поиск по чатам..."></div><div class="chats-list" id="chatsListContainer"><div style="text-align:center;padding:40px">Загрузка...</div></div></div>`;
+        document.getElementById('createGroupBtn').onclick = showCreateGroupModal;
+        loadChatsList();
+        document.getElementById('chatsSearchInput').oninput = (e) => renderChatsList(e.target.value.trim());
+        if(isMobile) updateMobileNav('chats');
+    }
+
+    async function showCreateGroupModal() {
+        const modal = document.getElementById('createGroupModal');
+        document.getElementById('groupName').value = '';
+        document.getElementById('selectedFriendsList').innerHTML = '';
+        const friendsListDiv = document.getElementById('friendsForGroupList');
+        const friendIds = userData.friends || [];
+        const selectedFriends = new Set();
+        if(friendIds.length === 0) friendsListDiv.innerHTML = '<div style="text-align: center; padding: 20px;">Нет друзей</div>';
+        else {
+            friendsListDiv.innerHTML = '';
+            for(const id of friendIds) {
+                const userDoc = await db.collection('users').doc(id).get();
+                if(userDoc.exists) {
+                    const u = userDoc.data();
+                    const avatarStyle = u.avatarUrl ? `background-image: url('${u.avatarUrl}'); background-size: cover; background-position: center;` : '';
+                    const div = document.createElement('div');
+                    div.className = 'friend-select-item';
+                    div.innerHTML = `<input type="checkbox" value="${id}" data-name="${u.firstName} ${u.lastName}"><div class="avatar" style="width:36px;height:36px;${avatarStyle}">${!u.avatarUrl ? getInitials(u.firstName, u.lastName) : ''}</div><div>${u.firstName} ${u.lastName}</div>`;
+                    const checkbox = div.querySelector('input');
+                    checkbox.onchange = () => {
+                        if(checkbox.checked) {
+                            selectedFriends.add(id);
+                            const selectedDiv = document.getElementById('selectedFriendsList');
+                            const tag = document.createElement('div');
+                            tag.className = 'selected-friend';
+                            tag.setAttribute('data-id', id);
+                            tag.innerHTML = `${u.firstName} ${u.lastName} <button style="background:none;border:none;cursor:pointer;">×</button>`;
+                            selectedDiv.appendChild(tag);
+                            tag.querySelector('button').onclick = () => { checkbox.checked = false; selectedFriends.delete(id); tag.remove(); };
+                        } else {
+                            selectedFriends.delete(id);
+                            const tag = document.querySelector(`.selected-friend[data-id="${id}"]`);
+                            if(tag) tag.remove();
+                        }
+                    };
+                    friendsListDiv.appendChild(div);
+                }
+            }
+        }
+        modal.classList.add('active');
+        document.getElementById('confirmCreateGroup').onclick = async () => {
+            const groupName = document.getElementById('groupName').value.trim();
+            if(!groupName) { showModal('Ошибка', 'Введите название'); return; }
+            const selected = document.querySelectorAll('#friendsForGroupList input:checked');
+            const members = [currentUser.uid];
+            selected.forEach(cb => members.push(cb.value));
+            if(members.length < 2) { showModal('Ошибка', 'Выберите хотя бы одного друга'); return; }
+            try {
+                await db.collection('groups').add({ name: groupName, members, createdBy: currentUser.uid, createdAt: new Date().toISOString() });
+                showModal('Успех', 'Беседа создана!');
+                modal.classList.remove('active');
+                loadChatsList();
+            } catch(e) { showModal('Ошибка', e.message); }
+        };
+        document.getElementById('cancelCreateGroup').onclick = () => modal.classList.remove('active');
+    }
+
+    async function loadPeopleList() {
+        const snapshot = await db.collection('users').get();
+        allUsers = [];
+        snapshot.forEach(doc => { if(doc.id !== currentUser.uid) allUsers.push({ id: doc.id, ...doc.data() }); });
+        renderPeopleList('');
+    }
+
+    function renderPeopleList(searchQuery) {
+        const container = document.getElementById('peopleListContainer');
+        if(!container) return;
+        let filtered = allUsers;
+        if(searchQuery) filtered = allUsers.filter(u => `${u.firstName} ${u.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()));
+        if(filtered.length === 0) { container.innerHTML = '<div style="text-align:center;padding:40px">Никого не найдено</div>'; return; }
+        container.innerHTML = '';
+        filtered.forEach(user => {
+            const isFriend = userData.friends?.includes(user.id);
+            const isSent = userData.friendRequests?.sent?.includes(user.id);
+            const isReceived = userData.friendRequests?.received?.includes(user.id);
+            const avatarStyle = user.avatarUrl ? `background-image: url('${user.avatarUrl}'); background-size: cover; background-position: center;` : '';
+            const div = document.createElement('div');
+            div.className = 'person-item';
+            div.innerHTML = `<div class="person-info"><div class="person-avatar" style="${avatarStyle}">${!user.avatarUrl ? getInitials(user.firstName, user.lastName) : ''}${user.isVerified ? '<div class="verified-badge" style="width: 16px; height: 16px; font-size: 8px;"><i class="fas fa-check"></i></div>' : ''}</div><div class="person-name">${user.firstName} ${user.lastName}${user.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div></div><div class="action-btns"><button class="action-btn write" data-chat="${user.id}">💬</button>${!isFriend && !isSent && !isReceived ? `<button class="action-btn add" data-add="${user.id}">➕</button>` : ''}${isSent ? '<button class="action-btn pending" disabled>⏳ Запрос</button>' : ''}${isReceived ? `<button class="action-btn add" data-accept="${user.id}" style="background:#28a745">✅ Принять</button>` : ''}${isFriend ? `<button class="action-btn remove" data-remove="${user.id}">🗑️</button>` : ''}</div>`;
+            const writeBtn = div.querySelector('[data-chat]');
+            const addBtn = div.querySelector('[data-add]');
+            const acceptBtn = div.querySelector('[data-accept]');
+            const removeBtn = div.querySelector('[data-remove]');
+            if(writeBtn) writeBtn.onclick = () => openChat({ type: 'private', id: user.id, firstName: user.firstName, lastName: user.lastName, avatarUrl: user.avatarUrl, isVerified: user.isVerified });
+            if(addBtn) addBtn.onclick = () => sendFriendRequest(user.id, user.firstName, user.lastName);
+            if(acceptBtn) acceptBtn.onclick = () => acceptFriendRequest(user.id);
+            if(removeBtn) removeBtn.onclick = () => removeFriend(user.id);
+            container.appendChild(div);
+        });
+    }
+
+    function showPeopleView() {
+        currentView = 'people';
+        if(isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
+        document.getElementById('mainContent').innerHTML = `<div class="people-view"><div class="people-header"><h2>Люди</h2></div><div class="people-search"><input type="text" id="peopleSearchInput" placeholder="Поиск людей..."></div><div class="people-list" id="peopleListContainer"><div style="text-align:center;padding:40px">Загрузка...</div></div></div>`;
+        loadPeopleList();
+        document.getElementById('peopleSearchInput').oninput = (e) => renderPeopleList(e.target.value.trim());
+        if(isMobile) updateMobileNav('more');
+    }
+
+    async function sendFriendRequest(toId, firstName, lastName) {
+        try {
+            await db.collection('users').doc(toId).update({ 'friendRequests.received': firebase.firestore.FieldValue.arrayUnion(currentUser.uid) });
+            await db.collection('users').doc(currentUser.uid).update({ 'friendRequests.sent': firebase.firestore.FieldValue.arrayUnion(toId) });
+            showModal('Успех', `Запрос отправлен ${firstName} ${lastName}`);
+            const updated = await db.collection('users').doc(currentUser.uid).get();
+            userData = updated.data();
+            loadPeopleList();
+        } catch(e) { showModal('Ошибка', e.message); }
+    }
+
+    async function acceptFriendRequest(fromId) {
+        try {
+            await db.collection('users').doc(currentUser.uid).update({ friends: firebase.firestore.FieldValue.arrayUnion(fromId), 'friendRequests.received': firebase.firestore.FieldValue.arrayRemove(fromId) });
+            await db.collection('users').doc(fromId).update({ friends: firebase.firestore.FieldValue.arrayUnion(currentUser.uid), 'friendRequests.sent': firebase.firestore.FieldValue.arrayRemove(currentUser.uid) });
+            showModal('Успех', 'Теперь вы друзья!');
+            const updated = await db.collection('users').doc(currentUser.uid).get();
+            userData = updated.data();
+            loadPeopleList();
+            loadChatsList();
+        } catch(e) { showModal('Ошибка', e.message); }
+    }
+
+    async function removeFriend(friendId) {
+        showModal('Подтверждение', 'Удалить пользователя из друзей?', async () => {
+            try {
+                await db.collection('users').doc(currentUser.uid).update({ friends: firebase.firestore.FieldValue.arrayRemove(friendId) });
+                await db.collection('users').doc(friendId).update({ friends: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) });
+                showModal('Успех', 'Пользователь удалён из друзей');
+                const updated = await db.collection('users').doc(currentUser.uid).get();
+                userData = updated.data();
+                loadPeopleList();
+                loadChatsList();
+            } catch(e) { showModal('Ошибка', e.message); }
+        });
+    }
+
     function setTheme(theme) {
         document.body.setAttribute('data-theme', theme);
         localStorage.setItem('cheburchat_theme', theme);
@@ -912,35 +1829,14 @@
         setShadow(savedShadow);
     }
 
-    // ========== ОСТАЛЬНЫЕ ФУНКЦИИ (сохранены без изменений для краткости, но все работают) ==========
-    // ... (остальной код функций сохранен в неизменном виде из предыдущей версии)
-    // Из-за ограничения длины сообщения, остальной код функций остается таким же как в предыдущей версии
-    // Все функции showModal, getInitials, escapeHtml, scrollToBottom, getChatId, hideContextMenu,
-    // showReactionsModal, addReaction, deleteMessage, showContextMenu, uploadAvatar, changeAvatar,
-    // loadTracks, addTrack, deleteTrack, showMusicView, createPost, deletePost, toggleLike,
-    // toggleCommentLike, addComment, loadPosts, showFeedView, showProfileView, loadChatsList,
-    // renderChatsList, openChat, sendTextMessage, markMessagesAsRead, loadMessages,
-    // uploadFileToCloudinary, sendMediaFile, openFilePicker, showGroupManage, addMemberToGroup,
-    // removeMemberFromGroup, leaveGroup, deleteGroup, showChatsView, showCreateGroupModal,
-    // loadPeopleList, renderPeopleList, showPeopleView, sendFriendRequest, acceptFriendRequest,
-    // removeFriend, showSettingsView, loadAdminStats, loadAdminUsers, loadAdminTracks,
-    // toggleVerification, showAdminView, showMoreMenu, updateMobileNav, renderApp,
-    // renderEmailVerifyScreen, handleRegister, handleLogin, renderAuth остаются без изменений
-
-    // Для полноты кода, но из-за длины я сохраняю основную структуру
-    // Все функции работают идентично предыдущей версии
-    
-    // Функция showSettingsView обновлена с добавлением shadow-slider
     function showSettingsView() {
         currentView = 'settings';
         if(isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
-        
         const savedTheme = localStorage.getItem('cheburchat_theme') || 'default';
         const savedContrast = localStorage.getItem('cheburchat_text_contrast') || 'normal';
         const savedDisableHoverFlag = localStorage.getItem('cheburchat_disable_hover') === 'true';
         const savedOpacity = parseFloat(localStorage.getItem('cheburchat_opacity')) || 1;
         const savedShadow = parseFloat(localStorage.getItem('cheburchat_shadow')) || 0.08;
-        
         document.getElementById('mainContent').innerHTML = `
             <div class="settings-view">
                 <div class="settings-header">
@@ -951,26 +1847,10 @@
                     <div class="settings-section">
                         <div class="settings-section-title"><i class="fas fa-palette"></i> Тема</div>
                         <div class="theme-presets">
-                            <div class="theme-preset ${savedTheme === 'default' ? 'active' : ''}" data-theme="default">
-                                <div class="preset-icon">🌞</div>
-                                <div class="preset-name">Стандартная</div>
-                                <div class="preset-desc">Светлая тема</div>
-                            </div>
-                            <div class="theme-preset ${savedTheme === 'dark' ? 'active' : ''}" data-theme="dark">
-                                <div class="preset-icon">🌙</div>
-                                <div class="preset-name">Тёмная</div>
-                                <div class="preset-desc">Ночной режим</div>
-                            </div>
-                            <div class="theme-preset ${savedTheme === 'glass-light' ? 'active' : ''}" data-theme="glass-light">
-                                <div class="preset-icon">🌸</div>
-                                <div class="preset-name">Матовое стекло</div>
-                                <div class="preset-desc">Светлый градиент</div>
-                            </div>
-                            <div class="theme-preset ${savedTheme === 'glass-dark' ? 'active' : ''}" data-theme="glass-dark">
-                                <div class="preset-icon">🌌</div>
-                                <div class="preset-name">Тёмное матовое стекло</div>
-                                <div class="preset-desc">Тёмный градиент</div>
-                            </div>
+                            <div class="theme-preset ${savedTheme === 'default' ? 'active' : ''}" data-theme="default"><div class="preset-icon">🌞</div><div class="preset-name">Стандартная</div><div class="preset-desc">Светлая тема</div></div>
+                            <div class="theme-preset ${savedTheme === 'dark' ? 'active' : ''}" data-theme="dark"><div class="preset-icon">🌙</div><div class="preset-name">Тёмная</div><div class="preset-desc">Ночной режим</div></div>
+                            <div class="theme-preset ${savedTheme === 'glass-light' ? 'active' : ''}" data-theme="glass-light"><div class="preset-icon">🌸</div><div class="preset-name">Матовое стекло</div><div class="preset-desc">Светлый градиент</div></div>
+                            <div class="theme-preset ${savedTheme === 'glass-dark' ? 'active' : ''}" data-theme="glass-dark"><div class="preset-icon">🌌</div><div class="preset-name">Тёмное матовое стекло</div><div class="preset-desc">Тёмный градиент</div></div>
                         </div>
                     </div>
                     <div class="settings-section">
@@ -990,183 +1870,217 @@
                     <div class="settings-section">
                         <div class="settings-section-title"><i class="fas fa-border-all"></i> Скругление углов</div>
                         <div class="radius-presets">
-                            <div class="radius-preset ${currentRadius === 8 ? 'active' : ''}" data-radius="8">
-                                <i class="fas fa-square"></i>
-                                <div>Малые (8px)</div>
-                            </div>
-                            <div class="radius-preset ${currentRadius === 20 ? 'active' : ''}" data-radius="20">
-                                <i class="fas fa-border-all"></i>
-                                <div>Средние (20px)</div>
-                            </div>
-                            <div class="radius-preset ${currentRadius === 32 ? 'active' : ''}" data-radius="32">
-                                <i class="fas fa-circle"></i>
-                                <div>Большие (32px)</div>
-                            </div>
+                            <div class="radius-preset ${currentRadius === 8 ? 'active' : ''}" data-radius="8"><i class="fas fa-square"></i><div>Малые (8px)</div></div>
+                            <div class="radius-preset ${currentRadius === 20 ? 'active' : ''}" data-radius="20"><i class="fas fa-border-all"></i><div>Средние (20px)</div></div>
+                            <div class="radius-preset ${currentRadius === 32 ? 'active' : ''}" data-radius="32"><i class="fas fa-circle"></i><div>Большие (32px)</div></div>
                         </div>
                     </div>
                     <div class="settings-section">
                         <div class="settings-section-title"><i class="fas fa-adjust"></i> Контрастность текста</div>
                         <div class="contrast-presets">
-                            <div class="contrast-preset ${savedContrast === 'normal' ? 'active' : ''}" data-contrast="normal">
-                                <i class="fas fa-sun"></i>
-                                <div>Обычная</div>
-                            </div>
-                            <div class="contrast-preset ${savedContrast === 'light' ? 'active' : ''}" data-contrast="light">
-                                <i class="fas fa-sun"></i>
-                                <div>Светлее</div>
-                            </div>
-                            <div class="contrast-preset ${savedContrast === 'dark' ? 'active' : ''}" data-contrast="dark">
-                                <i class="fas fa-moon"></i>
-                                <div>Темнее</div>
-                            </div>
+                            <div class="contrast-preset ${savedContrast === 'normal' ? 'active' : ''}" data-contrast="normal"><i class="fas fa-sun"></i><div>Обычная</div></div>
+                            <div class="contrast-preset ${savedContrast === 'light' ? 'active' : ''}" data-contrast="light"><i class="fas fa-sun"></i><div>Светлее</div></div>
+                            <div class="contrast-preset ${savedContrast === 'dark' ? 'active' : ''}" data-contrast="dark"><i class="fas fa-moon"></i><div>Темнее</div></div>
                         </div>
                     </div>
                     <div class="settings-section">
                         <div class="settings-section-title"><i class="fas fa-eye"></i> Прозрачность карточек</div>
-                        <div class="opacity-slider">
-                            <label>Прозрачность: <span id="opacityValue">${Math.round(savedOpacity * 100)}%</span></label>
-                            <input type="range" id="opacitySlider" min="0.3" max="1" step="0.01" value="${savedOpacity}">
-                        </div>
+                        <div class="opacity-slider"><label>Прозрачность: <span id="opacityValue">${Math.round(savedOpacity * 100)}%</span></label><input type="range" id="opacitySlider" min="0.3" max="1" step="0.01" value="${savedOpacity}"></div>
                     </div>
                     <div class="settings-section">
                         <div class="settings-section-title"><i class="fas fa-cloud-sun"></i> Интенсивность теней</div>
-                        <div class="shadow-slider">
-                            <label>Тени: <span id="shadowValue">${Math.round(savedShadow * 100)}%</span></label>
-                            <input type="range" id="shadowSlider" min="0" max="0.3" step="0.01" value="${savedShadow}">
-                        </div>
+                        <div class="shadow-slider"><label>Тени: <span id="shadowValue">${Math.round(savedShadow * 100)}%</span></label><input type="range" id="shadowSlider" min="0" max="0.3" step="0.01" value="${savedShadow}"></div>
                     </div>
                     <div class="settings-section">
                         <div class="settings-section-title"><i class="fas fa-gamepad"></i> Анимации</div>
-                        <div class="hover-toggle" id="hoverToggleBtn">
-                            <span>Отключить анимации при наведении</span>
-                            <div class="toggle-switch ${savedDisableHoverFlag ? 'active' : ''}"></div>
-                        </div>
+                        <div class="hover-toggle" id="hoverToggleBtn"><span>Отключить анимации при наведении</span><div class="toggle-switch ${savedDisableHoverFlag ? 'active' : ''}"></div></div>
                     </div>
                     <button class="reset-btn" id="resetSettingsBtn">Сбросить все настройки</button>
                 </div>
             </div>
         `;
-        
         document.getElementById('settingsBackBtn').onclick = () => { if(currentChat) openChat(currentChat); else showChatsView(); };
-        
-        // Выбор темы
-        document.querySelectorAll('.theme-preset').forEach(preset => {
-            preset.onclick = () => {
-                const theme = preset.dataset.theme;
-                setTheme(theme);
-                document.querySelectorAll('.theme-preset').forEach(p => p.classList.remove('active'));
-                preset.classList.add('active');
-            };
-        });
-        
-        // Выбор цвета
-        document.querySelectorAll('.color-btn').forEach(btn => {
-            btn.onclick = () => {
-                const color = btn.dataset.color;
-                setAccentColor(color);
-                document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            };
-            if (btn.dataset.color === currentAccentColor) btn.classList.add('active');
-        });
-        
-        // Выбор скругления
-        document.querySelectorAll('.radius-preset').forEach(preset => {
-            preset.onclick = () => {
-                const radius = parseInt(preset.dataset.radius);
-                setRadius(radius);
-                document.querySelectorAll('.radius-preset').forEach(p => p.classList.remove('active'));
-                preset.classList.add('active');
-            };
-        });
-        
-        // Выбор контрастности
-        document.querySelectorAll('.contrast-preset').forEach(preset => {
-            preset.onclick = () => {
-                const contrast = preset.dataset.contrast;
-                setTextContrast(contrast);
-                document.querySelectorAll('.contrast-preset').forEach(p => p.classList.remove('active'));
-                preset.classList.add('active');
-            };
-        });
-        
-        // Ползунок прозрачности
+        document.querySelectorAll('.theme-preset').forEach(preset => { preset.onclick = () => { const theme = preset.dataset.theme; setTheme(theme); document.querySelectorAll('.theme-preset').forEach(p => p.classList.remove('active')); preset.classList.add('active'); }; });
+        document.querySelectorAll('.color-btn').forEach(btn => { btn.onclick = () => { const color = btn.dataset.color; setAccentColor(color); document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }; if (btn.dataset.color === currentAccentColor) btn.classList.add('active'); });
+        document.querySelectorAll('.radius-preset').forEach(preset => { preset.onclick = () => { const radius = parseInt(preset.dataset.radius); setRadius(radius); document.querySelectorAll('.radius-preset').forEach(p => p.classList.remove('active')); preset.classList.add('active'); }; });
+        document.querySelectorAll('.contrast-preset').forEach(preset => { preset.onclick = () => { const contrast = preset.dataset.contrast; setTextContrast(contrast); document.querySelectorAll('.contrast-preset').forEach(p => p.classList.remove('active')); preset.classList.add('active'); }; });
         const opacitySlider = document.getElementById('opacitySlider');
-        const opacityValue = document.getElementById('opacityValue');
-        if (opacitySlider) {
-            opacitySlider.oninput = (e) => {
-                const val = parseFloat(e.target.value);
-                setOpacity(val);
-                if (opacityValue) opacityValue.textContent = Math.round(val * 100) + '%';
-            };
-        }
-        
-        // Ползунок теней
+        if (opacitySlider) { opacitySlider.oninput = (e) => { const val = parseFloat(e.target.value); setOpacity(val); if(document.getElementById('opacityValue')) document.getElementById('opacityValue').textContent = Math.round(val * 100) + '%'; }; }
         const shadowSlider = document.getElementById('shadowSlider');
-        const shadowValue = document.getElementById('shadowValue');
-        if (shadowSlider) {
-            shadowSlider.oninput = (e) => {
-                const val = parseFloat(e.target.value);
-                setShadow(val);
-                if (shadowValue) shadowValue.textContent = Math.round(val * 100) + '%';
-            };
-        }
-        
-        // Переключатель анимаций
+        if (shadowSlider) { shadowSlider.oninput = (e) => { const val = parseFloat(e.target.value); setShadow(val); if(document.getElementById('shadowValue')) document.getElementById('shadowValue').textContent = Math.round(val * 100) + '%'; }; }
         const hoverToggle = document.getElementById('hoverToggleBtn');
-        if (hoverToggle) {
-            hoverToggle.onclick = () => {
-                setDisableHover(!disableHover);
-                const toggle = hoverToggle.querySelector('.toggle-switch');
-                if (toggle) {
-                    if (disableHover) toggle.classList.add('active');
-                    else toggle.classList.remove('active');
-                }
-            };
-        }
-        
-        // Сброс
-        document.getElementById('resetSettingsBtn').onclick = () => {
-            resetAllSettings();
-        };
-        
+        if (hoverToggle) { hoverToggle.onclick = () => { setDisableHover(!disableHover); const toggle = hoverToggle.querySelector('.toggle-switch'); if (toggle) { if (disableHover) toggle.classList.add('active'); else toggle.classList.remove('active'); } }; }
+        document.getElementById('resetSettingsBtn').onclick = () => { resetAllSettings(); };
         if(isMobile) updateMobileNav('more');
     }
 
-    // Остальные функции (showChatsView, openChat, loadMessages, sendTextMessage и т.д.) 
-    // остаются полностью идентичными предыдущей версии, поэтому для краткости они не дублируются,
-    // но в полном файле они присутствуют и работают корректно.
+    async function loadAdminStats() {
+        const usersSnapshot = await db.collection('users').get();
+        if(document.getElementById('totalUsersCount')) document.getElementById('totalUsersCount').textContent = usersSnapshot.size;
+        let verified = 0;
+        usersSnapshot.forEach(doc => { if(doc.data().isVerified) verified++; });
+        if(document.getElementById('verifiedUsersCount')) document.getElementById('verifiedUsersCount').textContent = verified;
+    }
+
+    async function loadAdminUsers() {
+        const snapshot = await db.collection('users').get();
+        const container = document.getElementById('adminUsersContainer');
+        if(!container) return;
+        container.innerHTML = '';
+        snapshot.forEach(doc => {
+            const user = doc.data();
+            const avatarStyle = user.avatarUrl ? `background-image: url('${user.avatarUrl}'); background-size: cover; background-position: center;` : '';
+            const div = document.createElement('div');
+            div.className = 'admin-user-item';
+            div.innerHTML = `<div class="admin-user-info"><div class="admin-user-avatar" style="${avatarStyle}">${!user.avatarUrl ? getInitials(user.firstName, user.lastName) : ''}${user.isVerified ? '<div class="verified-badge" style="width: 14px; height: 14px; font-size: 7px;"><i class="fas fa-check"></i></div>' : ''}</div><div class="admin-user-details"><div class="admin-user-name">${user.firstName} ${user.lastName} ${user.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div><div class="admin-user-email">${user.email}</div></div></div><div class="action-btns">${!user.isVerified ? `<button class="action-btn verify" data-verify="${doc.id}" style="background:#3b82f6;color:white;">✅ Выдать</button>` : `<button class="action-btn unverify" data-unverify="${doc.id}" style="background:#6c757d;color:white;">❌ Забрать</button>`}</div>`;
+            const verifyBtn = div.querySelector('[data-verify]');
+            const unverifyBtn = div.querySelector('[data-unverify]');
+            if(verifyBtn) verifyBtn.onclick = () => toggleVerification(doc.id, true, user.firstName, user.lastName);
+            if(unverifyBtn) unverifyBtn.onclick = () => toggleVerification(doc.id, false, user.firstName, user.lastName);
+            container.appendChild(div);
+        });
+        await loadAdminStats();
+    }
+
+    async function loadAdminTracks() {
+        const tracks = await loadTracks();
+        const container = document.getElementById('adminTracksContainer');
+        if(!container) return;
+        if(tracks.length === 0) { container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-secondary);">Нет треков</div>'; return; }
+        container.innerHTML = '';
+        for(const track of tracks) {
+            const div = document.createElement('div');
+            div.className = 'admin-user-item';
+            div.innerHTML = `<div class="admin-user-info"><div><strong>${escapeHtml(track.artist)}</strong> - ${escapeHtml(track.title)}</div></div><button class="action-btn remove" data-id="${track.id}">🗑️ Удалить</button>`;
+            div.querySelector('button').onclick = () => deleteTrack(track.id);
+            container.appendChild(div);
+        }
+    }
+
+    async function toggleVerification(userId, verify, firstName, lastName) {
+        showModal('Подтверждение', `${verify ? 'Выдать' : 'Забрать'} галочку ${firstName} ${lastName}?`, async () => {
+            try { await db.collection('users').doc(userId).update({ isVerified: verify }); showModal('Успех', `Галочка ${verify ? 'выдана' : 'забрана'}`); loadAdminUsers(); loadChatsList(); loadPeopleList(); } catch(e) { showModal('Ошибка', e.message); }
+        });
+    }
+
+    function showAdminView() {
+        currentView = 'admin';
+        if(isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
+        document.getElementById('mainContent').innerHTML = `
+            <div class="admin-view">
+                <div class="admin-header"><button class="back-btn" id="adminBackBtn"><i class="fas fa-arrow-left"></i></button><h2>Админ панель</h2></div>
+                <div class="admin-stats"><div class="admin-stat-card"><div class="admin-stat-value" id="totalUsersCount">0</div><div class="admin-stat-label">Всего пользователей</div></div><div class="admin-stat-card"><div class="admin-stat-value" id="verifiedUsersCount">0</div><div class="admin-stat-label">С галочкой</div></div></div>
+                <div class="create-post-card" style="margin: 16px;"><textarea id="officialPostText" class="create-post-input" rows="3" placeholder="Официальный пост от имени ЧЕБУРЧАТ..."></textarea><button class="official-post-btn" id="submitOfficialPostBtn"><i class="fas fa-star"></i> Опубликовать официальный пост</button></div>
+                <div class="create-post-card" style="margin: 16px;"><input type="text" id="trackArtist" placeholder="Исполнитель"><input type="text" id="trackTitle" placeholder="Название трека"><input type="file" id="trackFile" accept="audio/*"><button class="official-post-btn" id="addTrackBtn" style="margin-top: 12px;"><i class="fas fa-plus"></i> Добавить трек</button></div>
+                <div class="admin-list" id="adminTracksContainer">Загрузка...</div>
+                <div class="admin-list" id="adminUsersContainer">Загрузка...</div>
+            </div>
+        `;
+        document.getElementById('adminBackBtn').onclick = () => { if(currentChat) openChat(currentChat); else showChatsView(); };
+        document.getElementById('submitOfficialPostBtn').onclick = () => { const text = document.getElementById('officialPostText').value; createPost(text, true); document.getElementById('officialPostText').value = ''; };
+        document.getElementById('addTrackBtn').onclick = () => { const artist = document.getElementById('trackArtist').value; const title = document.getElementById('trackTitle').value; const file = document.getElementById('trackFile').files[0]; if (!artist || !title || !file) { showModal('Ошибка', 'Заполните все поля и выберите файл'); return; } addTrack(artist, title, file); document.getElementById('trackArtist').value = ''; document.getElementById('trackTitle').value = ''; document.getElementById('trackFile').value = ''; };
+        loadAdminUsers();
+        loadAdminTracks();
+        if(isMobile) updateMobileNav('more');
+    }
+
+    function showMoreMenu() {
+        const modal = document.getElementById('mobileSubmenuModal');
+        const adminItem = document.getElementById('adminSubmenuItem');
+        if (isAdmin) adminItem.style.display = 'flex';
+        else adminItem.style.display = 'none';
+        modal.classList.add('active');
+        document.querySelectorAll('.mobile-submenu-item[data-sub]').forEach(el => {
+            el.onclick = () => {
+                modal.classList.remove('active');
+                const sub = el.dataset.sub;
+                if (sub === 'people') showPeopleView();
+                else if (sub === 'music') showMusicView();
+                else if (sub === 'settings') showSettingsView();
+                else if (sub === 'admin') showAdminView();
+            };
+        });
+        document.getElementById('closeSubmenuModal').onclick = () => modal.classList.remove('active');
+    }
+
+    function updateMobileNav(active) {
+        document.querySelectorAll('.mobile-nav-item').forEach(btn => { if (btn.dataset.nav === active) btn.classList.add('active'); else btn.classList.remove('active'); });
+    }
+
+    function renderApp() {
+        if(!currentUser || !userData) return;
+        if(!currentUser.emailVerified) { renderEmailVerifyScreen(); return; }
+        isAdmin = currentUser.email === 'sad.spotty@gmail.com';
+        const avatarStyle = userData.avatarUrl ? `background-image: url('${userData.avatarUrl}'); background-size: cover; background-position: center;` : '';
+        document.getElementById('app').innerHTML = `
+            <div class="app">
+                <div class="sidebar">
+                    <div class="logo">ЧЕБУРЧАТ</div>
+                    <div class="sidebar-section">
+                        <div class="nav-item active" data-nav="chats"><i class="fas fa-comments"></i> Чаты</div>
+                        <div class="nav-item" data-nav="feed"><i class="fas fa-newspaper"></i> Новости</div>
+                        <div class="nav-item" data-nav="profile"><i class="fas fa-user-circle"></i> Профиль</div>
+                        <div class="nav-item has-submenu" data-nav="more"><i class="fas fa-ellipsis-h"></i> Прочее<div class="sub-menu"><div class="nav-item" data-sub="people"><i class="fas fa-users"></i> Люди</div><div class="nav-item" data-sub="music"><i class="fas fa-music"></i> Музыка</div><div class="nav-item" data-sub="settings"><i class="fas fa-cog"></i> Настройки</div>${isAdmin ? '<div class="nav-item" data-sub="admin"><i class="fas fa-shield-alt"></i> Админ панель</div>' : ''}</div></div>
+                    </div>
+                    <div class="user-info-sidebar" id="profileBtn"><div class="avatar-wrapper"><div class="avatar" style="${avatarStyle}">${!userData.avatarUrl ? getInitials(userData.firstName, userData.lastName) : ''}</div>${userData.isVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : ''}</div><div><strong>${userData.firstName} ${userData.lastName}</strong>${userData.isVerified ? ' <i class="fas fa-check-circle verified-icon" style="font-size:12px"></i>' : ''}</div></div>
+                    <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+                </div>
+                <div class="main" id="mainContent"></div>
+                <div class="mobile-bottom-nav"><button class="mobile-nav-item active" data-nav="chats"><i class="fas fa-comments"></i><span>Чаты</span></button><button class="mobile-nav-item" data-nav="feed"><i class="fas fa-newspaper"></i><span>Новости</span></button><button class="mobile-nav-item" data-nav="profile"><i class="fas fa-user-circle"></i><span>Профиль</span></button><button class="mobile-nav-item" data-nav="more"><i class="fas fa-ellipsis-h"></i><span>Прочее</span></button></div>
+            </div>
+        `;
+        const moreNav = document.querySelector('.nav-item[data-nav="more"]');
+        const subMenu = moreNav?.querySelector('.sub-menu');
+        if (moreNav && subMenu) {
+            moreNav.addEventListener('click', (e) => { e.stopPropagation(); subMenu.classList.toggle('show'); });
+            document.addEventListener('click', (e) => { if (!moreNav.contains(e.target)) subMenu.classList.remove('show'); });
+        }
+        document.querySelectorAll('.nav-item[data-nav]').forEach(el => { if (el.dataset.nav !== 'more') { el.onclick = () => { document.querySelectorAll('.nav-item[data-nav]').forEach(n => n.classList.remove('active')); el.classList.add('active'); if (el.dataset.nav === 'chats') showChatsView(); else if (el.dataset.nav === 'feed') showFeedView(); else if (el.dataset.nav === 'profile') showProfileView(); }; } });
+        document.querySelectorAll('.nav-item[data-sub]').forEach(el => { el.onclick = (e) => { e.stopPropagation(); const sub = el.dataset.sub; if (sub === 'people') showPeopleView(); else if (sub === 'music') showMusicView(); else if (sub === 'settings') showSettingsView(); else if (sub === 'admin') showAdminView(); if (subMenu) subMenu.classList.remove('show'); }; });
+        document.querySelectorAll('.mobile-nav-item').forEach(el => { if (el.dataset.nav === 'more') el.onclick = () => showMoreMenu(); else el.onclick = () => { if (el.dataset.nav === 'chats') showChatsView(); else if (el.dataset.nav === 'feed') showFeedView(); else if (el.dataset.nav === 'profile') showProfileView(); }; });
+        document.getElementById('profileBtn').onclick = () => showProfileView();
+        document.getElementById('logoutBtn').onclick = () => { if(messagesUnsubscribe) messagesUnsubscribe(); auth.signOut(); renderAuth(); };
+        showChatsView();
+    }
+
+    function renderEmailVerifyScreen() {
+        document.getElementById('app').innerHTML = `<div class="auth-container"><div class="auth-card"><h1>ЧЕБУРЧАТ</h1><div class="verify-msg"><i class="fas fa-envelope"></i> Подтвердите email<br><small>${currentUser.email}</small></div><button id="resendBtn">Отправить повторно</button><button id="checkBtn" style="background:#28a745">Я подтвердил</button><button id="logoutVerifyBtn" style="background:#dc3545; margin-top:10px">Выйти</button></div></div>`;
+        document.getElementById('resendBtn').onclick = async () => { await currentUser.sendEmailVerification(); showModal('Письмо отправлено', 'Проверьте почту'); };
+        document.getElementById('checkBtn').onclick = async () => { await currentUser.reload(); if(currentUser.emailVerified) location.reload(); else showModal('Ошибка', 'Email не подтверждён'); };
+        document.getElementById('logoutVerifyBtn').onclick = () => { if(messagesUnsubscribe) messagesUnsubscribe(); auth.signOut(); renderAuth(); };
+    }
+
+    async function handleRegister() {
+        const fn = document.getElementById('regFirstName').value.trim(), ln = document.getElementById('regLastName').value.trim(), email = document.getElementById('regEmail').value.trim(), pass = document.getElementById('regPassword').value;
+        if(!fn || !ln) { showModal('Ошибка', 'Введите имя и фамилию'); return; }
+        if(pass.length < 6) { showModal('Ошибка', 'Пароль минимум 6 символов'); return; }
+        try { const cred = await auth.createUserWithEmailAndPassword(email, pass); await cred.user.sendEmailVerification(); await db.collection('users').doc(cred.user.uid).set({ firstName: fn, lastName: ln, email, friends: [], friendRequests: { sent: [], received: [] }, createdAt: new Date(), isVerified: false }); showModal('Регистрация', 'Письмо с подтверждением отправлено!'); } catch(e) { showModal('Ошибка', e.message); }
+    }
+
+    async function handleLogin() {
+        const email = document.getElementById('loginEmail').value, pass = document.getElementById('loginPassword').value;
+        try { await auth.signInWithEmailAndPassword(email, pass); } catch(e) { showModal('Ошибка', e.message); }
+    }
+
+    function renderAuth() {
+        document.getElementById('app').innerHTML = `
+            <div class="auth-container"><div class="auth-card"><h1>ЧЕБУРЧАТ</h1><div class="auth-subtitle">Социальная сеть для своих</div><div id="loginView"><input type="email" id="loginEmail" placeholder="Email"><input type="password" id="loginPassword" placeholder="Пароль"><button id="doLoginBtn">Войти</button><div class="toggle-auth" id="showRegisterBtn">Нет аккаунта? Зарегистрироваться</div></div><div id="registerView" class="hidden"><input type="text" id="regFirstName" placeholder="Имя"><input type="text" id="regLastName" placeholder="Фамилия"><input type="email" id="regEmail" placeholder="Email"><input type="password" id="regPassword" placeholder="Пароль (мин. 6)"><button id="doRegisterBtn">Зарегистрироваться</button><div class="toggle-auth" id="showLoginBtn">Уже есть аккаунт? Войти</div></div></div></div>
+        `;
+        document.getElementById('doLoginBtn').onclick = handleLogin;
+        document.getElementById('showRegisterBtn').onclick = () => { document.getElementById('loginView').classList.add('hidden'); document.getElementById('registerView').classList.remove('hidden'); };
+        document.getElementById('showLoginBtn').onclick = () => { document.getElementById('registerView').classList.add('hidden'); document.getElementById('loginView').classList.remove('hidden'); };
+        document.getElementById('doRegisterBtn').onclick = handleRegister;
+    }
 
     auth.onAuthStateChanged(async (user) => {
         if(user) {
             currentUser = user;
             const doc = await db.collection('users').doc(user.uid).get();
-            if(!doc.exists) {
-                await db.collection('users').doc(user.uid).set({ firstName: user.email.split('@')[0], lastName: 'User', email: user.email, friends: [], friendRequests: { sent: [], received: [] }, isVerified: false });
-                userData = { firstName: user.email.split('@')[0], lastName: 'User', email: user.email, friends: [], friendRequests: { sent: [], received: [] }, isVerified: false };
-            } else {
-                userData = doc.data();
-                if(!userData.friendRequests) await db.collection('users').doc(user.uid).update({ friendRequests: { sent: [], received: [] } });
-                if(userData.isVerified === undefined) await db.collection('users').doc(user.uid).update({ isVerified: false });
-            }
+            if(!doc.exists) { await db.collection('users').doc(user.uid).set({ firstName: user.email.split('@')[0], lastName: 'User', email: user.email, friends: [], friendRequests: { sent: [], received: [] }, isVerified: false }); userData = { firstName: user.email.split('@')[0], lastName: 'User', email: user.email, friends: [], friendRequests: { sent: [], received: [] }, isVerified: false }; }
+            else { userData = doc.data(); if(!userData.friendRequests) await db.collection('users').doc(user.uid).update({ friendRequests: { sent: [], received: [] } }); if(userData.isVerified === undefined) await db.collection('users').doc(user.uid).update({ isVerified: false }); }
             loadSavedSettings();
-            // Инициализация основных функций после загрузки
-            window.showChatsView = showChatsView;
-            window.showFeedView = showFeedView;
-            window.showProfileView = showProfileView;
-            window.showPeopleView = showPeopleView;
-            window.showMusicView = showMusicView;
-            window.showSettingsView = showSettingsView;
-            window.showAdminView = showAdminView;
-            window.openChat = openChat;
-            window.showMoreMenu = showMoreMenu;
             renderApp();
-        } else {
-            if(messagesUnsubscribe) messagesUnsubscribe();
-            currentUser = null;
-            userData = null;
-            renderAuth();
-        }
+        } else { if(messagesUnsubscribe) messagesUnsubscribe(); currentUser = null; userData = null; renderAuth(); }
     });
     
     window.addEventListener('resize', () => { isMobile = window.innerWidth <= 768; });
