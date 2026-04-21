@@ -21,7 +21,14 @@
         
         body { background: var(--bg-page); color: var(--text); }
         
-        .auth-container { height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg-page); padding: 16px; }
+        /* Safe area для iPhone с чёлкой/островком */
+        .app { display: flex; height: 100vh; background: var(--bg-page); padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
+        .sidebar { width: 280px; background: var(--bg-surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; height: 100vh; }
+        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--bg-page); position: relative; }
+        .chat-header { padding: 12px 16px; background: var(--bg-surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; flex-shrink: 0; padding-top: max(12px, env(safe-area-inset-top)); }
+        .feed-header { background: linear-gradient(135deg, var(--accent), var(--accent-hover)); padding: 16px 20px; padding-top: max(16px, env(safe-area-inset-top)); }
+        
+        .auth-container { height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg-page); padding: 16px; padding-top: env(safe-area-inset-top); }
         .auth-card { background: var(--bg-surface); padding: 32px 24px; border-radius: 28px; width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--border); }
         .auth-card h1 { color: var(--accent); margin-bottom: 24px; font-size: 32px; }
         .auth-card input { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid var(--border); border-radius: 16px; font-size: 16px; background: var(--bg-element); color: var(--text); }
@@ -30,8 +37,6 @@
         .verify-msg { background: #fff3cd; color: #856404; padding: 12px; border-radius: 16px; margin: 12px 0; font-size: 14px; }
         .hidden { display: none !important; }
         
-        .app { display: flex; height: 100vh; background: var(--bg-page); }
-        .sidebar { width: 280px; background: var(--bg-surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; height: 100vh; }
         .logo { padding: 20px 20px 16px; font-size: 22px; font-weight: 800; color: var(--accent); border-bottom: 1px solid var(--border); }
         .sidebar-section { padding: 16px 0; }
         .nav-item { padding: 10px 20px; display: flex; align-items: center; gap: 12px; cursor: pointer; color: var(--text); font-weight: 500; border-radius: 10px; margin: 0 8px; transition: 0.2s; }
@@ -39,11 +44,20 @@
         .nav-item i { width: 24px; font-size: 20px; }
         .logout-btn { margin: 10px 16px; padding: 12px; background: #dc3545; color: white; border: none; border-radius: 14px; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; }
         
-        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--bg-page); }
+        /* Аватар с галочкой */
+        .avatar-wrapper { position: relative; display: inline-block; }
+        .avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; flex-shrink: 0; }
+        .verified-badge { position: absolute; bottom: -2px; right: -2px; width: 18px; height: 18px; background: var(--verified); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: white; border: 2px solid var(--bg-surface); z-index: 2; }
+        
+        .chat-avatar-wrapper { position: relative; width: 52px; height: 52px; flex-shrink: 0; }
+        .chat-avatar { width: 100%; height: 100%; border-radius: 50%; background: var(--accent); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 20px; }
+        .chat-avatar .verified-badge { position: absolute; bottom: -2px; right: -2px; width: 18px; height: 18px; background: var(--verified); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: white; border: 2px solid var(--bg-surface); }
+        
+        .group-avatar { background: linear-gradient(135deg, var(--accent), var(--accent-hover)); }
         
         /* Профиль */
         .profile-view { height: 100%; overflow-y: auto; background: var(--bg-surface); padding-bottom: 80px; }
-        .profile-header { position: relative; background: linear-gradient(135deg, var(--accent), var(--accent-hover)); height: 100px; flex-shrink: 0; }
+        .profile-header { position: relative; background: linear-gradient(135deg, var(--accent), var(--accent-hover)); height: 100px; flex-shrink: 0; margin-top: env(safe-area-inset-top); }
         .profile-avatar-large { position: absolute; bottom: -50px; left: 20px; width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--bg-surface); background: var(--accent); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 40px; cursor: pointer; }
         .profile-info { padding: 60px 20px 20px 20px; }
         .profile-name { font-size: 24px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -59,15 +73,11 @@
         .profile-section { padding: 0 20px 20px 20px; }
         .section-title { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
         
-        /* Лента новостей */
-        .feed-header { background: linear-gradient(135deg, var(--accent), var(--accent-hover)); padding: 16px 20px; }
-        .feed-header h2 { font-size: 24px; font-weight: 700; color: white; }
-        
         /* Посты */
         .posts-feed { display: flex; flex-direction: column; gap: 16px; padding: 16px; }
-        .post-card { background: var(--bg-surface); border-radius: 20px; padding: 16px; border: 1px solid var(--border); }
+        .post-card { background: var(--bg-surface); border-radius: 20px; padding: 16px; border: 1px solid var(--border); position: relative; }
         .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; cursor: pointer; }
-        .post-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; flex-shrink: 0; }
+        .post-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; flex-shrink: 0; position: relative; }
         .post-author-name { font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
         .post-time { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
         .post-text { font-size: 15px; color: var(--text); margin-bottom: 12px; line-height: 1.4; white-space: pre-wrap; word-wrap: break-word; }
@@ -75,10 +85,11 @@
         .post-action-btn { background: none; border: none; display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--text-secondary); cursor: pointer; padding: 6px 12px; border-radius: 20px; transition: 0.1s; }
         .post-action-btn:hover { background: var(--bg-element); }
         .post-action-btn.liked { color: #e74c3c; }
-        .post-action-btn.liked i { color: #e74c3c; }
+        .post-delete-btn { background: none; border: none; font-size: 16px; color: var(--text-secondary); cursor: pointer; padding: 6px; border-radius: 50%; transition: 0.1s; position: absolute; top: 12px; right: 12px; }
+        .post-delete-btn:hover { background: var(--bg-element); color: #dc3545; }
         .comments-section { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
         .comment-item { display: flex; gap: 10px; padding: 8px 0; font-size: 13px; }
-        .comment-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 12px; flex-shrink: 0; }
+        .comment-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 12px; flex-shrink: 0; position: relative; }
         .comment-content { flex: 1; }
         .comment-author { font-weight: 600; font-size: 12px; color: var(--text); display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
         .comment-text { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
@@ -96,7 +107,7 @@
         
         /* Чаты */
         .chats-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
-        .chats-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .chats-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding-top: max(16px, env(safe-area-inset-top)); }
         .chats-header h2 { font-size: 24px; font-weight: 700; color: var(--text); }
         .create-group-btn { background: var(--accent); border: none; padding: 8px 16px; border-radius: 24px; color: white; cursor: pointer; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
         .chats-search { padding: 12px 16px; border-bottom: 1px solid var(--border); }
@@ -104,8 +115,6 @@
         .chats-list { flex: 1; overflow-y: auto; }
         .chat-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; cursor: pointer; border-bottom: 1px solid var(--border); }
         .chat-item:hover { background: var(--bg-element); }
-        .chat-avatar { width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0; position: relative; background: var(--accent); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 20px; }
-        .group-avatar { background: linear-gradient(135deg, var(--accent), var(--accent-hover)); }
         .chat-info { flex: 1; min-width: 0; }
         .chat-name { font-weight: 600; font-size: 16px; color: var(--text); margin-bottom: 4px; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
         .verified-icon { color: var(--verified); font-size: 14px; }
@@ -114,12 +123,11 @@
         .empty-chats { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
         
         .chat-window { display: flex; flex-direction: column; height: 100%; background: var(--bg-page); }
-        .chat-header { padding: 12px 16px; background: var(--bg-surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-        .back-btn { background: none; border: none; font-size: 22px; cursor: pointer; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text); }
+        .chat-header { padding: 12px 16px; background: var(--bg-surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; flex-shrink: 0; padding-top: max(12px, env(safe-area-inset-top)); }
+        .back-btn { background: none; border: none; font-size: 22px; cursor: pointer; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text); flex-shrink: 0; }
         .chat-header-avatar { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; position: relative; background: var(--accent); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; }
-        .chat-header-info { flex: 1; }
-        .chat-header-name { font-weight: 600; font-size: 17px; color: var(--text); display: flex; align-items: center; gap: 6px; cursor: pointer; }
-        .chat-header-name:hover { text-decoration: underline; }
+        .chat-header-info { flex: 1; min-width: 0; }
+        .chat-header-name { font-weight: 600; font-size: 17px; color: var(--text); display: flex; align-items: center; gap: 6px; cursor: pointer; flex-wrap: wrap; }
         .chat-header-members { font-size: 12px; color: var(--text-secondary); cursor: pointer; }
         .messages-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 8px; }
         .message { display: flex; flex-direction: column; max-width: 75%; animation: fadeIn 0.2s ease; margin-bottom: 8px; }
@@ -129,9 +137,8 @@
         .message-bubble { padding: 10px 14px; border-radius: 18px; word-wrap: break-word; cursor: pointer; }
         .my .message-bubble { background: var(--my-msg); color: var(--my-msg-text); border-bottom-right-radius: 4px; }
         .other .message-bubble { background: var(--other-msg); color: var(--other-msg-text); border-bottom-left-radius: 4px; }
-        .message-sender { font-size: 11px; font-weight: 600; margin-bottom: 4px; margin-left: 6px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; cursor: pointer; }
-        .message-sender:hover { text-decoration: underline; }
-        .sender-avatar { width: 18px; height: 18px; border-radius: 50%; background: var(--accent); background-size: cover; background-position: center; }
+        .message-sender { font-size: 11px; font-weight: 600; margin-bottom: 4px; margin-left: 6px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; cursor: pointer; flex-wrap: wrap; }
+        .sender-avatar { width: 18px; height: 18px; border-radius: 50%; background: var(--accent); background-size: cover; background-position: center; flex-shrink: 0; }
         .message-footer { display: flex; align-items: center; justify-content: flex-end; gap: 6px; margin-top: 4px; margin-right: 6px; }
         .message-time { font-size: 10px; color: var(--text-secondary); }
         .read-status { font-size: 10px; display: flex; align-items: center; gap: 2px; }
@@ -162,7 +169,7 @@
         .reaction-emoji-big { font-size: 32px; }
         .reaction-name { font-size: 12px; color: var(--text-secondary); }
         
-        .mobile-context-menu { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-surface); border-radius: 20px 20px 0 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.15); z-index: 1001; display: none; flex-direction: column; padding: 16px; animation: slideUp 0.2s ease; }
+        .mobile-context-menu { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-surface); border-radius: 20px 20px 0 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.15); z-index: 1001; display: none; flex-direction: column; padding: 16px; animation: slideUp 0.2s ease; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
         .mobile-context-menu.active { display: flex; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .mobile-context-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; }
@@ -172,14 +179,14 @@
         .mobile-context-btn { padding: 14px; border-radius: 14px; background: var(--bg-element); border: none; font-size: 16px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--text); }
         .mobile-context-btn.delete { color: #dc3545; background: rgba(220,53,69,0.1); }
         
-        .input-area { padding: 12px 16px; background: var(--bg-surface); border-top: 1px solid var(--border); display: flex; gap: 12px; flex-shrink: 0; }
+        .input-area { padding: 12px 16px; background: var(--bg-surface); border-top: 1px solid var(--border); display: flex; gap: 12px; flex-shrink: 0; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
         .input-area input { flex: 1; padding: 12px 18px; border: none; background: var(--bg-element); border-radius: 28px; font-size: 16px; outline: none; color: var(--text); }
         .input-area button { background: var(--accent); border: none; width: 48px; height: 48px; border-radius: 50%; color: white; cursor: pointer; font-size: 18px; }
         .attach-btn { background: var(--bg-element); border: none; width: 48px; height: 48px; border-radius: 50%; color: var(--text); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
         .attach-btn:hover { background: var(--accent); color: white; }
         
         .people-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
-        .people-header { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+        .people-header { padding: 16px 20px; border-bottom: 1px solid var(--border); padding-top: max(16px, env(safe-area-inset-top)); }
         .people-header h2 { font-size: 24px; font-weight: 700; color: var(--text); }
         .people-search { padding: 12px 16px; border-bottom: 1px solid var(--border); }
         .people-search input { width: 100%; padding: 10px 16px; border: none; background: var(--bg-element); border-radius: 24px; font-size: 15px; outline: none; color: var(--text); }
@@ -197,7 +204,7 @@
         .action-btn.pending { background: var(--bg-element); color: var(--text-secondary); cursor: default; }
         
         .settings-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
-        .settings-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+        .settings-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; padding-top: max(16px, env(safe-area-inset-top)); }
         .settings-header h2 { font-size: 24px; font-weight: 700; color: var(--text); flex: 1; }
         .settings-list { padding: 16px; }
         .settings-section { margin-bottom: 24px; }
@@ -215,7 +222,7 @@
         .theme-name { font-size: 13px; color: var(--text); }
         
         .admin-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
-        .admin-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+        .admin-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; padding-top: max(16px, env(safe-area-inset-top)); }
         .admin-header h2 { font-size: 24px; font-weight: 700; color: var(--text); flex: 1; }
         .admin-stats { display: flex; gap: 16px; padding: 16px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
         .admin-stat-card { background: var(--bg-element); border-radius: 16px; padding: 12px 20px; text-align: center; flex: 1; min-width: 100px; }
@@ -228,6 +235,8 @@
         .admin-user-details { flex: 1; }
         .admin-user-name { font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
         .admin-user-email { font-size: 12px; color: var(--text-secondary); }
+        
+        .official-post-btn { background: var(--verified); color: white; border: none; padding: 12px; border-radius: 16px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
         
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
         .modal-overlay.active { display: flex; }
@@ -248,14 +257,14 @@
         .group-manage-modal .modal { max-width: 500px; }
         .group-members-list { max-height: 300px; overflow-y: auto; margin: 16px 0; border: 1px solid var(--border); border-radius: 16px; }
         .group-member-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); }
-        .group-member-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; }
+        .group-member-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; position: relative; }
         .remove-member-btn { background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 12px; }
         .add-member-section { margin: 16px 0; padding-top: 16px; border-top: 1px solid var(--border); }
         .add-member-select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 16px; background: var(--bg-element); color: var(--text); margin-bottom: 12px; }
         .danger-btn { background: #dc3545; color: white; border: none; padding: 12px; border-radius: 16px; cursor: pointer; width: 100%; margin-top: 8px; font-weight: 600; }
         .leave-btn { background: #ffc107; color: #1a1a1a; }
         
-        .mobile-bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-surface); border-top: 1px solid var(--border); padding: 8px 20px 12px; justify-content: space-around; z-index: 100; transition: transform 0.3s ease; }
+        .mobile-bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-surface); border-top: 1px solid var(--border); padding: 8px 20px 12px; justify-content: space-around; z-index: 100; transition: transform 0.3s ease; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
         .mobile-bottom-nav.hidden { transform: translateY(100%); }
         .mobile-nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; font-size: 11px; color: var(--text-secondary); cursor: pointer; padding: 8px; border-radius: 12px; }
         .mobile-nav-item i { font-size: 22px; }
@@ -268,6 +277,7 @@
 <body data-theme="default">
 <div id="app"></div>
 
+<!-- Модалки -->
 <div id="reactionsModal" class="modal-overlay reactions-modal">
     <div class="modal">
         <div class="modal-header">Выберите реакцию</div>
@@ -489,21 +499,35 @@
     }
 
     // ========== ПОСТЫ И КОММЕНТАРИИ ==========
-    async function createPost(text) {
+    async function createPost(text, isOfficial = false) {
         if (!text.trim()) return;
         await db.collection('posts').add({
-            userId: currentUser.uid,
-            userName: `${userData.firstName} ${userData.lastName}`,
-            userAvatar: userData.avatarUrl || null,
-            userVerified: userData.isVerified || false,
+            userId: isOfficial ? 'official' : currentUser.uid,
+            userName: isOfficial ? 'ЧЕБУРЧАТ' : `${userData.firstName} ${userData.lastName}`,
+            userAvatar: isOfficial ? null : (userData.avatarUrl || null),
+            userVerified: isOfficial ? true : (userData.isVerified || false),
+            isOfficial: isOfficial,
             text: text.trim(),
             likes: [],
             comments: [],
             createdAt: new Date().toISOString()
         });
-        showModal('Успех', 'Запись опубликована!');
+        showModal('Успех', isOfficial ? 'Официальный пост опубликован!' : 'Запись опубликована!');
         if (currentView === 'profile') showProfileView(viewedProfileUserId);
         else if (currentView === 'feed') showFeedView();
+        else if (currentView === 'admin') loadAdminStats();
+    }
+
+    async function deletePost(postId, postUserId) {
+        if (postUserId !== currentUser.uid && !isAdmin) return;
+        showModal('Подтверждение', 'Удалить этот пост?', async () => {
+            try {
+                await db.collection('posts').doc(postId).delete();
+                showModal('Успех', 'Пост удалён');
+                if (currentView === 'profile') showProfileView(viewedProfileUserId);
+                else if (currentView === 'feed') showFeedView();
+            } catch(e) { showModal('Ошибка', e.message); }
+        });
     }
 
     async function toggleLike(postId) {
@@ -576,7 +600,7 @@
         
         let postsHtml = '<div class="posts-feed">';
         if (posts.length === 0) {
-            postsHtml += '<div class="post-card" style="text-align: center; padding: 40px;"><i class="fas fa-newspaper" style="font-size: 48px; opacity: 0.5; margin-bottom: 16px;"></i><p>Нет постов</p><p style="font-size: 13px;">Подпишитесь на друзей или создайте свой первый пост!</p></div>';
+            postsHtml += '<div class="post-card" style="text-align: center; padding: 40px;"><i class="fas fa-newspaper" style="font-size: 48px; opacity: 0.5; margin-bottom: 16px;"></i><p>Нет постов</p><p style="font-size: 13px;">Создайте свой первый пост!</p></div>';
         }
         
         for (const post of posts) {
@@ -584,13 +608,15 @@
             const likes = post.likes || [];
             const comments = post.comments || [];
             const isLiked = likes.includes(currentUser.uid);
+            const canDelete = (post.userId === currentUser.uid) || isAdmin;
             
             postsHtml += `
                 <div class="post-card" data-post-id="${post.id}">
-                    <div class="post-header" data-user-id="${post.userId}">
-                        <div class="post-avatar" style="${post.userAvatar ? `background-image: url('${post.userAvatar}'); background-size: cover; background-position: center;` : ''}">${!post.userAvatar ? getInitials(post.userName?.split(' ')[0], post.userName?.split(' ')[1] || '') : ''}</div>
+                    ${canDelete ? `<button class="post-delete-btn" data-action="delete" data-post="${post.id}" data-user="${post.userId}"><i class="fas fa-trash"></i></button>` : ''}
+                    <div class="post-header" data-user-id="${post.userId === 'official' ? null : post.userId}">
+                        <div class="post-avatar" style="${post.userAvatar ? `background-image: url('${post.userAvatar}'); background-size: cover; background-position: center;` : ''}">${!post.userAvatar ? getInitials(post.userName?.split(' ')[0], post.userName?.split(' ')[1] || '') : ''}${post.isOfficial ? '<div class="verified-badge" style="background: #fbbf24;"><i class="fas fa-star"></i></div>' : (post.userVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : '')}</div>
                         <div>
-                            <div class="post-author-name">${escapeHtml(post.userName)} ${post.userVerified ? '<i class="fas fa-check-circle verified-icon" style="font-size: 12px;"></i>' : ''}</div>
+                            <div class="post-author-name">${escapeHtml(post.userName)} ${post.isOfficial ? '<i class="fas fa-star" style="color: #fbbf24;"></i>' : (post.userVerified ? '<i class="fas fa-check-circle verified-icon" style="font-size: 12px;"></i>' : '')}</div>
                             <div class="post-time">${postDate}</div>
                         </div>
                     </div>
@@ -602,7 +628,7 @@
                     <div class="comments-section" id="comments-${post.id}" style="display: none;">
                         ${comments.map(c => `
                             <div class="comment-item">
-                                <div class="comment-avatar" style="${c.userAvatar ? `background-image: url('${c.userAvatar}'); background-size: cover; background-position: center;` : ''}">${!c.userAvatar ? getInitials(c.userName?.split(' ')[0], c.userName?.split(' ')[1] || '') : ''}</div>
+                                <div class="comment-avatar" style="${c.userAvatar ? `background-image: url('${c.userAvatar}'); background-size: cover; background-position: center;` : ''}">${!c.userAvatar ? getInitials(c.userName?.split(' ')[0], c.userName?.split(' ')[1] || '') : ''}${c.userVerified ? '<div class="verified-badge" style="width: 14px; height: 14px; font-size: 7px;"><i class="fas fa-check"></i></div>' : ''}</div>
                                 <div class="comment-content">
                                     <div class="comment-author">${escapeHtml(c.userName)} ${c.userVerified ? '<i class="fas fa-check-circle verified-icon" style="font-size: 10px;"></i>' : ''}</div>
                                     <div class="comment-text">${escapeHtml(c.text)}</div>
@@ -632,27 +658,29 @@
             </div>
         `;
         
-        // Обработчики
         document.querySelectorAll('.post-header').forEach(header => {
-            header.addEventListener('click', () => {
-                const userId = header.dataset.userId;
-                if (userId) showProfileView(userId);
-            });
+            const userId = header.dataset.userId;
+            if (userId && userId !== 'null') {
+                header.addEventListener('click', () => showProfileView(userId));
+            }
         });
         
         document.querySelectorAll('.post-action-btn[data-action="like"]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggleLike(btn.dataset.post);
-            });
+            btn.addEventListener('click', (e) => { e.stopPropagation(); toggleLike(btn.dataset.post); });
         });
         
         document.querySelectorAll('.post-action-btn[data-action="comment"]').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const commentsDiv = document.getElementById(`comments-${btn.dataset.post}`);
-                if (commentsDiv.style.display === 'none') commentsDiv.style.display = 'block';
-                else commentsDiv.style.display = 'none';
+                commentsDiv.style.display = commentsDiv.style.display === 'none' ? 'block' : 'none';
+            });
+        });
+        
+        document.querySelectorAll('.post-delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                deletePost(btn.dataset.post, btn.dataset.user);
             });
         });
         
@@ -708,13 +736,15 @@
             const likes = post.likes || [];
             const comments = post.comments || [];
             const isLiked = likes.includes(currentUser.uid);
+            const canDelete = (post.userId === currentUser.uid) || isAdmin;
             
             postsHtml += `
                 <div class="post-card" data-post-id="${post.id}">
+                    ${canDelete ? `<button class="post-delete-btn" data-action="delete" data-post="${post.id}" data-user="${post.userId}"><i class="fas fa-trash"></i></button>` : ''}
                     <div class="post-header">
-                        <div class="post-avatar" style="${post.userAvatar ? `background-image: url('${post.userAvatar}'); background-size: cover; background-position: center;` : ''}">${!post.userAvatar ? getInitials(post.userName?.split(' ')[0], post.userName?.split(' ')[1] || '') : ''}</div>
+                        <div class="post-avatar" style="${post.userAvatar ? `background-image: url('${post.userAvatar}'); background-size: cover; background-position: center;` : ''}">${!post.userAvatar ? getInitials(post.userName?.split(' ')[0], post.userName?.split(' ')[1] || '') : ''}${post.isOfficial ? '<div class="verified-badge" style="background: #fbbf24;"><i class="fas fa-star"></i></div>' : (post.userVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : '')}</div>
                         <div>
-                            <div class="post-author-name">${escapeHtml(post.userName)} ${post.userVerified ? '<i class="fas fa-check-circle verified-icon" style="font-size: 12px;"></i>' : ''}</div>
+                            <div class="post-author-name">${escapeHtml(post.userName)} ${post.isOfficial ? '<i class="fas fa-star" style="color: #fbbf24;"></i>' : (post.userVerified ? '<i class="fas fa-check-circle verified-icon" style="font-size: 12px;"></i>' : '')}</div>
                             <div class="post-time">${postDate}</div>
                         </div>
                     </div>
@@ -726,7 +756,7 @@
                     <div class="comments-section" id="comments-${post.id}" style="display: none;">
                         ${comments.map(c => `
                             <div class="comment-item">
-                                <div class="comment-avatar" style="${c.userAvatar ? `background-image: url('${c.userAvatar}'); background-size: cover; background-position: center;` : ''}">${!c.userAvatar ? getInitials(c.userName?.split(' ')[0], c.userName?.split(' ')[1] || '') : ''}</div>
+                                <div class="comment-avatar" style="${c.userAvatar ? `background-image: url('${c.userAvatar}'); background-size: cover; background-position: center;` : ''}">${!c.userAvatar ? getInitials(c.userName?.split(' ')[0], c.userName?.split(' ')[1] || '') : ''}${c.userVerified ? '<div class="verified-badge" style="width: 14px; height: 14px; font-size: 7px;"><i class="fas fa-check"></i></div>' : ''}</div>
                                 <div class="comment-content">
                                     <div class="comment-author">${escapeHtml(c.userName)} ${c.userVerified ? '<i class="fas fa-check-circle verified-icon" style="font-size: 10px;"></i>' : ''}</div>
                                     <div class="comment-text">${escapeHtml(c.text)}</div>
@@ -750,7 +780,7 @@
         document.getElementById('mainContent').innerHTML = `
             <div class="profile-view">
                 <div class="profile-header">
-                    <div class="profile-avatar-large" style="${avatarStyle}" id="changeAvatarProfileBtn">${!profileData.avatarUrl ? getInitials(profileData.firstName, profileData.lastName) : ''}</div>
+                    <div class="profile-avatar-large" style="${avatarStyle}" id="changeAvatarProfileBtn">${!profileData.avatarUrl ? getInitials(profileData.firstName, profileData.lastName) : ''}${profileData.isVerified ? '<div class="verified-badge" style="width: 24px; height: 24px; font-size: 12px; bottom: -5px; right: -5px;"><i class="fas fa-check"></i></div>' : ''}</div>
                 </div>
                 <div class="profile-info">
                     <div class="profile-name">${profileData.firstName} ${profileData.lastName}${profileData.isVerified ? ' <i class="fas fa-check-circle verified-icon"></i>' : ''}</div>
@@ -777,23 +807,26 @@
             document.getElementById('changeAvatarBtn')?.addEventListener('click', changeAvatar);
             document.getElementById('submitPostBtn')?.addEventListener('click', () => {
                 const text = document.getElementById('newPostText').value;
-                createPost(text);
+                createPost(text, false);
             });
         }
         
         document.querySelectorAll('.post-action-btn[data-action="like"]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggleLike(btn.dataset.post);
-            });
+            btn.addEventListener('click', (e) => { e.stopPropagation(); toggleLike(btn.dataset.post); });
         });
         
         document.querySelectorAll('.post-action-btn[data-action="comment"]').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const commentsDiv = document.getElementById(`comments-${btn.dataset.post}`);
-                if (commentsDiv.style.display === 'none') commentsDiv.style.display = 'block';
-                else commentsDiv.style.display = 'none';
+                commentsDiv.style.display = commentsDiv.style.display === 'none' ? 'block' : 'none';
+            });
+        });
+        
+        document.querySelectorAll('.post-delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                deletePost(btn.dataset.post, btn.dataset.user);
             });
         });
         
@@ -858,7 +891,7 @@
         fg.forEach(chat => {
             const div = document.createElement('div'); div.className = 'chat-item';
             const timeStr = chat.lastTime ? new Date(chat.lastTime).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
-            div.innerHTML = `<div class="chat-avatar group-avatar"><i class="fas fa-users"></i></div><div class="chat-info"><div class="chat-name">${escapeHtml(chat.name)}<span class="group-icon"><i class="fas fa-users"></i></span></div><div class="chat-last-msg">${escapeHtml(chat.lastMsg.substring(0,50))}</div></div>${timeStr ? `<div class="chat-time">${timeStr}</div>` : ''}`;
+            div.innerHTML = `<div class="chat-avatar-wrapper"><div class="chat-avatar group-avatar"><i class="fas fa-users"></i></div></div><div class="chat-info"><div class="chat-name">${escapeHtml(chat.name)}<span class="group-icon"><i class="fas fa-users"></i></span></div><div class="chat-last-msg">${escapeHtml(chat.lastMsg.substring(0,50))}</div></div>${timeStr ? `<div class="chat-time">${timeStr}</div>` : ''}`;
             div.onclick = () => openChat({ type: 'group', id: chat.id, name: chat.name, members: chat.members, createdBy: chat.createdBy });
             container.appendChild(div);
         });
@@ -866,7 +899,7 @@
             const div = document.createElement('div'); div.className = 'chat-item';
             const timeStr = chat.lastTime?.toDate?.() ? new Date(chat.lastTime.toDate()).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
             const avatarStyle = chat.avatarUrl ? `background-image: url('${chat.avatarUrl}'); background-size: cover; background-position: center;` : '';
-            div.innerHTML = `<div class="chat-avatar" style="${avatarStyle}">${!chat.avatarUrl ? getInitials(chat.firstName, chat.lastName) : ''}${chat.isVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : ''}</div><div class="chat-info"><div class="chat-name">${chat.firstName} ${chat.lastName}${chat.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div><div class="chat-last-msg">${escapeHtml(chat.lastMsg.substring(0,50))}</div></div>${timeStr ? `<div class="chat-time">${timeStr}</div>` : ''}`;
+            div.innerHTML = `<div class="chat-avatar-wrapper"><div class="chat-avatar" style="${avatarStyle}">${!chat.avatarUrl ? getInitials(chat.firstName, chat.lastName) : ''}${chat.isVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : ''}</div></div><div class="chat-info"><div class="chat-name">${chat.firstName} ${chat.lastName}${chat.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div><div class="chat-last-msg">${escapeHtml(chat.lastMsg.substring(0,50))}</div></div>${timeStr ? `<div class="chat-time">${timeStr}</div>` : ''}`;
             div.onclick = () => openChat({ type: 'private', id: chat.id, firstName: chat.firstName, lastName: chat.lastName, avatarUrl: chat.avatarUrl, isVerified: chat.isVerified });
             container.appendChild(div);
         });
@@ -885,7 +918,7 @@
             <div class="chat-window">
                 <div class="chat-header">
                     <button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i></button>
-                    <div class="chat-header-avatar ${isGroup ? 'group-avatar' : ''}" style="${avatarStyle}">${avatarContent}${!isGroup && chat.isVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : ''}</div>
+                    <div class="chat-header-avatar ${isGroup ? 'group-avatar' : ''}" style="${avatarStyle}">${avatarContent}${!isGroup && chat.isVerified ? '<div class="verified-badge" style="bottom: -2px; right: -2px; width: 14px; height: 14px; font-size: 8px;"><i class="fas fa-check"></i></div>' : ''}</div>
                     <div class="chat-header-info">
                         <div class="chat-header-name" ${!isGroup ? `data-user-id="${chat.id}"` : ''}>${isGroup ? escapeHtml(chat.name) : `${escapeHtml(chat.firstName)} ${escapeHtml(chat.lastName)}`}${!isGroup && chat.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div>
                         ${isGroup && chat.members ? `<div class="chat-header-members" id="groupManageBtn">${chat.members.length} участников</div>` : ''}
@@ -1056,7 +1089,7 @@
             const removeBtn = (isCreator && member.id !== currentUser.uid) ? `<button class="remove-member-btn" data-id="${member.id}">Удалить</button>` : '';
             const div = document.createElement('div');
             div.className = 'group-member-item';
-            div.innerHTML = `<div class="group-member-info"><div class="group-member-avatar" style="${avatarStyle}">${!member.avatarUrl ? getInitials(member.firstName, member.lastName) : ''}</div><div class="group-member-name">${member.firstName} ${member.lastName}${isCreatorBadge}</div></div>${removeBtn}`;
+            div.innerHTML = `<div class="group-member-info"><div class="group-member-avatar" style="${avatarStyle}">${!member.avatarUrl ? getInitials(member.firstName, member.lastName) : ''}${member.isVerified ? '<div class="verified-badge" style="width: 14px; height: 14px; font-size: 7px;"><i class="fas fa-check"></i></div>' : ''}</div><div class="group-member-name">${member.firstName} ${member.lastName}${isCreatorBadge}</div></div>${removeBtn}`;
             const removeBtnEl = div.querySelector('.remove-member-btn');
             if (removeBtnEl) removeBtnEl.onclick = () => removeMemberFromGroup(member.id, member.firstName, member.lastName);
             membersListDiv.appendChild(div);
@@ -1122,7 +1155,7 @@
                     const avatarStyle = u.avatarUrl ? `background-image: url('${u.avatarUrl}'); background-size: cover; background-position: center;` : '';
                     const div = document.createElement('div');
                     div.className = 'friend-select-item';
-                    div.innerHTML = `<input type="checkbox" value="${id}" data-name="${u.firstName} ${u.lastName}"><div style="width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:bold;color:white;${avatarStyle}">${!u.avatarUrl ? getInitials(u.firstName, u.lastName) : ''}</div><div>${u.firstName} ${u.lastName}</div>`;
+                    div.innerHTML = `<input type="checkbox" value="${id}" data-name="${u.firstName} ${u.lastName}"><div class="avatar" style="width:36px;height:36px;${avatarStyle}">${!u.avatarUrl ? getInitials(u.firstName, u.lastName) : ''}</div><div>${u.firstName} ${u.lastName}</div>`;
                     const checkbox = div.querySelector('input');
                     checkbox.onchange = () => {
                         if(checkbox.checked) {
@@ -1184,7 +1217,7 @@
             const avatarStyle = user.avatarUrl ? `background-image: url('${user.avatarUrl}'); background-size: cover; background-position: center;` : '';
             const div = document.createElement('div');
             div.className = 'person-item';
-            div.innerHTML = `<div class="person-info"><div class="person-avatar" style="${avatarStyle}">${!user.avatarUrl ? getInitials(user.firstName, user.lastName) : ''}${user.isVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : ''}</div><div class="person-name">${user.firstName} ${user.lastName}${user.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div></div><div class="action-btns"><button class="action-btn write" data-chat="${user.id}">💬</button>${!isFriend && !isSent && !isReceived ? `<button class="action-btn add" data-add="${user.id}">➕</button>` : ''}${isSent ? '<button class="action-btn pending" disabled>⏳ Запрос</button>' : ''}${isReceived ? `<button class="action-btn add" data-accept="${user.id}" style="background:#28a745">✅ Принять</button>` : ''}${isFriend ? `<button class="action-btn remove" data-remove="${user.id}">🗑️</button>` : ''}</div>`;
+            div.innerHTML = `<div class="person-info"><div class="person-avatar" style="${avatarStyle}">${!user.avatarUrl ? getInitials(user.firstName, user.lastName) : ''}${user.isVerified ? '<div class="verified-badge" style="width: 16px; height: 16px; font-size: 8px;"><i class="fas fa-check"></i></div>' : ''}</div><div class="person-name">${user.firstName} ${user.lastName}${user.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div></div><div class="action-btns"><button class="action-btn write" data-chat="${user.id}">💬</button>${!isFriend && !isSent && !isReceived ? `<button class="action-btn add" data-add="${user.id}">➕</button>` : ''}${isSent ? '<button class="action-btn pending" disabled>⏳ Запрос</button>' : ''}${isReceived ? `<button class="action-btn add" data-accept="${user.id}" style="background:#28a745">✅ Принять</button>` : ''}${isFriend ? `<button class="action-btn remove" data-remove="${user.id}">🗑️</button>` : ''}</div>`;
             const writeBtn = div.querySelector('[data-chat]');
             const addBtn = div.querySelector('[data-add]');
             const acceptBtn = div.querySelector('[data-accept]');
@@ -1254,6 +1287,14 @@
     }
 
     // ========== АДМИНКА ==========
+    async function loadAdminStats() {
+        const usersSnapshot = await db.collection('users').get();
+        document.getElementById('totalUsersCount').textContent = usersSnapshot.size;
+        let verified = 0;
+        usersSnapshot.forEach(doc => { if(doc.data().isVerified) verified++; });
+        document.getElementById('verifiedUsersCount').textContent = verified;
+    }
+
     async function loadAdminUsers() {
         const snapshot = await db.collection('users').get();
         const container = document.getElementById('adminUsersContainer');
@@ -1264,18 +1305,14 @@
             const avatarStyle = user.avatarUrl ? `background-image: url('${user.avatarUrl}'); background-size: cover; background-position: center;` : '';
             const div = document.createElement('div');
             div.className = 'admin-user-item';
-            div.innerHTML = `<div class="admin-user-info"><div class="admin-user-avatar" style="${avatarStyle}">${!user.avatarUrl ? getInitials(user.firstName, user.lastName) : ''}${user.isVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : ''}</div><div class="admin-user-details"><div class="admin-user-name">${user.firstName} ${user.lastName} ${user.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div><div class="admin-user-email">${user.email}</div></div></div><div class="action-btns">${!user.isVerified ? `<button class="action-btn verify" data-verify="${doc.id}" style="background:var(--verified);color:white;">✅ Выдать</button>` : `<button class="action-btn unverify" data-unverify="${doc.id}" style="background:#6c757d;color:white;">❌ Забрать</button>`}</div>`;
+            div.innerHTML = `<div class="admin-user-info"><div class="admin-user-avatar" style="${avatarStyle}">${!user.avatarUrl ? getInitials(user.firstName, user.lastName) : ''}${user.isVerified ? '<div class="verified-badge" style="width: 14px; height: 14px; font-size: 7px;"><i class="fas fa-check"></i></div>' : ''}</div><div class="admin-user-details"><div class="admin-user-name">${user.firstName} ${user.lastName} ${user.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div><div class="admin-user-email">${user.email}</div></div></div><div class="action-btns">${!user.isVerified ? `<button class="action-btn verify" data-verify="${doc.id}" style="background:var(--verified);color:white;">✅ Выдать</button>` : `<button class="action-btn unverify" data-unverify="${doc.id}" style="background:#6c757d;color:white;">❌ Забрать</button>`}</div>`;
             const verifyBtn = div.querySelector('[data-verify]');
             const unverifyBtn = div.querySelector('[data-unverify]');
             if(verifyBtn) verifyBtn.onclick = () => toggleVerification(doc.id, true, user.firstName, user.lastName);
             if(unverifyBtn) unverifyBtn.onclick = () => toggleVerification(doc.id, false, user.firstName, user.lastName);
             container.appendChild(div);
         });
-        const usersSnapshot = await db.collection('users').get();
-        document.getElementById('totalUsersCount').textContent = usersSnapshot.size;
-        let verified = 0;
-        usersSnapshot.forEach(doc => { if(doc.data().isVerified) verified++; });
-        document.getElementById('verifiedUsersCount').textContent = verified;
+        await loadAdminStats();
     }
 
     async function toggleVerification(userId, verify, firstName, lastName) {
@@ -1293,8 +1330,29 @@
     function showAdminView() {
         currentView = 'admin';
         if(isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
-        document.getElementById('mainContent').innerHTML = `<div class="admin-view"><div class="admin-header"><button class="back-btn" id="adminBackBtn"><i class="fas fa-arrow-left"></i></button><h2>Админ панель</h2></div><div class="admin-stats"><div class="admin-stat-card"><div class="admin-stat-value" id="totalUsersCount">0</div><div class="admin-stat-label">Всего пользователей</div></div><div class="admin-stat-card"><div class="admin-stat-value" id="verifiedUsersCount">0</div><div class="admin-stat-label">С галочкой</div></div></div><div class="admin-list" id="adminUsersContainer">Загрузка...</div></div>`;
+        document.getElementById('mainContent').innerHTML = `
+            <div class="admin-view">
+                <div class="admin-header">
+                    <button class="back-btn" id="adminBackBtn"><i class="fas fa-arrow-left"></i></button>
+                    <h2>Админ панель</h2>
+                </div>
+                <div class="admin-stats">
+                    <div class="admin-stat-card"><div class="admin-stat-value" id="totalUsersCount">0</div><div class="admin-stat-label">Всего пользователей</div></div>
+                    <div class="admin-stat-card"><div class="admin-stat-value" id="verifiedUsersCount">0</div><div class="admin-stat-label">С галочкой</div></div>
+                </div>
+                <div class="create-post-card" style="margin: 16px;">
+                    <textarea id="officialPostText" class="create-post-input" rows="3" placeholder="Официальный пост от имени ЧЕБУРЧАТ..."></textarea>
+                    <button class="official-post-btn" id="submitOfficialPostBtn"><i class="fas fa-star"></i> Опубликовать официальный пост</button>
+                </div>
+                <div class="admin-list" id="adminUsersContainer">Загрузка...</div>
+            </div>
+        `;
         document.getElementById('adminBackBtn').onclick = () => { if(currentChat) openChat(currentChat); else showChatsView(); };
+        document.getElementById('submitOfficialPostBtn').onclick = () => {
+            const text = document.getElementById('officialPostText').value;
+            createPost(text, true);
+            document.getElementById('officialPostText').value = '';
+        };
         loadAdminUsers();
         if(isMobile) updateMobileNav('admin');
     }
@@ -1308,6 +1366,8 @@
         if(!currentUser.emailVerified) { renderEmailVerifyScreen(); return; }
         isAdmin = currentUser.email === 'sad.spotty@gmail.com';
         
+        const avatarStyle = userData.avatarUrl ? `background-image: url('${userData.avatarUrl}'); background-size: cover; background-position: center;` : '';
+        
         document.getElementById('app').innerHTML = `
             <div class="app">
                 <div class="sidebar">
@@ -1319,6 +1379,13 @@
                         <div class="nav-item" data-nav="profile"><i class="fas fa-user-circle"></i> Профиль</div>
                         <div class="nav-item" data-nav="settings"><i class="fas fa-cog"></i> Настройки</div>
                         ${isAdmin ? '<div class="nav-item" data-nav="admin"><i class="fas fa-shield-alt"></i> Админ</div>' : ''}
+                    </div>
+                    <div class="user-info-sidebar" id="profileBtn">
+                        <div class="avatar-wrapper">
+                            <div class="avatar" style="${avatarStyle}">${!userData.avatarUrl ? getInitials(userData.firstName, userData.lastName) : ''}</div>
+                            ${userData.isVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : ''}
+                        </div>
+                        <div><strong>${userData.firstName} ${userData.lastName}</strong>${userData.isVerified ? ' <i class="fas fa-check-circle verified-icon" style="font-size:12px"></i>' : ''}</div>
                     </div>
                     <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</button>
                 </div>
@@ -1336,6 +1403,7 @@
         
         document.querySelectorAll('.nav-item').forEach(el => { el.onclick = () => { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); if(el.dataset.nav === 'people') showPeopleView(); else if(el.dataset.nav === 'feed') showFeedView(); else if(el.dataset.nav === 'profile') showProfileView(); else if(el.dataset.nav === 'settings') showSettingsView(); else if(el.dataset.nav === 'admin') showAdminView(); else showChatsView(); }; });
         document.querySelectorAll('.mobile-nav-item').forEach(el => { if(el.dataset.nav) el.onclick = () => { if(el.dataset.nav === 'people') showPeopleView(); else if(el.dataset.nav === 'feed') showFeedView(); else if(el.dataset.nav === 'profile') showProfileView(); else if(el.dataset.nav === 'settings') showSettingsView(); else if(el.dataset.nav === 'admin') showAdminView(); else if(el.dataset.nav === 'chats') showChatsView(); }; });
+        document.getElementById('profileBtn').onclick = () => showProfileView();
         document.getElementById('logoutBtn').onclick = () => { if(messagesUnsubscribe) messagesUnsubscribe(); auth.signOut(); renderAuth(); };
         
         showChatsView();
