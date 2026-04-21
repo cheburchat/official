@@ -89,29 +89,83 @@
         }
         
         /* ===== КОНТРАСТНОСТЬ ТЕКСТА - РАБОТАЕТ ДЛЯ ВСЕХ ТЕМ ===== */
+        /* Светлая контрастность (делает текст темнее) */
         body[data-text-contrast="light"] {
             --text: #1a1a1a !important;
-            --text-secondary: #555555 !important;
+            --text-secondary: #444444 !important;
             --other-msg-text: #1a1a1a !important;
         }
         
+        /* Тёмная контрастность (делает текст светлее/белее) */
         body[data-text-contrast="dark"] {
             --text: #ffffff !important;
             --text-secondary: #cccccc !important;
             --other-msg-text: #ffffff !important;
         }
         
-        /* Дополнительное усиление для стеклянных тем */
-        body[data-theme="glass-light"][data-text-contrast="dark"] {
-            --text: #1a1a1a !important;
-            --text-secondary: #444444 !important;
-            --other-msg-text: #1a1a1a !important;
+        /* Принудительное применение для всех элементов */
+        body[data-text-contrast="light"] .post-text,
+        body[data-text-contrast="light"] .comment-text,
+        body[data-text-contrast="light"] .chat-last-msg,
+        body[data-text-contrast="light"] .message-bubble,
+        body[data-text-contrast="light"] .post-author-name,
+        body[data-text-contrast="light"] .chat-name,
+        body[data-text-contrast="light"] .person-name,
+        body[data-text-contrast="light"] .track-title,
+        body[data-text-contrast="light"] .section-title,
+        body[data-text-contrast="light"] .profile-name,
+        body[data-text-contrast="light"] .message-sender,
+        body[data-text-contrast="light"] .chat-header-name,
+        body[data-text-contrast="light"] .nav-item,
+        body[data-text-contrast="light"] .settings-section-title,
+        body[data-text-contrast="light"] .preset-name,
+        body[data-text-contrast="light"] .hover-toggle span,
+        body[data-text-contrast="light"] .modal-header,
+        body[data-text-contrast="light"] .logo {
+            color: #1a1a1a !important;
         }
         
-        body[data-theme="glass-dark"][data-text-contrast="light"] {
-            --text: #1a1a1a !important;
-            --text-secondary: #666666 !important;
-            --other-msg-text: #1a1a1a !important;
+        body[data-text-contrast="light"] .post-time,
+        body[data-text-contrast="light"] .comment-time,
+        body[data-text-contrast="light"] .chat-time,
+        body[data-text-contrast="light"] .track-artist,
+        body[data-text-contrast="light"] .profile-email,
+        body[data-text-contrast="light"] .stat-label,
+        body[data-text-contrast="light"] .chat-last-msg,
+        body[data-text-contrast="light"] .message-time {
+            color: #444444 !important;
+        }
+        
+        body[data-text-contrast="dark"] .post-text,
+        body[data-text-contrast="dark"] .comment-text,
+        body[data-text-contrast="dark"] .chat-last-msg,
+        body[data-text-contrast="dark"] .message-bubble,
+        body[data-text-contrast="dark"] .post-author-name,
+        body[data-text-contrast="dark"] .chat-name,
+        body[data-text-contrast="dark"] .person-name,
+        body[data-text-contrast="dark"] .track-title,
+        body[data-text-contrast="dark"] .section-title,
+        body[data-text-contrast="dark"] .profile-name,
+        body[data-text-contrast="dark"] .message-sender,
+        body[data-text-contrast="dark"] .chat-header-name,
+        body[data-text-contrast="dark"] .nav-item,
+        body[data-text-contrast="dark"] .settings-section-title,
+        body[data-text-contrast="dark"] .preset-name,
+        body[data-text-contrast="dark"] .hover-toggle span,
+        body[data-text-contrast="dark"] .modal-header,
+        body[data-text-contrast="dark"] .logo {
+            color: #ffffff !important;
+        }
+        
+        body[data-text-contrast="dark"] .post-time,
+        body[data-text-contrast="dark"] .comment-time,
+        body[data-text-contrast="dark"] .chat-time,
+        body[data-text-contrast="dark"] .track-artist,
+        body[data-text-contrast="dark"] .profile-email,
+        body[data-text-contrast="dark"] .stat-label,
+        body[data-text-contrast="dark"] .chat-last-msg,
+        body[data-text-contrast="dark"] .message-time {
+            color: #cccccc !important;
         }
         
         /* Отключение анимаций */
@@ -360,7 +414,7 @@
         .attach-btn { background: var(--bg-element); border: none; width: 48px; height: 48px; border-radius: 50%; color: var(--text); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .attach-btn:hover { background: var(--accent); color: white; }
         
-        /* Feed - теперь заголовок наследует цвет темы */
+        /* Feed */
         .feed-header { background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); padding: 16px 20px; padding-top: max(16px, env(safe-area-inset-top)); }
         .feed-header h2 { font-size: 24px; font-weight: 700; color: var(--text); }
         .posts-feed { display: flex; flex-direction: column; gap: 16px; padding: 16px; }
