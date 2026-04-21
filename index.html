@@ -44,9 +44,10 @@
         .nav-item:hover, .nav-item.active { background: var(--bg-element); color: var(--accent); }
         .nav-item i { width: 24px; font-size: 20px; }
         
-        /* Выпадающее подменю (вниз) */
+        /* Выпадающее подменю (по клику) */
         .nav-item.has-submenu { position: relative; }
         .sub-menu { position: absolute; top: 100%; left: 8px; right: 8px; background: var(--bg-surface); border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); border: 1px solid var(--border); z-index: 100; display: none; margin-top: 4px; }
+        .sub-menu.show { display: block; }
         .sub-menu .nav-item { padding: 10px 16px; margin: 0; border-radius: 0; }
         .sub-menu .nav-item:first-child { border-radius: 12px 12px 0 0; }
         .sub-menu .nav-item:last-child { border-radius: 0 0 12px 12px; }
@@ -61,7 +62,7 @@
         
         .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--bg-page); }
         
-        /* ========== ЧАТЫ ========== */
+        /* Чаты */
         .chats-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
         .chats-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding-top: max(16px, env(safe-area-inset-top)); }
         .chats-header h2 { font-size: 24px; font-weight: 700; color: var(--text); }
@@ -328,8 +329,6 @@
         }
         @media (min-width: 769px) { 
             .back-btn { display: flex !important; }
-            .nav-item.has-submenu .sub-menu { display: none; position: absolute; }
-            .nav-item.has-submenu:hover .sub-menu { display: block; }
         }
     </style>
 </head>
@@ -1631,11 +1630,26 @@
             </div>
         `;
         
+        // Обработка клика по "Прочее" на ПК
+        const moreNav = document.querySelector('.nav-item[data-nav="more"]');
+        const subMenu = moreNav?.querySelector('.sub-menu');
+        
+        if (moreNav && subMenu) {
+            moreNav.addEventListener('click', (e) => {
+                e.stopPropagation();
+                subMenu.classList.toggle('show');
+            });
+            
+            // Закрываем подменю при клике вне его
+            document.addEventListener('click', (e) => {
+                if (!moreNav.contains(e.target)) {
+                    subMenu.classList.remove('show');
+                }
+            });
+        }
+        
         document.querySelectorAll('.nav-item[data-nav]').forEach(el => {
-            if (el.dataset.nav === 'more') {
-                // Обработка для ПК - при наведении показывается подменю (CSS уже есть)
-                return;
-            } else {
+            if (el.dataset.nav !== 'more') {
                 el.onclick = () => {
                     document.querySelectorAll('.nav-item[data-nav]').forEach(n => n.classList.remove('active'));
                     el.classList.add('active');
@@ -1654,6 +1668,8 @@
                 else if (sub === 'music') showMusicView();
                 else if (sub === 'settings') showSettingsView();
                 else if (sub === 'admin') showAdminView();
+                // Закрываем подменю после выбора
+                if (subMenu) subMenu.classList.remove('show');
             };
         });
         
