@@ -21,7 +21,6 @@
         
         body { background: var(--bg-page); color: var(--text); }
         
-        /* Auth */
         .auth-container { height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg-page); padding: 16px; }
         .auth-card { background: var(--bg-surface); padding: 32px 24px; border-radius: 28px; width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--border); }
         .auth-card h1 { color: var(--accent); margin-bottom: 24px; font-size: 32px; }
@@ -31,7 +30,6 @@
         .verify-msg { background: #fff3cd; color: #856404; padding: 12px; border-radius: 16px; margin: 12px 0; font-size: 14px; }
         .hidden { display: none !important; }
         
-        /* App layout */
         .app { display: flex; height: 100vh; background: var(--bg-page); }
         .sidebar { width: 280px; background: var(--bg-surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; height: 100vh; }
         .logo { padding: 20px 20px 16px; font-size: 22px; font-weight: 800; color: var(--accent); border-bottom: 1px solid var(--border); }
@@ -40,12 +38,34 @@
         .nav-item:hover, .nav-item.active { background: var(--bg-element); color: var(--accent); }
         .nav-item i { width: 24px; font-size: 20px; }
         .user-info-sidebar { margin-top: auto; padding: 16px 20px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .avatar { width: 44px; height: 44px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; flex-shrink: 0; position: relative; background-size: cover; background-position: center; }
-        .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; flex-shrink: 0; position: relative; background-size: cover; background-position: center; }
         .verified-badge { position: absolute; bottom: -2px; right: -2px; width: 18px; height: 18px; background: var(--verified); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: white; border: 2px solid var(--bg-surface); z-index: 1; }
         .logout-btn { margin: 10px 16px; padding: 12px; background: #dc3545; color: white; border: none; border-radius: 14px; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; }
         
         .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--bg-page); }
+        
+        /* Страница профиля */
+        .profile-view { height: 100%; overflow-y: auto; background: var(--bg-surface); }
+        .profile-header { position: relative; background: linear-gradient(135deg, var(--accent), var(--accent-hover)); height: 180px; }
+        .profile-avatar-large { position: absolute; bottom: -50px; left: 30px; width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--bg-surface); background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 48px; background-size: cover; background-position: center; cursor: pointer; }
+        .profile-avatar-large:hover { opacity: 0.9; }
+        .profile-info { padding: 70px 30px 20px 30px; }
+        .profile-name { font-size: 28px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+        .profile-email { color: var(--text-secondary); margin-top: 8px; }
+        .profile-stats { display: flex; gap: 30px; margin-top: 20px; padding: 16px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .stat { text-align: center; }
+        .stat-value { font-size: 22px; font-weight: 700; color: var(--text); }
+        .stat-label { font-size: 13px; color: var(--text-secondary); }
+        .profile-actions { display: flex; gap: 12px; margin-top: 20px; }
+        .profile-btn { padding: 10px 20px; border-radius: 24px; border: none; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .profile-btn.primary { background: var(--accent); color: white; }
+        .profile-btn.secondary { background: var(--bg-element); color: var(--text); }
+        .profile-section { padding: 20px 30px; border-top: 1px solid var(--border); }
+        .section-title { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        
+        /* Посты (заглушка для будущего) */
+        .post-placeholder { background: var(--bg-element); border-radius: 20px; padding: 40px; text-align: center; color: var(--text-secondary); border: 1px solid var(--border); }
+        .post-placeholder i { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
         
         /* Список чатов */
         .chats-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
@@ -91,12 +111,10 @@
         .read-status.read i { color: var(--read-status-delivered); }
         .read-status.delivered i { color: var(--read-status); }
         
-        /* Медиа в сообщениях */
         .media-container { margin: 4px 0; border-radius: 16px; overflow: hidden; max-width: 280px; }
         .message-image { width: 100%; height: auto; max-height: 300px; object-fit: cover; cursor: pointer; border-radius: 16px; }
         .message-video { width: 100%; max-height: 280px; border-radius: 16px; background: #000; outline: none; }
         
-        /* Реакции */
         .reactions-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; margin-left: 6px; }
         .reaction-item { display: inline-flex; align-items: center; gap: 4px; background: var(--bg-element); padding: 2px 8px; border-radius: 20px; font-size: 13px; cursor: pointer; transition: 0.1s; border: 1px solid var(--border); }
         .reaction-item:hover { background: var(--bg-element); transform: scale(1.05); }
@@ -104,14 +122,12 @@
         .reaction-emoji { font-size: 14px; }
         .reaction-count { font-size: 11px; font-weight: 500; }
         
-        /* Контекстное меню */
         .context-menu { position: fixed; background: var(--bg-surface); border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); z-index: 1000; min-width: 180px; overflow: hidden; border: 1px solid var(--border); display: none; }
         .context-menu.active { display: block; }
         .context-menu-item { padding: 12px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.1s; color: var(--text); }
         .context-menu-item:hover { background: var(--bg-element); }
         .context-menu-item.delete { color: #dc3545; }
         
-        /* Модалка выбора реакций */
         .reactions-modal .modal { max-width: 350px; }
         .reactions-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; padding: 16px; }
         .reaction-option { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px; cursor: pointer; border-radius: 16px; transition: 0.1s; min-width: 60px; }
@@ -119,7 +135,6 @@
         .reaction-emoji-big { font-size: 32px; }
         .reaction-name { font-size: 12px; color: var(--text-secondary); }
         
-        /* Мобильное контекстное меню */
         .mobile-context-menu { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-surface); border-radius: 20px 20px 0 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.15); z-index: 1001; display: none; flex-direction: column; padding: 16px; animation: slideUp 0.2s ease; }
         .mobile-context-menu.active { display: flex; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -136,7 +151,6 @@
         .attach-btn { background: var(--bg-element); border: none; width: 48px; height: 48px; border-radius: 50%; color: var(--text); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
         .attach-btn:hover { background: var(--accent); color: white; }
         
-        /* Страница людей */
         .people-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
         .people-header { padding: 16px 20px; border-bottom: 1px solid var(--border); }
         .people-header h2 { font-size: 24px; font-weight: 700; color: var(--text); }
@@ -155,7 +169,6 @@
         .action-btn.remove { background: #dc3545; color: white; }
         .action-btn.pending { background: var(--bg-element); color: var(--text-secondary); cursor: default; }
         
-        /* Настройки */
         .settings-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
         .settings-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
         .settings-header h2 { font-size: 24px; font-weight: 700; color: var(--text); flex: 1; }
@@ -174,7 +187,6 @@
         .theme-preview.green { background: linear-gradient(135deg, #27ae60, #219a52); }
         .theme-name { font-size: 13px; color: var(--text); }
         
-        /* Админ панель */
         .admin-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
         .admin-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
         .admin-header h2 { font-size: 24px; font-weight: 700; color: var(--text); flex: 1; }
@@ -190,7 +202,6 @@
         .admin-user-name { font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
         .admin-user-email { font-size: 12px; color: var(--text-secondary); }
         
-        /* Модалки */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
         .modal-overlay.active { display: flex; }
         .modal { background: var(--bg-surface); border-radius: 28px; width: 320px; max-width: 90%; text-align: center; overflow: hidden; }
@@ -217,22 +228,11 @@
         .danger-btn { background: #dc3545; color: white; border: none; padding: 12px; border-radius: 16px; cursor: pointer; width: 100%; margin-top: 8px; font-weight: 600; }
         .leave-btn { background: #ffc107; color: #1a1a1a; }
         
-        /* Мобильная навигация */
         .mobile-bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-surface); border-top: 1px solid var(--border); padding: 8px 20px 12px; justify-content: space-around; z-index: 100; transition: transform 0.3s ease; }
         .mobile-bottom-nav.hidden { transform: translateY(100%); }
         .mobile-nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; font-size: 11px; color: var(--text-secondary); cursor: pointer; padding: 8px; border-radius: 12px; }
         .mobile-nav-item i { font-size: 22px; }
         .mobile-nav-item.active { color: var(--accent); background: var(--bg-element); }
-        
-        /* Мобильный профиль */
-        .mobile-profile-modal .modal { max-width: 320px; }
-        .mobile-profile-info { text-align: center; padding: 16px; }
-        .mobile-profile-avatar { width: 100px; height: 100px; border-radius: 50%; background: var(--accent); background-size: cover; background-position: center; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 36px; position: relative; }
-        .mobile-profile-name { font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-        .mobile-profile-email { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; word-break: break-all; }
-        .mobile-profile-verified { color: var(--verified); margin-bottom: 20px; }
-        .mobile-logout-btn { width: 100%; padding: 14px; background: #dc3545; color: white; border: none; border-radius: 16px; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; }
-        .change-avatar-btn { width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 16px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
         
         @media (max-width: 768px) { .sidebar { display: none; } .mobile-bottom-nav { display: flex; } .message { max-width: 85%; } }
         @media (min-width: 769px) { .back-btn { display: flex !important; } }
@@ -241,7 +241,6 @@
 <body data-theme="default">
 <div id="app"></div>
 
-<!-- Модалка выбора реакций -->
 <div id="reactionsModal" class="modal-overlay reactions-modal">
     <div class="modal">
         <div class="modal-header">Выберите реакцию</div>
@@ -260,7 +259,6 @@
     </div>
 </div>
 
-<!-- Мобильное контекстное меню -->
 <div id="mobileContextOverlay" class="mobile-context-overlay"></div>
 <div id="mobileContextMenu" class="mobile-context-menu">
     <div class="mobile-context-title">Действия с сообщением</div>
@@ -270,7 +268,6 @@
     </div>
 </div>
 
-<!-- Модалка создания беседы -->
 <div id="createGroupModal" class="modal-overlay create-group-modal">
     <div class="modal">
         <div class="modal-header">Создание беседы</div>
@@ -283,7 +280,6 @@
     </div>
 </div>
 
-<!-- Модалка управления беседой -->
 <div id="groupManageModal" class="modal-overlay group-manage-modal">
     <div class="modal">
         <div class="modal-header" id="groupManageTitle">Управление беседой</div>
@@ -297,25 +293,6 @@
     </div>
 </div>
 
-<!-- Мобильный профиль -->
-<div id="mobileProfileModal" class="modal-overlay mobile-profile-modal">
-    <div class="modal">
-        <div class="modal-header">Профиль</div>
-        <div class="modal-body">
-            <div class="mobile-profile-info">
-                <div class="mobile-profile-avatar" id="mobileProfileAvatar"></div>
-                <div class="mobile-profile-name" id="mobileProfileName"></div>
-                <div class="mobile-profile-email" id="mobileProfileEmail"></div>
-                <div class="mobile-profile-verified" id="mobileProfileVerified"></div>
-                <button class="change-avatar-btn" id="changeAvatarBtn"><i class="fas fa-camera"></i> Сменить аватар</button>
-                <button class="mobile-logout-btn" id="mobileLogoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</button>
-            </div>
-        </div>
-        <div class="modal-buttons"><button class="confirm" id="closeMobileProfileBtn">Закрыть</button></div>
-    </div>
-</div>
-
-<!-- Обычная модалка -->
 <div id="modal" class="modal-overlay">
     <div class="modal">
         <div class="modal-header" id="modalTitle">Уведомление</div>
@@ -376,32 +353,13 @@
     function getChatId(a, b) { return [a, b].sort().join('_'); }
 
     // ========== АВАТАРКИ ==========
-    function updateAvatarElement(element, avatarUrl, initials) {
-        if (!element) return;
-        if (avatarUrl) {
-            element.style.backgroundImage = `url(${avatarUrl})`;
-            element.style.backgroundSize = 'cover';
-            element.style.backgroundPosition = 'center';
-            element.textContent = '';
-            // Удаляем дочерние элементы если есть
-            const img = element.querySelector('img');
-            if (img) img.remove();
-        } else {
-            element.style.backgroundImage = '';
-            element.textContent = initials;
-        }
-    }
-
     function uploadAvatar(file) {
         if (!file) return;
-        
         const formData = new FormData();
         formData.append('file', file);
         formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
         formData.append('folder', 'avatars');
-        
         showModal('Загрузка', 'Обновление аватарки...');
-        
         fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
             method: 'POST',
             body: formData
@@ -409,29 +367,69 @@
         .then(res => res.json())
         .then(data => {
             if (data.secure_url) {
-                db.collection('users').doc(currentUser.uid).update({
-                    avatarUrl: data.secure_url
-                }).then(() => {
+                db.collection('users').doc(currentUser.uid).update({ avatarUrl: data.secure_url }).then(() => {
                     userData.avatarUrl = data.secure_url;
                     showModal('Успех', 'Аватарка обновлена!');
-                    renderApp();
+                    if (currentView === 'profile') showProfileView();
+                    else if (currentView === 'chats') showChatsView();
+                    else if (currentView === 'people') showPeopleView();
                 }).catch(err => showModal('Ошибка', err.message));
-            } else {
-                showModal('Ошибка', data.error?.message || 'Ошибка загрузки');
-            }
-        })
-        .catch(err => showModal('Ошибка', err.message));
+            } else showModal('Ошибка', data.error?.message || 'Ошибка загрузки');
+        }).catch(err => showModal('Ошибка', err.message));
     }
 
     function changeAvatar() {
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = 'image/*';
-        input.onchange = (e) => {
-            const file = e.target.files?.[0];
-            if (file) uploadAvatar(file);
-        };
+        input.onchange = (e) => { const file = e.target.files?.[0]; if (file) uploadAvatar(file); };
         input.click();
+    }
+
+    // ========== СТРАНИЦА ПРОФИЛЯ ==========
+    let currentView = 'chats';
+
+    function showProfileView() {
+        currentView = 'profile';
+        if (isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
+        
+        const friendsCount = userData.friends?.length || 0;
+        const avatarStyle = userData.avatarUrl ? `background-image: url('${userData.avatarUrl}'); background-size: cover; background-position: center;` : '';
+        
+        document.getElementById('mainContent').innerHTML = `
+            <div class="profile-view">
+                <div class="profile-header">
+                    <div class="profile-avatar-large" style="${avatarStyle}" id="changeAvatarProfileBtn">${!userData.avatarUrl ? getInitials(userData.firstName, userData.lastName) : ''}</div>
+                </div>
+                <div class="profile-info">
+                    <div class="profile-name">${userData.firstName} ${userData.lastName}${userData.isVerified ? ' <i class="fas fa-check-circle verified-icon"></i>' : ''}</div>
+                    <div class="profile-email">${userData.email}</div>
+                    <div class="profile-stats">
+                        <div class="stat"><div class="stat-value">${friendsCount}</div><div class="stat-label">друзей</div></div>
+                        <div class="stat"><div class="stat-value">0</div><div class="stat-label">подписчиков</div></div>
+                        <div class="stat"><div class="stat-value">0</div><div class="stat-label">постов</div></div>
+                    </div>
+                    <div class="profile-actions">
+                        <button class="profile-btn primary" id="editProfileBtn"><i class="fas fa-pen"></i> Редактировать</button>
+                        <button class="profile-btn secondary" id="changeAvatarBtn"><i class="fas fa-camera"></i> Сменить аватар</button>
+                    </div>
+                </div>
+                <div class="profile-section">
+                    <div class="section-title"><i class="fas fa-newspaper"></i> Записи</div>
+                    <div class="post-placeholder">
+                        <i class="fas fa-scroll"></i>
+                        <p>Здесь будут ваши посты</p>
+                        <p style="font-size: 13px; margin-top: 8px;">Скоро появится возможность делиться записями!</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('changeAvatarProfileBtn').onclick = changeAvatar;
+        document.getElementById('changeAvatarBtn').onclick = changeAvatar;
+        document.getElementById('editProfileBtn').onclick = () => showModal('Редактирование', 'Эта функция появится позже');
+        
+        if (isMobile) updateMobileNav('profile');
     }
 
     // ========== РЕАКЦИИ ==========
@@ -439,10 +437,7 @@
         const modal = document.getElementById('reactionsModal');
         modal.classList.add('active');
         document.querySelectorAll('#reactionsModal .reaction-option').forEach(el => {
-            el.onclick = () => {
-                addReaction(messageId, el.dataset.reaction);
-                modal.classList.remove('active');
-            };
+            el.onclick = () => { addReaction(messageId, el.dataset.reaction); modal.classList.remove('active'); };
         });
         document.getElementById('closeReactionsModal').onclick = () => modal.classList.remove('active');
     }
@@ -468,7 +463,6 @@
         hideContextMenu();
     }
 
-    // ========== ЗАГРУЗКА ФАЙЛОВ ==========
     function uploadFileToCloudinary(file, onSuccess, onError) {
         const formData = new FormData();
         formData.append('file', file);
@@ -504,7 +498,6 @@
         input.click();
     }
 
-    // ========== КОНТЕКСТНОЕ МЕНЮ ==========
     function hideContextMenu() {
         document.getElementById('contextMenu')?.classList.remove('active');
         document.getElementById('mobileContextOverlay')?.classList.remove('active');
@@ -527,8 +520,14 @@
             overlay.classList.add('active');
             mobileMenu.classList.add('active');
         } else {
-            const menu = document.getElementById('contextMenu');
-            if (!menu) return;
+            let menu = document.getElementById('contextMenu');
+            if (!menu) {
+                menu = document.createElement('div');
+                menu.id = 'contextMenu';
+                menu.className = 'context-menu';
+                menu.innerHTML = `<div id="contextReactionItem" class="context-menu-item"><i class="fas fa-smile"></i> Реакция</div><div id="contextDeleteItem" class="context-menu-item delete"><i class="fas fa-trash"></i> Удалить</div>`;
+                document.body.appendChild(menu);
+            }
             const deleteItem = document.getElementById('contextDeleteItem');
             const reactionItem = document.getElementById('contextReactionItem');
             deleteItem.style.display = isMyMessage ? 'flex' : 'none';
@@ -543,7 +542,6 @@
         }
     }
 
-    // ========== ОТПРАВКА СООБЩЕНИЙ ==========
     async function sendTextMessage() {
         const input = document.getElementById('messageInput');
         if(!input || !currentChat) return;
@@ -663,7 +661,6 @@
         setTimeout(() => { const ma = document.getElementById('messagesArea'); if(ma) ma.scrollTop = ma.scrollHeight; }, 100);
     }
 
-    // ========== ГРУППОВЫЕ ФУНКЦИИ ==========
     async function showGroupManage() {
         if (!currentChat || currentChat.type !== 'group') return;
         const groupDoc = await db.collection('groups').doc(currentChat.id).get();
@@ -803,7 +800,7 @@
                     const avatarStyle = u.avatarUrl ? `background-image: url('${u.avatarUrl}'); background-size: cover; background-position: center;` : '';
                     const div = document.createElement('div');
                     div.className = 'friend-select-item';
-                    div.innerHTML = `<input type="checkbox" value="${id}" data-name="${u.firstName} ${u.lastName}"><div class="avatar" style="width:36px;height:36px;${avatarStyle}">${!u.avatarUrl ? getInitials(u.firstName, u.lastName) : ''}</div><div>${u.firstName} ${u.lastName}</div>`;
+                    div.innerHTML = `<input type="checkbox" value="${id}" data-name="${u.firstName} ${u.lastName}"><div style="width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:bold;color:white;${avatarStyle}">${!u.avatarUrl ? getInitials(u.firstName, u.lastName) : ''}</div><div>${u.firstName} ${u.lastName}</div>`;
                     const checkbox = div.querySelector('input');
                     checkbox.onchange = () => {
                         if(checkbox.checked) {
@@ -844,27 +841,13 @@
     }
 
     function showChatsView() {
+        currentView = 'chats';
         if(isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
         document.getElementById('mainContent').innerHTML = `<div class="chats-view"><div class="chats-header"><h2>Чаты</h2><button class="create-group-btn" id="createGroupBtn"><i class="fas fa-plus"></i> Беседа</button></div><div class="chats-search"><input type="text" id="chatsSearchInput" placeholder="Поиск по чатам..."></div><div class="chats-list" id="chatsListContainer"><div style="text-align:center;padding:40px">Загрузка...</div></div></div>`;
         document.getElementById('createGroupBtn').onclick = showCreateGroupModal;
         loadChatsList();
         document.getElementById('chatsSearchInput').oninput = (e) => renderChatsList(e.target.value.trim());
         if(isMobile) updateMobileNav('chats');
-    }
-
-    function showMobileProfile() {
-        const modal = document.getElementById('mobileProfileModal');
-        const avatarEl = document.getElementById('mobileProfileAvatar');
-        const avatarStyle = userData.avatarUrl ? `background-image: url('${userData.avatarUrl}'); background-size: cover; background-position: center;` : '';
-        avatarEl.style = avatarStyle;
-        avatarEl.innerHTML = !userData.avatarUrl ? getInitials(userData.firstName, userData.lastName) : '';
-        document.getElementById('mobileProfileName').textContent = `${userData.firstName} ${userData.lastName}`;
-        document.getElementById('mobileProfileEmail').textContent = userData.email;
-        document.getElementById('mobileProfileVerified').innerHTML = userData.isVerified ? '<i class="fas fa-check-circle"></i> Официальная галочка' : '';
-        modal.classList.add('active');
-        document.getElementById('changeAvatarBtn').onclick = () => { modal.classList.remove('active'); changeAvatar(); };
-        document.getElementById('mobileLogoutBtn').onclick = () => { modal.classList.remove('active'); if(messagesUnsubscribe) messagesUnsubscribe(); auth.signOut(); renderAuth(); };
-        document.getElementById('closeMobileProfileBtn').onclick = () => modal.classList.remove('active');
     }
 
     async function loadPeopleList() {
@@ -902,6 +885,7 @@
     }
 
     function showPeopleView() {
+        currentView = 'people';
         if(isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
         document.getElementById('mainContent').innerHTML = `<div class="people-view"><div class="people-header"><h2>Люди</h2></div><div class="people-search"><input type="text" id="peopleSearchInput" placeholder="Поиск людей..."></div><div class="people-list" id="peopleListContainer"><div style="text-align:center;padding:40px">Загрузка...</div></div></div>`;
         loadPeopleList();
@@ -910,6 +894,7 @@
     }
 
     function showSettingsView() {
+        currentView = 'settings';
         if(isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
         document.getElementById('mainContent').innerHTML = `<div class="settings-view"><div class="settings-header"><button class="back-btn" id="settingsBackBtn"><i class="fas fa-arrow-left"></i></button><h2>Настройки</h2></div><div class="settings-list"><div class="settings-section"><div class="settings-section-title">Тема оформления</div><div class="theme-options"><div class="theme-option ${savedTheme === 'default' ? 'active' : ''}" data-theme="default"><div class="theme-preview default"></div><span class="theme-name">Стандартная</span></div><div class="theme-option ${savedTheme === 'dark' ? 'active' : ''}" data-theme="dark"><div class="theme-preview dark"></div><span class="theme-name">Тёмная</span></div><div class="theme-option ${savedTheme === 'purple' ? 'active' : ''}" data-theme="purple"><div class="theme-preview purple"></div><span class="theme-name">Фиолетовая</span></div><div class="theme-option ${savedTheme === 'red' ? 'active' : ''}" data-theme="red"><div class="theme-preview red"></div><span class="theme-name">Красная</span></div><div class="theme-option ${savedTheme === 'blue' ? 'active' : ''}" data-theme="blue"><div class="theme-preview blue"></div><span class="theme-name">Синяя</span></div><div class="theme-option ${savedTheme === 'green' ? 'active' : ''}" data-theme="green"><div class="theme-preview green"></div><span class="theme-name">Зелёная</span></div></div></div></div></div>`;
         document.getElementById('settingsBackBtn').onclick = () => { if(currentChat) openChat(currentChat); else showChatsView(); };
@@ -991,6 +976,7 @@
     }
 
     function showAdminView() {
+        currentView = 'admin';
         if(isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
         document.getElementById('mainContent').innerHTML = `<div class="admin-view"><div class="admin-header"><button class="back-btn" id="adminBackBtn"><i class="fas fa-arrow-left"></i></button><h2>Админ панель</h2></div><div class="admin-stats"><div class="admin-stat-card"><div class="admin-stat-value" id="totalUsersCount">0</div><div class="admin-stat-label">Всего пользователей</div></div><div class="admin-stat-card"><div class="admin-stat-value" id="verifiedUsersCount">0</div><div class="admin-stat-label">С галочкой</div></div></div><div class="admin-list" id="adminUsersContainer">Загрузка...</div></div>`;
         document.getElementById('adminBackBtn').onclick = () => { if(currentChat) openChat(currentChat); else showChatsView(); };
@@ -1015,12 +1001,9 @@
                     <div class="sidebar-section">
                         <div class="nav-item active" data-nav="chats"><i class="fas fa-comments"></i> Чаты</div>
                         <div class="nav-item" data-nav="people"><i class="fas fa-users"></i> Люди</div>
+                        <div class="nav-item" data-nav="profile"><i class="fas fa-user-circle"></i> Профиль</div>
                         <div class="nav-item" data-nav="settings"><i class="fas fa-cog"></i> Настройки</div>
                         ${isAdmin ? '<div class="nav-item" data-nav="admin"><i class="fas fa-shield-alt"></i> Админ</div>' : ''}
-                    </div>
-                    <div class="user-info-sidebar" id="profileBtn">
-                        <div class="avatar" style="${avatarStyle}">${!userData.avatarUrl ? getInitials(userData.firstName, userData.lastName) : ''}${userData.isVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : ''}</div>
-                        <div><strong>${userData.firstName} ${userData.lastName}</strong>${userData.isVerified ? ' <i class="fas fa-check-circle verified-icon" style="font-size:12px"></i>' : ''}</div>
                     </div>
                     <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</button>
                 </div>
@@ -1028,26 +1011,15 @@
                 <div class="mobile-bottom-nav">
                     <button class="mobile-nav-item active" data-nav="chats"><i class="fas fa-comments"></i><span>Чаты</span></button>
                     <button class="mobile-nav-item" data-nav="people"><i class="fas fa-users"></i><span>Люди</span></button>
+                    <button class="mobile-nav-item" data-nav="profile"><i class="fas fa-user-circle"></i><span>Профиль</span></button>
                     <button class="mobile-nav-item" data-nav="settings"><i class="fas fa-cog"></i><span>Настройки</span></button>
                     ${isAdmin ? '<button class="mobile-nav-item" data-nav="admin"><i class="fas fa-shield-alt"></i><span>Админ</span></button>' : ''}
-                    <button class="mobile-nav-item" id="mobileProfileBtn"><i class="fas fa-user"></i><span>Профиль</span></button>
                 </div>
             </div>
         `;
         
-        // Контекстное меню для ПК (создаём если нет)
-        if (!document.getElementById('contextMenu')) {
-            const menu = document.createElement('div');
-            menu.id = 'contextMenu';
-            menu.className = 'context-menu';
-            menu.innerHTML = `<div id="contextReactionItem" class="context-menu-item"><i class="fas fa-smile"></i> Реакция</div><div id="contextDeleteItem" class="context-menu-item delete"><i class="fas fa-trash"></i> Удалить</div>`;
-            document.body.appendChild(menu);
-        }
-        
-        document.querySelectorAll('.nav-item').forEach(el => { el.onclick = () => { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); if(el.dataset.nav === 'people') showPeopleView(); else if(el.dataset.nav === 'settings') showSettingsView(); else if(el.dataset.nav === 'admin') showAdminView(); else showChatsView(); }; });
-        document.querySelectorAll('.mobile-nav-item').forEach(el => { if(el.dataset.nav) el.onclick = () => { if(el.dataset.nav === 'people') showPeopleView(); else if(el.dataset.nav === 'settings') showSettingsView(); else if(el.dataset.nav === 'admin') showAdminView(); else if(el.dataset.nav === 'chats') showChatsView(); }; });
-        document.getElementById('mobileProfileBtn').onclick = showMobileProfile;
-        document.getElementById('profileBtn').onclick = () => showModal('Профиль', `${userData.firstName} ${userData.lastName}\n${userData.email}\n✅ Email подтверждён\n${userData.isVerified ? '✅ Официальная галочка' : ''}`);
+        document.querySelectorAll('.nav-item').forEach(el => { el.onclick = () => { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); if(el.dataset.nav === 'people') showPeopleView(); else if(el.dataset.nav === 'profile') showProfileView(); else if(el.dataset.nav === 'settings') showSettingsView(); else if(el.dataset.nav === 'admin') showAdminView(); else showChatsView(); }; });
+        document.querySelectorAll('.mobile-nav-item').forEach(el => { if(el.dataset.nav) el.onclick = () => { if(el.dataset.nav === 'people') showPeopleView(); else if(el.dataset.nav === 'profile') showProfileView(); else if(el.dataset.nav === 'settings') showSettingsView(); else if(el.dataset.nav === 'admin') showAdminView(); else if(el.dataset.nav === 'chats') showChatsView(); }; });
         document.getElementById('logoutBtn').onclick = () => { if(messagesUnsubscribe) messagesUnsubscribe(); auth.signOut(); renderAuth(); };
         
         showChatsView();
