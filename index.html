@@ -88,7 +88,7 @@
             --shadow-lg: 0 8px 32px rgba(0,0,0,var(--shadow-intensity));
         }
         
-        /* КОНТРАСТНОСТЬ ТЕКСТА - работает для всех тем */
+        /* ===== КОНТРАСТНОСТЬ ТЕКСТА - РАБОТАЕТ ДЛЯ ВСЕХ ТЕМ ===== */
         body[data-text-contrast="light"] {
             --text: #1a1a1a !important;
             --text-secondary: #555555 !important;
@@ -101,10 +101,16 @@
             --other-msg-text: #ffffff !important;
         }
         
-        /* Переопределение для светлой стеклянной темы при тёмной контрастности */
+        /* Дополнительное усиление для стеклянных тем */
         body[data-theme="glass-light"][data-text-contrast="dark"] {
             --text: #1a1a1a !important;
             --text-secondary: #444444 !important;
+            --other-msg-text: #1a1a1a !important;
+        }
+        
+        body[data-theme="glass-dark"][data-text-contrast="light"] {
+            --text: #1a1a1a !important;
+            --text-secondary: #666666 !important;
             --other-msg-text: #1a1a1a !important;
         }
         
@@ -354,9 +360,9 @@
         .attach-btn { background: var(--bg-element); border: none; width: 48px; height: 48px; border-radius: 50%; color: var(--text); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .attach-btn:hover { background: var(--accent); color: white; }
         
-        /* Feed */
+        /* Feed - теперь заголовок наследует цвет темы */
         .feed-header { background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); padding: 16px 20px; padding-top: max(16px, env(safe-area-inset-top)); }
-        .feed-header h2 { font-size: 24px; font-weight: 700; color: white !important; }
+        .feed-header h2 { font-size: 24px; font-weight: 700; color: var(--text); }
         .posts-feed { display: flex; flex-direction: column; gap: 16px; padding: 16px; }
         .post-card { background: var(--bg-surface); padding: 16px; border: 1px solid var(--border); position: relative; transition: all 0.2s; box-shadow: var(--shadow-sm); }
         .post-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
@@ -414,7 +420,7 @@
         /* Music */
         .music-view { height: 100%; overflow-y: auto; background: var(--bg-surface); padding-bottom: 80px; }
         .music-header { background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); padding: 16px 20px; padding-top: max(16px, env(safe-area-inset-top)); }
-        .music-header h2 { font-size: 24px; font-weight: 700; color: white !important; }
+        .music-header h2 { font-size: 24px; font-weight: 700; color: var(--text); }
         .music-list { display: flex; flex-direction: column; gap: 12px; padding: 16px; }
         .track-card { background: var(--bg-surface); padding: 16px; border: 1px solid var(--border); transition: all 0.2s; box-shadow: var(--shadow-sm); }
         .track-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
