@@ -60,7 +60,7 @@
             --text-secondary: #555555;
             --border: rgba(255, 255, 255, 0.5);
             --my-msg: rgba(255, 123, 44, 0.9);
-            --my-msg-text: white;
+            --my-msg-text: #1a1a1a;
             --other-msg: rgba(255, 255, 255, 0.6);
             --other-msg-text: #2d2d2d;
             --shadow-sm: 0 4px 12px rgba(0,0,0,var(--shadow-intensity));
@@ -246,7 +246,7 @@
             border-radius: var(--card-radius);
         }
         
-        .auth-container { height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); padding: 16px; }
+        .auth-container { height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); padding: 16px; position: relative; }
         .auth-card { background: var(--bg-surface); padding: 40px 32px; width: 100%; max-width: 420px; text-align: center; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
         .auth-card h1 { color: var(--accent); margin-bottom: 8px; font-size: 36px; font-weight: 800; }
         .auth-subtitle { color: var(--text-secondary); margin-bottom: 32px; font-size: 14px; }
@@ -257,6 +257,7 @@
         .toggle-auth { margin-top: 20px; color: var(--accent); cursor: pointer; font-size: 14px; }
         .verify-msg { background: #fff3cd; color: #856404; padding: 12px; border-radius: 16px; margin: 16px 0; font-size: 14px; }
         .hidden { display: none !important; }
+        .app-version { position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; font-size: 11px; color: rgba(255,255,255,0.6); }
         
         .app { display: flex; height: 100vh; background: var(--bg-page); }
         .sidebar { width: 280px; background: var(--bg-surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; height: 100vh; transition: all 0.2s; }
@@ -373,6 +374,20 @@
         .sticker-pack-locked { text-align: center; padding: 20px; background: var(--bg-element); border-radius: 20px; margin: 8px; }
         .buy-sticker-btn { margin-top: 12px; padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer; font-weight: 600; color: white; }
         
+        /* FAQ */
+        .faq-item { background: var(--bg-element); border-radius: 16px; margin-bottom: 12px; overflow: hidden; }
+        .faq-question { padding: 14px 16px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: var(--text); }
+        .faq-question i { transition: 0.2s; color: var(--accent); }
+        .faq-answer { padding: 0 16px; max-height: 0; overflow: hidden; transition: 0.3s ease; color: var(--text-secondary); font-size: 13px; line-height: 1.4; }
+        .faq-answer.show { padding: 0 16px 14px 16px; max-height: 200px; }
+        
+        /* Shop */
+        .shop-item { background: var(--bg-element); border-radius: 20px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+        .shop-item-info { display: flex; align-items: center; gap: 12px; }
+        .shop-item-emoji { font-size: 40px; }
+        .shop-item-name { font-weight: 600; color: var(--text); }
+        .shop-item-price { font-size: 12px; color: var(--accent); margin-top: 4px; }
+        
         .mobile-context-menu { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-surface); border-radius: 20px 20px 0 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.15); z-index: 1001; display: none; flex-direction: column; padding: 16px; animation: slideUp 0.2s ease; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
         .mobile-context-menu.active { display: flex; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -385,11 +400,11 @@
         
         .input-area { padding: 12px 16px; background: var(--bg-surface); border-top: 1px solid var(--border); display: flex; gap: 12px; flex-shrink: 0; padding-bottom: max(12px, env(safe-area-inset-bottom)); transition: all 0.2s; }
         .input-area input { flex: 1; padding: 12px 18px; border: none; background: var(--bg-element); border-radius: 28px; font-size: 16px; outline: none; color: var(--text); }
-        .input-area button { border: none; width: 48px; height: 48px; border-radius: 50%; color: white; cursor: pointer; font-size: 18px; transition: 0.2s; }
+        .input-area button { border: none; width: 48px; height: 48px; border-radius: 50%; color: white; cursor: pointer; font-size: 18px; transition: 0.2s; flex-shrink: 0; }
         .input-area button:hover { filter: brightness(0.95); transform: scale(1.02); }
-        .attach-btn { background: var(--bg-element); border: none; width: 48px; height: 48px; border-radius: 50%; color: var(--text); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .attach-btn { background: var(--bg-element); border: none; width: 48px; height: 48px; border-radius: 50%; color: var(--text); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: 0.2s; flex-shrink: 0; }
         .attach-btn:hover { background: var(--accent); color: white; }
-        .sticker-btn { background: var(--bg-element); border: none; width: 48px; height: 48px; border-radius: 50%; color: var(--text); cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .sticker-btn { background: var(--bg-element); border: none; width: 48px; height: 48px; border-radius: 50%; color: var(--text); cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; transition: 0.2s; flex-shrink: 0; }
         .sticker-btn:hover { background: var(--accent); color: white; }
         
         .feed-header { background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); padding: 16px 20px; padding-top: max(16px, env(safe-area-inset-top)); }
@@ -604,13 +619,13 @@
 <!-- Modals -->
 <div id="reactionsModal" class="modal-overlay reactions-modal"><div class="modal"><div class="modal-header">Выберите реакцию</div><div class="modal-body"><div class="reactions-grid"><div class="reaction-option" data-reaction="❤️"><span class="reaction-emoji-big">❤️</span><span class="reaction-name">Сердце</span></div><div class="reaction-option" data-reaction="👍"><span class="reaction-emoji-big">👍</span><span class="reaction-name">Класс</span></div><div class="reaction-option" data-reaction="🔥"><span class="reaction-emoji-big">🔥</span><span class="reaction-name">Огонь</span></div><div class="reaction-option" data-reaction="😂"><span class="reaction-emoji-big">😂</span><span class="reaction-name">Смех</span></div><div class="reaction-option" data-reaction="😮"><span class="reaction-emoji-big">😮</span><span class="reaction-name">Удивление</span></div><div class="reaction-option" data-reaction="😢"><span class="reaction-emoji-big">😢</span><span class="reaction-name">Грусть</span></div><div class="reaction-option" data-reaction="😡"><span class="reaction-emoji-big">😡</span><span class="reaction-name">Злость</span></div></div></div><div class="modal-buttons"><button class="confirm" id="closeReactionsModal">Отмена</button></div></div></div>
 
-<div id="stickersModal" class="modal-overlay stickers-modal"><div class="modal"><div class="modal-header">Стикеры</div><div class="modal-body" id="stickersModalBody" style="padding: 0;"><div style="text-align:center;padding:20px">Загрузка...</div></div><div class="modal-buttons"><button class="confirm" id="closeStickersModal">Закрыть</button></div></div></div>
+<div id="stickersModal" class="modal-overlay stickers-modal"><div class="modal"><div class="modal-header">Мои стикеры</div><div class="modal-body" id="stickersModalBody" style="padding: 0;"><div style="text-align:center;padding:20px">Загрузка...</div></div><div class="modal-buttons"><button class="confirm" id="closeStickersModal">Закрыть</button></div></div></div>
 
 <div id="mobileContextOverlay" class="mobile-context-overlay"></div>
 <div id="mobileContextMenu" class="mobile-context-menu"><div class="mobile-context-title">Действия с сообщением</div><div class="mobile-context-buttons"><button class="mobile-context-btn" id="mobileReactionBtn"><i class="fas fa-smile"></i> Реакция</button><button class="mobile-context-btn delete" id="mobileDeleteBtn"><i class="fas fa-trash"></i> Удалить</button></div></div>
 <div id="createGroupModal" class="modal-overlay create-group-modal"><div class="modal"><div class="modal-header">Создание беседы</div><div class="modal-body"><input type="text" id="groupName" placeholder="Название беседы"><div class="friend-list-select" id="friendsForGroupList">Загрузка...</div><div class="selected-friends" id="selectedFriendsList"></div></div><div class="modal-buttons"><button class="confirm" id="confirmCreateGroup">Создать</button><button id="cancelCreateGroup">Отмена</button></div></div></div>
 <div id="groupManageModal" class="modal-overlay group-manage-modal"><div class="modal"><div class="modal-header" id="groupManageTitle">Управление беседой</div><div class="modal-body"><div class="group-members-list" id="groupMembersList"></div><div class="add-member-section"><select id="addMemberSelect" class="add-member-select"><option value="">Выберите друга</option></select><button id="addMemberBtn" class="action-btn add" style="width:100%">➕ Добавить</button></div><button id="leaveGroupBtn" class="danger-btn leave-btn">🚪 Выйти из беседы</button><button id="deleteGroupBtn" class="danger-btn">🗑️ Удалить беседу</button></div><div class="modal-buttons"><button class="confirm" id="closeGroupManageBtn">Закрыть</button></div></div></div>
-<div id="mobileSubmenuModal" class="modal-overlay mobile-submenu-modal"><div class="modal"><div class="modal-header">Прочее</div><div class="modal-body" style="padding: 0;"><div class="mobile-submenu-item" data-sub="people"><i class="fas fa-users"></i> Люди</div><div class="mobile-submenu-item" data-sub="music"><i class="fas fa-music"></i> Музыка</div><div class="mobile-submenu-item" data-sub="settings"><i class="fas fa-cog"></i> Настройки</div><div id="adminSubmenuItem" class="mobile-submenu-item" data-sub="admin" style="display: none;"><i class="fas fa-shield-alt"></i> Админ панель</div></div><div class="modal-buttons"><button class="confirm" id="closeSubmenuModal">Закрыть</button></div></div></div>
+<div id="mobileSubmenuModal" class="modal-overlay mobile-submenu-modal"><div class="modal"><div class="modal-header">Прочее</div><div class="modal-body" style="padding: 0;"><div class="mobile-submenu-item" data-sub="people"><i class="fas fa-users"></i> Люди</div><div class="mobile-submenu-item" data-sub="music"><i class="fas fa-music"></i> Музыка</div><div class="mobile-submenu-item" data-sub="shop"><i class="fas fa-store"></i> Магазин стикеров</div><div class="mobile-submenu-item" data-sub="faq"><i class="fas fa-question-circle"></i> FAQ</div><div class="mobile-submenu-item" data-sub="settings"><i class="fas fa-cog"></i> Настройки</div><div id="adminSubmenuItem" class="mobile-submenu-item" data-sub="admin" style="display: none;"><i class="fas fa-shield-alt"></i> Админ панель</div></div><div class="modal-buttons"><button class="confirm" id="closeSubmenuModal">Закрыть</button></div></div></div>
 <div id="modal" class="modal-overlay"><div class="modal"><div class="modal-header" id="modalTitle">Уведомление</div><div class="modal-body" id="modalMessage">Сообщение</div><div class="modal-buttons"><button class="confirm" id="modalConfirm">OK</button></div></div></div>
 
 <script>
@@ -710,7 +725,7 @@
         if (profileBalanceEl) profileBalanceEl.textContent = userData?.balance || 0;
     }
     
-    // ========== СТИКЕРЫ ==========
+    // ========== СТИКЕРЫ И МАГАЗИН ==========
     async function purchaseStickerPack(packId) {
         const pack = STICKER_PACKS[packId];
         if (!pack) return false;
@@ -729,28 +744,26 @@
         });
         userData.stickers = [...(userData.stickers || []), packId];
         showModal('Успех', `Вы купили набор стикеров "${pack.name}" за ${pack.price} 🪙!`);
-        showStickersModal();
         return true;
     }
     
-    function showStickersModal() {
+    function showMyStickersModal() {
+        const userPacks = userData?.stickers || [];
+        
+        if (userPacks.length === 0) {
+            showModal('Нет стикеров', 'У вас пока нет купленных стикеров. Перейдите в "Магазин стикеров" в меню "Прочее" чтобы купить.');
+            return;
+        }
+        
         const modal = document.getElementById('stickersModal');
         const body = document.getElementById('stickersModalBody');
-        const userPacks = userData?.stickers || [];
+        document.querySelector('#stickersModal .modal-header').textContent = 'Мои стикеры';
         
         let html = '<div class="stickers-grid">';
         
-        for (const [packId, pack] of Object.entries(STICKER_PACKS)) {
-            const isOwned = userPacks.includes(packId);
-            
-            if (!isOwned) {
-                html += `<div class="sticker-pack-locked">
-                            <div style="font-size: 48px;">${pack.emoji}</div>
-                            <div style="font-weight: 600;">${pack.name}</div>
-                            <div style="font-size: 12px; margin-top: 4px;">${pack.price} 🪙</div>
-                            <button class="buy-sticker-btn" onclick="purchaseStickerPack('${packId}')">Купить</button>
-                         </div>`;
-            } else {
+        for (const packId of userPacks) {
+            const pack = STICKER_PACKS[packId];
+            if (pack) {
                 for (const num of pack.stickers) {
                     const stickerUrl = `${GITHUB_RAW_URL}/${packId}/${num}.png`;
                     html += `<div class="sticker-item" onclick="sendSticker('${packId}', ${num})">
@@ -761,16 +774,49 @@
             }
         }
         
-        if (Object.keys(STICKER_PACKS).length === 0) {
-            html = '<div style="text-align:center;padding:40px">Нет доступных стикерпаков</div>';
-        }
-        
         html += '</div>';
         body.innerHTML = html;
         modal.classList.add('active');
     }
     
-    async function sendSticker(packId, stickerNum) {
+    function showShopView() {
+        currentView = 'shop';
+        if (isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
+        
+        let shopHtml = '<div style="padding: 16px;">';
+        shopHtml += '<h2 style="margin-bottom: 16px; color: var(--text);">Магазин стикеров</h2>';
+        shopHtml += '<div style="margin-bottom: 20px; background: var(--bg-element); border-radius: 16px; padding: 12px; display: flex; align-items: center; gap: 12px;">';
+        shopHtml += '<i class="fas fa-coins" style="font-size: 24px; color: var(--accent);"></i>';
+        shopHtml += `<span style="color: var(--text);">Ваш баланс: <strong style="color: var(--accent);">${userData?.balance || 0}</strong> 🪙</span>`;
+        shopHtml += '</div>';
+        
+        for (const [packId, pack] of Object.entries(STICKER_PACKS)) {
+            const isOwned = userData?.stickers?.includes(packId);
+            shopHtml += `<div class="shop-item">
+                            <div class="shop-item-info">
+                                <div class="shop-item-emoji">${pack.emoji}</div>
+                                <div>
+                                    <div class="shop-item-name">${pack.name}</div>
+                                    <div class="shop-item-price">${pack.price} 🪙</div>
+                                    <div style="font-size: 11px; color: var(--text-secondary);">${pack.stickers.length} стикеров</div>
+                                </div>
+                            </div>
+                            ${!isOwned ? `<button class="buy-sticker-btn" onclick="purchaseStickerPackFromShop('${packId}')">Купить</button>` : '<span style="color: green;"><i class="fas fa-check-circle"></i> Куплено</span>'}
+                         </div>`;
+        }
+        
+        shopHtml += '</div>';
+        document.getElementById('mainContent').innerHTML = `<div class="people-view"><div class="people-header"><h2>🛍️ Магазин стикеров</h2></div>${shopHtml}</div>`;
+        
+        if (isMobile) updateMobileNav('more');
+    }
+    
+    window.purchaseStickerPackFromShop = async function(packId) {
+        await purchaseStickerPack(packId);
+        showShopView();
+    };
+    
+    window.sendSticker = async function(packId, stickerNum) {
         if (!currentChat) {
             showModal('Ошибка', 'Сначала выберите чат');
             document.getElementById('stickersModal').classList.remove('active');
@@ -800,10 +846,64 @@
         document.getElementById('stickersModal').classList.remove('active');
         scrollToBottom();
         loadChatsList();
+    };
+    
+    // ========== FAQ ==========
+    function showFAQView() {
+        currentView = 'faq';
+        if (isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
+        
+        const faqHtml = `
+            <div style="padding: 16px;">
+                <h2 style="margin-bottom: 16px; color: var(--text);">📖 Часто задаваемые вопросы</h2>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>💰 Как пополнять кошелёк?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Монеты на баланс вашего кошелька начисляются автоматически за активность:<br>
+                        • +1 🪙 за каждое отправленное сообщение<br>
+                        • +1 🪙 за каждый поставленный лайк под постом<br>
+                        • +1 🪙 за каждый комментарий<br><br>
+                        Никаких донатов и реальных денег — только активность в соцсети!
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>✅ Как получить галочку верификации?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Галочка верификации выдаётся на усмотрение администрации. Чтобы получить верификацию, нужно быть активным участником сообщества, соблюдать правила и вносить вклад в развитие ЧЕБУРЧАТА.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>🛍️ Как купить стикеры?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Зайдите в раздел "Магазин стикеров" в меню "Прочее", выберите понравившийся набор и нажмите "Купить". Стоимость списывается с баланса кошелька. После покупки стикеры появятся в кнопке "😊" в чате.
+                    </div>
+                </div>
+            </div>
+        `;
+        document.getElementById('mainContent').innerHTML = `<div class="people-view"><div class="people-header"><h2>❓ FAQ</h2></div>${faqHtml}</div>`;
+        
+        if (isMobile) updateMobileNav('more');
     }
     
-    window.purchaseStickerPack = purchaseStickerPack;
-    window.sendSticker = sendSticker;
+    window.toggleFaq = function(element) {
+        const answer = element.nextElementSibling;
+        const icon = element.querySelector('i');
+        answer.classList.toggle('show');
+        if (answer.classList.contains('show')) {
+            icon.style.transform = 'rotate(180deg)';
+        } else {
+            icon.style.transform = 'rotate(0deg)';
+        }
+    };
 
     // ========== КОНТЕКСТНОЕ МЕНЮ ==========
     function hideContextMenu() {
@@ -1197,7 +1297,7 @@
         if (!isGroup) { const nameEl = document.querySelector('.chat-header-name'); if (nameEl) nameEl.style.cursor = 'pointer'; nameEl?.addEventListener('click', () => showProfileView(chat.id)); }
         document.getElementById('sendBtn').onclick = sendTextMessage;
         document.getElementById('attachBtn').onclick = openFilePicker;
-        document.getElementById('stickerBtn').onclick = () => showStickersModal();
+        document.getElementById('stickerBtn').onclick = () => showMyStickersModal();
         document.getElementById('messageInput').onkeypress = (e) => { if(e.key === 'Enter') sendTextMessage(); };
         loadMessages();
         setTimeout(() => { const ma = document.getElementById('messagesArea'); if(ma) ma.scrollTop = ma.scrollHeight; }, 100);
@@ -1736,7 +1836,18 @@
         if (isAdmin) adminItem.style.display = 'flex';
         else adminItem.style.display = 'none';
         modal.classList.add('active');
-        document.querySelectorAll('.mobile-submenu-item[data-sub]').forEach(el => { el.onclick = () => { modal.classList.remove('active'); const sub = el.dataset.sub; if (sub === 'people') showPeopleView(); else if (sub === 'music') showMusicView(); else if (sub === 'settings') showSettingsView(); else if (sub === 'admin') showAdminView(); }; });
+        document.querySelectorAll('.mobile-submenu-item[data-sub]').forEach(el => { 
+            el.onclick = () => { 
+                modal.classList.remove('active'); 
+                const sub = el.dataset.sub; 
+                if (sub === 'people') showPeopleView(); 
+                else if (sub === 'music') showMusicView(); 
+                else if (sub === 'shop') showShopView();
+                else if (sub === 'faq') showFAQView();
+                else if (sub === 'settings') showSettingsView(); 
+                else if (sub === 'admin') showAdminView(); 
+            }; 
+        });
         document.getElementById('closeSubmenuModal').onclick = () => modal.classList.remove('active');
     }
 
@@ -1749,7 +1860,7 @@
         if(!currentUser.emailVerified) { renderEmailVerifyScreen(); return; }
         isAdmin = currentUser.email === 'sad.spotty@gmail.com';
         const avatarStyle = userData.avatarUrl ? `background-image: url('${userData.avatarUrl}'); background-size: cover; background-position: center;` : '';
-        document.getElementById('app').innerHTML = `<div class="app"><div class="sidebar"><div class="logo">ЧЕБУРЧАТ</div><div class="sidebar-section"><div class="nav-item active" data-nav="chats"><i class="fas fa-comments"></i> Чаты</div><div class="nav-item" data-nav="feed"><i class="fas fa-newspaper"></i> Новости</div><div class="nav-item" data-nav="profile"><i class="fas fa-user-circle"></i> Профиль</div><div class="nav-item has-submenu" data-nav="more"><i class="fas fa-ellipsis-h"></i> Прочее<div class="sub-menu"><div class="nav-item" data-sub="people"><i class="fas fa-users"></i> Люди</div><div class="nav-item" data-sub="music"><i class="fas fa-music"></i> Музыка</div><div class="nav-item" data-sub="settings"><i class="fas fa-cog"></i> Настройки</div>${isAdmin ? '<div class="nav-item" data-sub="admin"><i class="fas fa-shield-alt"></i> Админ панель</div>' : ''}</div></div></div><div class="user-info-sidebar" id="profileBtn"><div class="avatar-wrapper"><div class="avatar" style="${avatarStyle}">${!userData.avatarUrl ? getInitials(userData.firstName, userData.lastName) : ''}</div>${userData.isVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : ''}</div><div><strong>${userData.firstName} ${userData.lastName}</strong>${userData.isVerified ? ' <i class="fas fa-check-circle verified-icon" style="font-size:12px"></i>' : ''}</div></div><button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</button></div><div class="main" id="mainContent"></div><div class="mobile-bottom-nav"><button class="mobile-nav-item active" data-nav="chats"><i class="fas fa-comments"></i><span>Чаты</span></button><button class="mobile-nav-item" data-nav="feed"><i class="fas fa-newspaper"></i><span>Новости</span></button><button class="mobile-nav-item" data-nav="profile"><i class="fas fa-user-circle"></i><span>Профиль</span></button><button class="mobile-nav-item" data-nav="more"><i class="fas fa-ellipsis-h"></i><span>Прочее</span></button></div></div>`;
+        document.getElementById('app').innerHTML = `<div class="app"><div class="sidebar"><div class="logo">ЧЕБУРЧАТ</div><div class="sidebar-section"><div class="nav-item active" data-nav="chats"><i class="fas fa-comments"></i> Чаты</div><div class="nav-item" data-nav="feed"><i class="fas fa-newspaper"></i> Новости</div><div class="nav-item" data-nav="profile"><i class="fas fa-user-circle"></i> Профиль</div><div class="nav-item has-submenu" data-nav="more"><i class="fas fa-ellipsis-h"></i> Прочее<div class="sub-menu"><div class="nav-item" data-sub="people"><i class="fas fa-users"></i> Люди</div><div class="nav-item" data-sub="music"><i class="fas fa-music"></i> Музыка</div><div class="nav-item" data-sub="shop"><i class="fas fa-store"></i> Магазин стикеров</div><div class="nav-item" data-sub="faq"><i class="fas fa-question-circle"></i> FAQ</div><div class="nav-item" data-sub="settings"><i class="fas fa-cog"></i> Настройки</div>${isAdmin ? '<div class="nav-item" data-sub="admin"><i class="fas fa-shield-alt"></i> Админ панель</div>' : ''}</div></div></div><div class="user-info-sidebar" id="profileBtn"><div class="avatar-wrapper"><div class="avatar" style="${avatarStyle}">${!userData.avatarUrl ? getInitials(userData.firstName, userData.lastName) : ''}</div>${userData.isVerified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : ''}</div><div><strong>${userData.firstName} ${userData.lastName}</strong>${userData.isVerified ? ' <i class="fas fa-check-circle verified-icon" style="font-size:12px"></i>' : ''}</div></div><button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</button></div><div class="main" id="mainContent"></div><div class="mobile-bottom-nav"><button class="mobile-nav-item active" data-nav="chats"><i class="fas fa-comments"></i><span>Чаты</span></button><button class="mobile-nav-item" data-nav="feed"><i class="fas fa-newspaper"></i><span>Новости</span></button><button class="mobile-nav-item" data-nav="profile"><i class="fas fa-user-circle"></i><span>Профиль</span></button><button class="mobile-nav-item" data-nav="more"><i class="fas fa-ellipsis-h"></i><span>Прочее</span></button></div></div>`;
         const moreNav = document.querySelector('.nav-item[data-nav="more"]');
         const subMenu = moreNav?.querySelector('.sub-menu');
         if (moreNav && subMenu) {
@@ -1757,7 +1868,7 @@
             document.addEventListener('click', (e) => { if (!moreNav.contains(e.target)) subMenu.classList.remove('show'); });
         }
         document.querySelectorAll('.nav-item[data-nav]').forEach(el => { if (el.dataset.nav !== 'more') { el.onclick = () => { document.querySelectorAll('.nav-item[data-nav]').forEach(n => n.classList.remove('active')); el.classList.add('active'); if (el.dataset.nav === 'chats') showChatsView(); else if (el.dataset.nav === 'feed') showFeedView(); else if (el.dataset.nav === 'profile') showProfileView(); }; } });
-        document.querySelectorAll('.nav-item[data-sub]').forEach(el => { el.onclick = (e) => { e.stopPropagation(); const sub = el.dataset.sub; if (sub === 'people') showPeopleView(); else if (sub === 'music') showMusicView(); else if (sub === 'settings') showSettingsView(); else if (sub === 'admin') showAdminView(); if (subMenu) subMenu.classList.remove('show'); }; });
+        document.querySelectorAll('.nav-item[data-sub]').forEach(el => { el.onclick = (e) => { e.stopPropagation(); const sub = el.dataset.sub; if (sub === 'people') showPeopleView(); else if (sub === 'music') showMusicView(); else if (sub === 'shop') showShopView(); else if (sub === 'faq') showFAQView(); else if (sub === 'settings') showSettingsView(); else if (sub === 'admin') showAdminView(); if (subMenu) subMenu.classList.remove('show'); }; });
         document.querySelectorAll('.mobile-nav-item').forEach(el => { if (el.dataset.nav === 'more') el.onclick = () => showMoreMenu(); else el.onclick = () => { if (el.dataset.nav === 'chats') showChatsView(); else if (el.dataset.nav === 'feed') showFeedView(); else if (el.dataset.nav === 'profile') showProfileView(); }; });
         document.getElementById('profileBtn').onclick = () => showProfileView();
         document.getElementById('logoutBtn').onclick = () => { if(messagesUnsubscribe) messagesUnsubscribe(); auth.signOut(); renderAuth(); };
@@ -1765,7 +1876,7 @@
     }
 
     function renderEmailVerifyScreen() {
-        document.getElementById('app').innerHTML = `<div class="auth-container"><div class="auth-card"><h1>ЧЕБУРЧАТ</h1><div class="verify-msg"><i class="fas fa-envelope"></i> Подтвердите email<br><small>${currentUser.email}</small></div><button id="resendBtn">Отправить повторно</button><button id="checkBtn" style="background:#28a745">Я подтвердил</button><button id="logoutVerifyBtn" style="background:#dc3545; margin-top:10px">Выйти</button></div></div>`;
+        document.getElementById('app').innerHTML = `<div class="auth-container"><div class="auth-card"><h1>ЧЕБУРЧАТ</h1><div class="verify-msg"><i class="fas fa-envelope"></i> Подтвердите email<br><small>${currentUser.email}</small></div><button id="resendBtn">Отправить повторно</button><button id="checkBtn" style="background:#28a745">Я подтвердил</button><button id="logoutVerifyBtn" style="background:#dc3545; margin-top:10px">Выйти</button></div><div class="app-version">v1.0</div></div>`;
         document.getElementById('resendBtn').onclick = async () => { await currentUser.sendEmailVerification(); showModal('Письмо отправлено', 'Проверьте почту'); };
         document.getElementById('checkBtn').onclick = async () => { await currentUser.reload(); if(currentUser.emailVerified) location.reload(); else showModal('Ошибка', 'Email не подтверждён'); };
         document.getElementById('logoutVerifyBtn').onclick = () => { if(messagesUnsubscribe) messagesUnsubscribe(); auth.signOut(); renderAuth(); };
@@ -1784,7 +1895,7 @@
     }
 
     function renderAuth() {
-        document.getElementById('app').innerHTML = `<div class="auth-container"><div class="auth-card"><h1>ЧЕБУРЧАТ</h1><div class="auth-subtitle">Социальная сеть для своих</div><div id="loginView"><input type="email" id="loginEmail" placeholder="Email"><input type="password" id="loginPassword" placeholder="Пароль"><button id="doLoginBtn">Войти</button><div class="toggle-auth" id="showRegisterBtn">Нет аккаунта? Зарегистрироваться</div></div><div id="registerView" class="hidden"><input type="text" id="regFirstName" placeholder="Имя"><input type="text" id="regLastName" placeholder="Фамилия"><input type="email" id="regEmail" placeholder="Email"><input type="password" id="regPassword" placeholder="Пароль (мин. 6)"><button id="doRegisterBtn">Зарегистрироваться</button><div class="toggle-auth" id="showLoginBtn">Уже есть аккаунт? Войти</div></div></div></div>`;
+        document.getElementById('app').innerHTML = `<div class="auth-container"><div class="auth-card"><h1>ЧЕБУРЧАТ</h1><div class="auth-subtitle">Социальная сеть для своих</div><div id="loginView"><input type="email" id="loginEmail" placeholder="Email"><input type="password" id="loginPassword" placeholder="Пароль"><button id="doLoginBtn">Войти</button><div class="toggle-auth" id="showRegisterBtn">Нет аккаунта? Зарегистрироваться</div></div><div id="registerView" class="hidden"><input type="text" id="regFirstName" placeholder="Имя"><input type="text" id="regLastName" placeholder="Фамилия"><input type="email" id="regEmail" placeholder="Email"><input type="password" id="regPassword" placeholder="Пароль (мин. 6)"><button id="doRegisterBtn">Зарегистрироваться</button><div class="toggle-auth" id="showLoginBtn">Уже есть аккаунт? Войти</div></div></div><div class="app-version">v1.0</div></div>`;
         document.getElementById('doLoginBtn').onclick = handleLogin;
         document.getElementById('showRegisterBtn').onclick = () => { document.getElementById('loginView').classList.add('hidden'); document.getElementById('registerView').classList.remove('hidden'); };
         document.getElementById('showLoginBtn').onclick = () => { document.getElementById('registerView').classList.add('hidden'); document.getElementById('loginView').classList.remove('hidden'); };
