@@ -20,7 +20,6 @@
             --shadow-intensity: 0.08;
         }
         
-        /* СТАНДАРТНАЯ ТЕМА */
         body[data-theme="default"] {
             --bg-page: #f0f2f5;
             --bg-surface: rgba(255, 255, 255, var(--card-opacity));
@@ -37,7 +36,6 @@
             --shadow-lg: 0 8px 24px rgba(0,0,0,var(--shadow-intensity));
         }
         
-        /* ТЁМНАЯ ТЕМА */
         body[data-theme="dark"] {
             --bg-page: #121212;
             --bg-surface: rgba(30, 30, 30, var(--card-opacity));
@@ -54,7 +52,6 @@
             --shadow-lg: 0 8px 24px rgba(0,0,0,var(--shadow-intensity));
         }
         
-        /* МАТОВОЕ СТЕКЛО (светлый пастельный градиент) */
         body[data-theme="glass-light"] {
             --bg-page: linear-gradient(135deg, #e8edf2 0%, #e66bfa 50%, #fbacf3 100%);
             --bg-surface: rgba(255, 255, 255, var(--card-opacity));
@@ -71,7 +68,6 @@
             --shadow-lg: 0 16px 40px rgba(0,0,0,var(--shadow-intensity));
         }
         
-        /* ТЁМНОЕ МАТОВОЕ СТЕКЛО (тёмный градиент) */
         body[data-theme="glass-dark"] {
             --bg-page: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             --bg-surface: rgba(20, 25, 45, var(--card-opacity));
@@ -88,7 +84,6 @@
             --shadow-lg: 0 8px 32px rgba(0,0,0,var(--shadow-intensity));
         }
         
-        /* КОНТРАСТНОСТЬ ТЕКСТА */
         body[data-text-contrast="light"] {
             --text: #1a1a1a !important;
             --text-secondary: #444444 !important;
@@ -101,7 +96,6 @@
             --other-msg-text: #ffffff !important;
         }
         
-        /* Принудительное применение контрастности */
         body[data-text-contrast="light"] .post-text,
         body[data-text-contrast="light"] .comment-text,
         body[data-text-contrast="light"] .chat-last-msg,
@@ -134,7 +128,6 @@
             color: #ffffff !important;
         }
         
-        /* Отключение анимаций */
         body[data-disable-hover="true"] * {
             transition: none !important;
             animation: none !important;
@@ -161,7 +154,10 @@
         body[data-disable-hover="true"] .submit-comment-btn:hover,
         body[data-disable-hover="true"] .add-comment button:hover,
         body[data-disable-hover="true"] .back-btn:hover,
-        body[data-disable-hover="true"] .attach-btn:hover {
+        body[data-disable-hover="true"] .attach-btn:hover,
+        body[data-disable-hover="true"] .sticker-btn:hover,
+        body[data-disable-hover="true"] .buy-sticker-btn:hover,
+        body[data-disable-hover="true"] .sticker-item:hover {
             transform: none !important;
             background: none !important;
             filter: none !important;
@@ -174,20 +170,12 @@
             background: var(--bg-surface) !important;
         }
         
-        body[data-disable-hover="true"] .theme-preset:hover,
-        body[data-disable-hover="true"] .radius-preset:hover,
-        body[data-disable-hover="true"] .contrast-preset:hover {
-            transform: none !important;
-            box-shadow: none !important;
-        }
-        
         body { background: var(--bg-page); color: var(--text); }
         
         .post-card, .chat-item, .person-item, .track-card, .create-post-card {
             background: var(--bg-surface);
         }
         
-        /* Стеклянные эффекты */
         body[data-theme="glass-light"] .sidebar,
         body[data-theme="glass-light"] .chats-view,
         body[data-theme="glass-light"] .chat-header,
@@ -229,33 +217,35 @@
         body[data-theme="glass-light"] .sidebar { background: rgba(255, 255, 255, 0.8); }
         body[data-theme="glass-dark"] .sidebar { background: rgba(15, 20, 35, 0.6); }
         
-        /* Общие стили */
         .logo, .nav-item.active, .nav-item:hover, .create-group-btn, 
         .post-action-btn.liked, .comment-like-btn.liked,
         .action-btn.write, .profile-btn.primary, .input-area button,
-        .modal-buttons .confirm, .toggle-auth, .stat:hover {
+        .modal-buttons .confirm, .toggle-auth, .stat:hover,
+        .sticker-btn:hover, .buy-sticker-btn {
             color: var(--accent);
         }
         
         .create-group-btn, .action-btn.write, .profile-btn.primary, 
         .input-area button, .auth-card button, .official-post-btn,
-        .send-btn, .submit-comment-btn, .add-comment button {
+        .send-btn, .submit-comment-btn, .add-comment button,
+        .buy-sticker-btn {
             background: var(--accent);
         }
         
         .create-group-btn:hover, .action-btn.write:hover, .profile-btn.primary:hover,
-        .input-area button:hover, .auth-card button:hover {
+        .input-area button:hover, .auth-card button:hover,
+        .buy-sticker-btn:hover {
             background: var(--accent-hover);
         }
         
         .sidebar, .chats-view, .chat-header, .feed-header, .music-header,
         .people-view, .settings-view, .admin-view, .post-card, .track-card,
         .person-item, .chat-item, .profile-view, .create-post-card,
-        .modal, .auth-card, .context-menu, .reactions-modal .modal {
+        .modal, .auth-card, .context-menu, .reactions-modal .modal,
+        .stickers-modal .modal {
             border-radius: var(--card-radius);
         }
         
-        /* Auth */
         .auth-container { height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); padding: 16px; }
         .auth-card { background: var(--bg-surface); padding: 40px 32px; width: 100%; max-width: 420px; text-align: center; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
         .auth-card h1 { color: var(--accent); margin-bottom: 8px; font-size: 36px; font-weight: 800; }
@@ -268,7 +258,6 @@
         .verify-msg { background: #fff3cd; color: #856404; padding: 12px; border-radius: 16px; margin: 16px 0; font-size: 14px; }
         .hidden { display: none !important; }
         
-        /* App layout */
         .app { display: flex; height: 100vh; background: var(--bg-page); }
         .sidebar { width: 280px; background: var(--bg-surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; height: 100vh; transition: all 0.2s; }
         .logo { padding: 20px 20px 16px; font-size: 24px; font-weight: 800; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
@@ -294,7 +283,6 @@
         
         .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--bg-page); }
         
-        /* Баланс в шапке */
         .balance-header {
             display: flex;
             align-items: center;
@@ -309,7 +297,6 @@
         }
         .balance-header i { font-size: 16px; }
         
-        /* Чаты */
         .chats-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); transition: all 0.2s; }
         .chats-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding-top: max(16px, env(safe-area-inset-top)); }
         .chats-header h2 { font-size: 24px; font-weight: 700; color: var(--text); }
@@ -329,7 +316,6 @@
         .chat-time { font-size: 11px; color: var(--text-secondary); flex-shrink: 0; }
         .empty-chats { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
         
-        /* Chat window */
         .chat-window { display: flex; flex-direction: column; height: 100%; background: var(--bg-page); }
         .chat-header { padding: 12px 16px; background: var(--bg-surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; flex-shrink: 0; padding-top: max(12px, env(safe-area-inset-top)); transition: all 0.2s; }
         .back-btn { background: none; border: none; font-size: 22px; cursor: pointer; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text); transition: 0.2s; }
@@ -381,11 +367,11 @@
         /* Стикеры */
         .stickers-modal .modal { max-width: 500px; width: 90%; }
         .stickers-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 16px; max-height: 400px; overflow-y: auto; }
-        .sticker-item { cursor: pointer; transition: 0.2s; border-radius: 16px; padding: 8px; background: var(--bg-element); }
+        .sticker-item { cursor: pointer; transition: 0.2s; border-radius: 16px; padding: 8px; background: var(--bg-element); text-align: center; }
         .sticker-item:hover { transform: scale(1.05); background: var(--accent); }
         .sticker-item img { width: 100%; height: auto; border-radius: 12px; }
         .sticker-pack-locked { text-align: center; padding: 20px; background: var(--bg-element); border-radius: 20px; margin: 8px; }
-        .sticker-pack-locked button { margin-top: 12px; padding: 8px 16px; background: var(--accent); color: white; border: none; border-radius: 20px; cursor: pointer; }
+        .buy-sticker-btn { margin-top: 12px; padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer; font-weight: 600; color: white; }
         
         .mobile-context-menu { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-surface); border-radius: 20px 20px 0 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.15); z-index: 1001; display: none; flex-direction: column; padding: 16px; animation: slideUp 0.2s ease; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
         .mobile-context-menu.active { display: flex; }
@@ -406,7 +392,6 @@
         .sticker-btn { background: var(--bg-element); border: none; width: 48px; height: 48px; border-radius: 50%; color: var(--text); cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .sticker-btn:hover { background: var(--accent); color: white; }
         
-        /* Feed */
         .feed-header { background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); padding: 16px 20px; padding-top: max(16px, env(safe-area-inset-top)); }
         .feed-header h2 { font-size: 24px; font-weight: 700; color: var(--text); }
         .posts-feed { display: flex; flex-direction: column; gap: 16px; padding: 16px; }
@@ -441,7 +426,6 @@
         .create-post-input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 20px; background: var(--bg-element); color: var(--text); font-size: 14px; resize: vertical; font-family: inherit; margin-bottom: 12px; }
         .create-post-btn { border: none; padding: 8px 20px; border-radius: 24px; color: white; cursor: pointer; font-size: 14px; font-weight: 600; transition: 0.2s; }
         
-        /* Profile */
         .profile-view { height: 100%; overflow-y: auto; background: var(--bg-surface); padding-bottom: 80px; }
         .profile-header { position: relative; background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); height: 100px; flex-shrink: 0; margin-top: env(safe-area-inset-top); border-radius: var(--card-radius) var(--card-radius) 0 0; }
         .profile-avatar-large { position: absolute; bottom: -50px; left: 20px; width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--bg-surface); background: var(--accent); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 40px; cursor: pointer; position: relative; transition: 0.2s; }
@@ -464,7 +448,6 @@
         .profile-section { padding: 0 20px 20px 20px; }
         .section-title { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
         
-        /* Music */
         .music-view { height: 100%; overflow-y: auto; background: var(--bg-surface); padding-bottom: 80px; }
         .music-header { background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); padding: 16px 20px; padding-top: max(16px, env(safe-area-inset-top)); }
         .music-header h2 { font-size: 24px; font-weight: 700; color: var(--text); }
@@ -476,7 +459,6 @@
         .track-artist { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
         .track-player audio { width: 100%; border-radius: 40px; height: 40px; }
         
-        /* People */
         .people-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); padding-bottom: 80px; }
         .people-header { padding: 16px 20px; border-bottom: 1px solid var(--border); padding-top: max(16px, env(safe-area-inset-top)); }
         .people-header h2 { font-size: 24px; font-weight: 700; color: var(--text); }
@@ -498,7 +480,6 @@
         .action-btn.remove:hover { opacity: 0.9; }
         .action-btn.pending { background: var(--bg-element); color: var(--text-secondary); cursor: default; }
         
-        /* Settings */
         .settings-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
         .settings-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; padding-top: max(16px, env(safe-area-inset-top)); }
         .settings-header h2 { font-size: 24px; font-weight: 700; color: var(--text); flex: 1; }
@@ -543,7 +524,6 @@
         .reset-btn { width: 100%; padding: 14px; background: var(--bg-element); border: 1px solid var(--border); border-radius: 16px; cursor: pointer; font-weight: 600; color: var(--text); transition: 0.2s; margin-top: 20px; }
         .reset-btn:hover { background: var(--border); }
         
-        /* Admin - вкладки */
         .admin-view { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
         .admin-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; padding-top: max(16px, env(safe-area-inset-top)); }
         .admin-header h2 { font-size: 24px; font-weight: 700; color: var(--text); flex: 1; }
@@ -563,9 +543,9 @@
         .admin-user-details { flex: 1; }
         .admin-user-name { font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
         .admin-user-email { font-size: 12px; color: var(--text-secondary); }
+        .admin-user-balance { font-size: 12px; color: var(--accent); margin-top: 4px; }
         .official-post-btn { background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 16px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
         
-        /* Modals */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
         .modal-overlay.active { display: flex; }
         .modal { background: var(--bg-surface); border-radius: 28px; width: 320px; max-width: 90%; text-align: center; overflow: hidden; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
@@ -593,7 +573,6 @@
         .danger-btn:hover { opacity: 0.9; }
         .leave-btn { background: #ffc107; color: #1a1a1a; }
         
-        /* Mobile */
         .mobile-bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-surface); border-top: 1px solid var(--border); padding: 8px 20px 12px; justify-content: space-around; z-index: 100; transition: transform 0.3s ease; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
         .mobile-bottom-nav.hidden { transform: translateY(100%); }
         .mobile-nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; font-size: 11px; color: var(--text-secondary); cursor: pointer; padding: 8px; border-radius: 12px; transition: 0.2s; }
@@ -625,7 +604,6 @@
 <!-- Modals -->
 <div id="reactionsModal" class="modal-overlay reactions-modal"><div class="modal"><div class="modal-header">Выберите реакцию</div><div class="modal-body"><div class="reactions-grid"><div class="reaction-option" data-reaction="❤️"><span class="reaction-emoji-big">❤️</span><span class="reaction-name">Сердце</span></div><div class="reaction-option" data-reaction="👍"><span class="reaction-emoji-big">👍</span><span class="reaction-name">Класс</span></div><div class="reaction-option" data-reaction="🔥"><span class="reaction-emoji-big">🔥</span><span class="reaction-name">Огонь</span></div><div class="reaction-option" data-reaction="😂"><span class="reaction-emoji-big">😂</span><span class="reaction-name">Смех</span></div><div class="reaction-option" data-reaction="😮"><span class="reaction-emoji-big">😮</span><span class="reaction-name">Удивление</span></div><div class="reaction-option" data-reaction="😢"><span class="reaction-emoji-big">😢</span><span class="reaction-name">Грусть</span></div><div class="reaction-option" data-reaction="😡"><span class="reaction-emoji-big">😡</span><span class="reaction-name">Злость</span></div></div></div><div class="modal-buttons"><button class="confirm" id="closeReactionsModal">Отмена</button></div></div></div>
 
-<!-- Модалка стикеров -->
 <div id="stickersModal" class="modal-overlay stickers-modal"><div class="modal"><div class="modal-header">Стикеры</div><div class="modal-body" id="stickersModalBody" style="padding: 0;"><div style="text-align:center;padding:20px">Загрузка...</div></div><div class="modal-buttons"><button class="confirm" id="closeStickersModal">Закрыть</button></div></div></div>
 
 <div id="mobileContextOverlay" class="mobile-context-overlay"></div>
@@ -649,8 +627,8 @@
     const CLOUDINARY_CLOUD_NAME = 'dsf0w12ff';
     const CLOUDINARY_UPLOAD_PRESET = 'cheburchat_preset';
     
-    // GitHub RAW URL для стикеров (ЗАМЕНИ НА СВОЙ ЛОГИН И РЕПОЗИТОРИЙ!)
-    const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/ТВОЙ_ЛОГИН/ТВОЙ_РЕПОЗИТОРИЙ/main/Stickers';
+    // GitHub Pages URL для стикеров (твой сайт)
+    const GITHUB_RAW_URL = 'https://cheburchat.github.io/official/Stickers';
     
     // Стикерпаки
     const STICKER_PACKS = {
@@ -658,7 +636,7 @@
             name: 'Гусь-Русь',
             price: 50,
             emoji: '🦢',
-            stickers: [1,2,3,4,5,6,7,8,9,10,11,12]
+            stickers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         }
     };
 
@@ -733,11 +711,6 @@
     }
     
     // ========== СТИКЕРЫ ==========
-    async function getUserStickerPacks() {
-        if (!userData?.stickers) return [];
-        return userData.stickers;
-    }
-    
     async function purchaseStickerPack(packId) {
         const pack = STICKER_PACKS[packId];
         if (!pack) return false;
@@ -756,6 +729,7 @@
         });
         userData.stickers = [...(userData.stickers || []), packId];
         showModal('Успех', `Вы купили набор стикеров "${pack.name}" за ${pack.price} 🪙!`);
+        showStickersModal();
         return true;
     }
     
@@ -774,13 +748,15 @@
                             <div style="font-size: 48px;">${pack.emoji}</div>
                             <div style="font-weight: 600;">${pack.name}</div>
                             <div style="font-size: 12px; margin-top: 4px;">${pack.price} 🪙</div>
-                            <button onclick="purchaseStickerPack('${packId}')">Купить</button>
+                            <button class="buy-sticker-btn" onclick="purchaseStickerPack('${packId}')">Купить</button>
                          </div>`;
             } else {
                 for (const num of pack.stickers) {
+                    const stickerUrl = `${GITHUB_RAW_URL}/${packId}/${num}.png`;
                     html += `<div class="sticker-item" onclick="sendSticker('${packId}', ${num})">
-                                <img src="${GITHUB_RAW_URL}/${packId}/${num}.png" alt="sticker" onerror="this.src='https://via.placeholder.com/100?text=🖼️'">
-                            </div>`;
+                                <img src="${stickerUrl}" alt="sticker" 
+                                     onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23ddd\'/%3E%3Ctext x=\'50\' y=\'55\' text-anchor=\'middle\' font-size=\'40\' fill=\'%23999\'%3E🦢%3C/text%3E%3C/svg%3E'">
+                             </div>`;
                 }
             }
         }
