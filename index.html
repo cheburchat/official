@@ -96,78 +96,9 @@
             --other-msg-text: #ffffff !important;
         }
         
-        body[data-text-contrast="light"] .post-text,
-        body[data-text-contrast="light"] .comment-text,
-        body[data-text-contrast="light"] .chat-last-msg,
-        body[data-text-contrast="light"] .post-author-name,
-        body[data-text-contrast="light"] .chat-name,
-        body[data-text-contrast="light"] .person-name,
-        body[data-text-contrast="light"] .profile-name,
-        body[data-text-contrast="light"] .nav-item,
-        body[data-text-contrast="light"] .settings-section-title,
-        body[data-text-contrast="light"] .preset-name,
-        body[data-text-contrast="light"] .hover-toggle span,
-        body[data-text-contrast="light"] .modal-header,
-        body[data-text-contrast="light"] .logo {
-            color: #1a1a1a !important;
-        }
-        
-        body[data-text-contrast="dark"] .post-text,
-        body[data-text-contrast="dark"] .comment-text,
-        body[data-text-contrast="dark"] .chat-last-msg,
-        body[data-text-contrast="dark"] .post-author-name,
-        body[data-text-contrast="dark"] .chat-name,
-        body[data-text-contrast="dark"] .person-name,
-        body[data-text-contrast="dark"] .profile-name,
-        body[data-text-contrast="dark"] .nav-item,
-        body[data-text-contrast="dark"] .settings-section-title,
-        body[data-text-contrast="dark"] .preset-name,
-        body[data-text-contrast="dark"] .hover-toggle span,
-        body[data-text-contrast="dark"] .modal-header,
-        body[data-text-contrast="dark"] .logo {
-            color: #ffffff !important;
-        }
-        
         body[data-disable-hover="true"] * {
             transition: none !important;
             animation: none !important;
-        }
-        
-        body[data-disable-hover="true"] .post-card:hover,
-        body[data-disable-hover="true"] .chat-item:hover,
-        body[data-disable-hover="true"] .person-item:hover,
-        body[data-disable-hover="true"] .track-card:hover,
-        body[data-disable-hover="true"] .nav-item:hover,
-        body[data-disable-hover="true"] .post-action-btn:hover,
-        body[data-disable-hover="true"] button:hover,
-        body[data-disable-hover="true"] .reaction-item:hover,
-        body[data-disable-hover="true"] .color-btn:hover,
-        body[data-disable-hover="true"] .theme-preset:hover,
-        body[data-disable-hover="true"] .radius-preset:hover,
-        body[data-disable-hover="true"] .contrast-preset:hover,
-        body[data-disable-hover="true"] .mobile-nav-item:hover,
-        body[data-disable-hover="true"] .create-group-btn:hover,
-        body[data-disable-hover="true"] .action-btn.write:hover,
-        body[data-disable-hover="true"] .profile-btn.primary:hover,
-        body[data-disable-hover="true"] .input-area button:hover,
-        body[data-disable-hover="true"] .official-post-btn:hover,
-        body[data-disable-hover="true"] .submit-comment-btn:hover,
-        body[data-disable-hover="true"] .add-comment button:hover,
-        body[data-disable-hover="true"] .back-btn:hover,
-        body[data-disable-hover="true"] .attach-btn:hover,
-        body[data-disable-hover="true"] .sticker-btn:hover,
-        body[data-disable-hover="true"] .buy-sticker-btn:hover,
-        body[data-disable-hover="true"] .sticker-item:hover {
-            transform: none !important;
-            background: none !important;
-            filter: none !important;
-            opacity: 1 !important;
-        }
-        
-        body[data-disable-hover="true"] .post-card:hover,
-        body[data-disable-hover="true"] .chat-item:hover,
-        body[data-disable-hover="true"] .person-item:hover {
-            background: var(--bg-surface) !important;
         }
         
         body { background: var(--bg-page); color: var(--text); }
@@ -176,6 +107,7 @@
             background: var(--bg-surface);
         }
         
+        /* Стеклянные эффекты */
         body[data-theme="glass-light"] .sidebar,
         body[data-theme="glass-light"] .chats-view,
         body[data-theme="glass-light"] .chat-header,
@@ -221,20 +153,20 @@
         .post-action-btn.liked, .comment-like-btn.liked,
         .action-btn.write, .profile-btn.primary, .input-area button,
         .modal-buttons .confirm, .toggle-auth, .stat:hover,
-        .sticker-btn:hover, .buy-sticker-btn {
+        .plus-btn:hover {
             color: var(--accent);
         }
         
         .create-group-btn, .action-btn.write, .profile-btn.primary, 
         .input-area button, .auth-card button, .official-post-btn,
         .send-btn, .submit-comment-btn, .add-comment button,
-        .buy-sticker-btn {
+        .buy-sticker-btn, .plus-btn {
             background: var(--accent);
         }
         
         .create-group-btn:hover, .action-btn.write:hover, .profile-btn.primary:hover,
         .input-area button:hover, .auth-card button:hover,
-        .buy-sticker-btn:hover {
+        .buy-sticker-btn:hover, .plus-btn:hover {
             background: var(--accent-hover);
         }
         
@@ -242,7 +174,7 @@
         .people-view, .settings-view, .admin-view, .post-card, .track-card,
         .person-item, .chat-item, .profile-view, .create-post-card,
         .modal, .auth-card, .context-menu, .reactions-modal .modal,
-        .stickers-modal .modal {
+        .stickers-modal .modal, .plus-menu {
             border-radius: var(--card-radius);
         }
         
@@ -365,6 +297,33 @@
         .reaction-emoji-big { font-size: 32px; }
         .reaction-name { font-size: 12px; color: var(--text-secondary); }
         
+        /* Меню плюсика */
+        .plus-menu {
+            position: fixed;
+            bottom: 80px;
+            right: 16px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            min-width: 160px;
+        }
+        .plus-menu.show { display: flex; }
+        .plus-menu-item {
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            color: var(--text);
+            transition: 0.1s;
+        }
+        .plus-menu-item:hover { background: var(--bg-element); }
+        .plus-menu-item i { width: 22px; font-size: 18px; color: var(--accent); }
+        
         /* Стикеры */
         .stickers-modal .modal { max-width: 500px; width: 90%; }
         .stickers-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 16px; max-height: 400px; overflow-y: auto; }
@@ -372,7 +331,11 @@
         .sticker-item:hover { transform: scale(1.05); background: var(--accent); }
         .sticker-item img { width: 100%; height: auto; border-radius: 12px; }
         .sticker-pack-locked { text-align: center; padding: 20px; background: var(--bg-element); border-radius: 20px; margin: 8px; }
-        .buy-sticker-btn { margin-top: 12px; padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer; font-weight: 600; color: white; }
+        .sticker-pack-preview { display: flex; gap: 8px; justify-content: center; margin: 12px 0; flex-wrap: wrap; }
+        .sticker-pack-preview img { width: 60px; height: 60px; border-radius: 12px; background: var(--bg-surface); }
+        .buy-sticker-btn, .preview-sticker-btn { margin-top: 12px; padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer; font-weight: 600; color: white; }
+        .preview-sticker-btn { background: var(--bg-element); color: var(--text); margin-right: 8px; }
+        .preview-sticker-btn:hover { background: var(--accent); color: white; }
         
         /* FAQ */
         .faq-item { background: var(--bg-element); border-radius: 16px; margin-bottom: 12px; overflow: hidden; }
@@ -382,11 +345,12 @@
         .faq-answer.show { padding: 0 16px 14px 16px; max-height: 200px; }
         
         /* Shop */
-        .shop-item { background: var(--bg-element); border-radius: 20px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
-        .shop-item-info { display: flex; align-items: center; gap: 12px; }
-        .shop-item-emoji { font-size: 40px; }
+        .shop-item { background: var(--bg-element); border-radius: 20px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .shop-item-info { display: flex; align-items: center; gap: 12px; flex: 1; }
+        .shop-item-preview-img { width: 50px; height: 50px; border-radius: 12px; object-fit: cover; background: var(--bg-surface); }
         .shop-item-name { font-weight: 600; color: var(--text); }
         .shop-item-price { font-size: 12px; color: var(--accent); margin-top: 4px; }
+        .shop-item-actions { display: flex; gap: 8px; }
         
         .mobile-context-menu { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-surface); border-radius: 20px 20px 0 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.15); z-index: 1001; display: none; flex-direction: column; padding: 16px; animation: slideUp 0.2s ease; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
         .mobile-context-menu.active { display: flex; }
@@ -402,10 +366,8 @@
         .input-area input { flex: 1; padding: 12px 18px; border: none; background: var(--bg-element); border-radius: 28px; font-size: 16px; outline: none; color: var(--text); }
         .input-area button { border: none; width: 48px; height: 48px; border-radius: 50%; color: white; cursor: pointer; font-size: 18px; transition: 0.2s; flex-shrink: 0; }
         .input-area button:hover { filter: brightness(0.95); transform: scale(1.02); }
-        .attach-btn { background: var(--bg-element); border: none; width: 48px; height: 48px; border-radius: 50%; color: var(--text); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: 0.2s; flex-shrink: 0; }
-        .attach-btn:hover { background: var(--accent); color: white; }
-        .sticker-btn { background: var(--bg-element); border: none; width: 48px; height: 48px; border-radius: 50%; color: var(--text); cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; transition: 0.2s; flex-shrink: 0; }
-        .sticker-btn:hover { background: var(--accent); color: white; }
+        .plus-btn { background: var(--bg-element); border: none; width: 48px; height: 48px; border-radius: 50%; color: var(--text); cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; transition: 0.2s; flex-shrink: 0; }
+        .plus-btn:hover { background: var(--accent); color: white; }
         
         .feed-header { background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000)); padding: 16px 20px; padding-top: max(16px, env(safe-area-inset-top)); }
         .feed-header h2 { font-size: 24px; font-weight: 700; color: var(--text); }
@@ -607,6 +569,7 @@
             .profile-view, .music-view, .people-view, .admin-view { padding-bottom: 80px; }
             .settings-list { padding-bottom: 100px; }
             .stickers-grid { grid-template-columns: repeat(3, 1fr); }
+            .plus-menu { bottom: 70px; right: 12px; }
         }
         @media (min-width: 769px) { 
             .back-btn { display: flex !important; }
@@ -620,6 +583,13 @@
 <div id="reactionsModal" class="modal-overlay reactions-modal"><div class="modal"><div class="modal-header">Выберите реакцию</div><div class="modal-body"><div class="reactions-grid"><div class="reaction-option" data-reaction="❤️"><span class="reaction-emoji-big">❤️</span><span class="reaction-name">Сердце</span></div><div class="reaction-option" data-reaction="👍"><span class="reaction-emoji-big">👍</span><span class="reaction-name">Класс</span></div><div class="reaction-option" data-reaction="🔥"><span class="reaction-emoji-big">🔥</span><span class="reaction-name">Огонь</span></div><div class="reaction-option" data-reaction="😂"><span class="reaction-emoji-big">😂</span><span class="reaction-name">Смех</span></div><div class="reaction-option" data-reaction="😮"><span class="reaction-emoji-big">😮</span><span class="reaction-name">Удивление</span></div><div class="reaction-option" data-reaction="😢"><span class="reaction-emoji-big">😢</span><span class="reaction-name">Грусть</span></div><div class="reaction-option" data-reaction="😡"><span class="reaction-emoji-big">😡</span><span class="reaction-name">Злость</span></div></div></div><div class="modal-buttons"><button class="confirm" id="closeReactionsModal">Отмена</button></div></div></div>
 
 <div id="stickersModal" class="modal-overlay stickers-modal"><div class="modal"><div class="modal-header">Мои стикеры</div><div class="modal-body" id="stickersModalBody" style="padding: 0;"><div style="text-align:center;padding:20px">Загрузка...</div></div><div class="modal-buttons"><button class="confirm" id="closeStickersModal">Закрыть</button></div></div></div>
+
+<div id="previewModal" class="modal-overlay"><div class="modal"><div class="modal-header">Предпросмотр набора</div><div class="modal-body" id="previewModalBody" style="padding: 20px;"></div><div class="modal-buttons"><button class="confirm" id="closePreviewModal">Закрыть</button></div></div></div>
+
+<div id="plusMenu" class="plus-menu">
+    <div class="plus-menu-item" id="plusMenuAttach"><i class="fas fa-image"></i> Фото/Видео</div>
+    <div class="plus-menu-item" id="plusMenuStickers"><i class="fas fa-smile-wink"></i> Стикеры</div>
+</div>
 
 <div id="mobileContextOverlay" class="mobile-context-overlay"></div>
 <div id="mobileContextMenu" class="mobile-context-menu"><div class="mobile-context-title">Действия с сообщением</div><div class="mobile-context-buttons"><button class="mobile-context-btn" id="mobileReactionBtn"><i class="fas fa-smile"></i> Реакция</button><button class="mobile-context-btn delete" id="mobileDeleteBtn"><i class="fas fa-trash"></i> Удалить</button></div></div>
@@ -650,7 +620,6 @@
         'gus': {
             name: 'Гусь-Русь',
             price: 50,
-            emoji: '🦢',
             stickers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         }
     };
@@ -747,6 +716,21 @@
         return true;
     }
     
+    function showPreviewStickerPack(packId) {
+        const pack = STICKER_PACKS[packId];
+        if (!pack) return;
+        const modal = document.getElementById('previewModal');
+        const body = document.getElementById('previewModalBody');
+        let previewHtml = `<div style="text-align:center;"><h3 style="margin-bottom:16px;">${pack.name}</h3><div class="sticker-pack-preview">`;
+        for (const num of pack.stickers.slice(0, 6)) {
+            const stickerUrl = `${GITHUB_RAW_URL}/${packId}/${num}.png`;
+            previewHtml += `<img src="${stickerUrl}" alt="sticker" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23ddd\'/%3E%3Ctext x=\'50\' y=\'55\' text-anchor=\'middle\' font-size=\'40\' fill=\'%23999\'%3E🦢%3C/text%3E%3C/svg%3E'">`;
+        }
+        previewHtml += `</div><p style="margin-top:16px;">${pack.stickers.length} стикеров</p><p>Цена: ${pack.price} 🪙</p></div>`;
+        body.innerHTML = previewHtml;
+        modal.classList.add('active');
+    }
+    
     function showMyStickersModal() {
         const userPacks = userData?.stickers || [];
         
@@ -784,7 +768,7 @@
         if (isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); }
         
         let shopHtml = '<div style="padding: 16px;">';
-        shopHtml += '<h2 style="margin-bottom: 16px; color: var(--text);">Магазин стикеров</h2>';
+        shopHtml += '<h2 style="margin-bottom: 16px; color: var(--text);">🛍️ Магазин стикеров</h2>';
         shopHtml += '<div style="margin-bottom: 20px; background: var(--bg-element); border-radius: 16px; padding: 12px; display: flex; align-items: center; gap: 12px;">';
         shopHtml += '<i class="fas fa-coins" style="font-size: 24px; color: var(--accent);"></i>';
         shopHtml += `<span style="color: var(--text);">Ваш баланс: <strong style="color: var(--accent);">${userData?.balance || 0}</strong> 🪙</span>`;
@@ -792,16 +776,20 @@
         
         for (const [packId, pack] of Object.entries(STICKER_PACKS)) {
             const isOwned = userData?.stickers?.includes(packId);
+            const previewUrl = `${GITHUB_RAW_URL}/${packId}/5.png`;
             shopHtml += `<div class="shop-item">
                             <div class="shop-item-info">
-                                <div class="shop-item-emoji">${pack.emoji}</div>
+                                <img src="${previewUrl}" class="shop-item-preview-img" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'50\' height=\'50\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23ddd\'/%3E%3Ctext x=\'50\' y=\'55\' text-anchor=\'middle\' font-size=\'40\' fill=\'%23999\'%3E🦢%3C/text%3E%3C/svg%3E'">
                                 <div>
                                     <div class="shop-item-name">${pack.name}</div>
                                     <div class="shop-item-price">${pack.price} 🪙</div>
                                     <div style="font-size: 11px; color: var(--text-secondary);">${pack.stickers.length} стикеров</div>
                                 </div>
                             </div>
-                            ${!isOwned ? `<button class="buy-sticker-btn" onclick="purchaseStickerPackFromShop('${packId}')">Купить</button>` : '<span style="color: green;"><i class="fas fa-check-circle"></i> Куплено</span>'}
+                            <div class="shop-item-actions">
+                                <button class="preview-sticker-btn" onclick="showPreviewStickerPack('${packId}')"><i class="fas fa-eye"></i></button>
+                                ${!isOwned ? `<button class="buy-sticker-btn" onclick="purchaseStickerPackFromShop('${packId}')">Купить</button>` : '<span style="color: green;"><i class="fas fa-check-circle"></i> Куплено</span>'}
+                            </div>
                          </div>`;
         }
         
@@ -815,6 +803,8 @@
         await purchaseStickerPack(packId);
         showShopView();
     };
+    
+    window.showPreviewStickerPack = showPreviewStickerPack;
     
     window.sendSticker = async function(packId, stickerNum) {
         if (!currentChat) {
@@ -847,6 +837,25 @@
         scrollToBottom();
         loadChatsList();
     };
+    
+    // ========== МЕНЮ ПЛЮСИКА ==========
+    function hidePlusMenu() {
+        document.getElementById('plusMenu').classList.remove('show');
+    }
+    
+    function showPlusMenu(e) {
+        e.stopPropagation();
+        const menu = document.getElementById('plusMenu');
+        menu.classList.toggle('show');
+        setTimeout(() => {
+            document.addEventListener('click', function closeMenu(event) {
+                if (!menu.contains(event.target)) {
+                    menu.classList.remove('show');
+                    document.removeEventListener('click', closeMenu);
+                }
+            });
+        }, 10);
+    }
     
     // ========== FAQ ==========
     function showFAQView() {
@@ -1291,13 +1300,14 @@
         const avatarUrl = !isGroup ? chat.avatarUrl : null;
         const avatarStyle = avatarUrl ? `background-image: url('${avatarUrl}'); background-size: cover; background-position: center;` : '';
         const avatarContent = !isGroup && !avatarUrl ? getInitials(chat.firstName, chat.lastName) : (isGroup ? '<i class="fas fa-users"></i>' : '');
-        document.getElementById('mainContent').innerHTML = `<div class="chat-window"><div class="chat-header"><button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i></button><div class="chat-header-avatar ${isGroup ? 'group-avatar' : ''}" style="${avatarStyle}">${avatarContent}${!isGroup && chat.isVerified ? '<div class="verified-badge" style="bottom: -2px; right: -2px; width: 14px; height: 14px; font-size: 8px;"><i class="fas fa-check"></i></div>' : ''}</div><div class="chat-header-info"><div class="chat-header-name" ${!isGroup ? `data-user-id="${chat.id}"` : ''}>${isGroup ? escapeHtml(chat.name) : `${escapeHtml(chat.firstName)} ${escapeHtml(chat.lastName)}`}${!isGroup && chat.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div>${isGroup && chat.members ? `<div class="chat-header-members" id="groupManageBtn">${chat.members.length} участников</div>` : ''}</div></div><div class="messages-area" id="messagesArea"></div><div class="input-area"><input type="text" id="messageInput" placeholder="Сообщение..."><button class="sticker-btn" id="stickerBtn"><i class="fas fa-smile-wink"></i></button><button class="attach-btn" id="attachBtn"><i class="fas fa-paperclip"></i></button><button id="sendBtn"><i class="fas fa-paper-plane"></i></button></div></div>`;
+        document.getElementById('mainContent').innerHTML = `<div class="chat-window"><div class="chat-header"><button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i></button><div class="chat-header-avatar ${isGroup ? 'group-avatar' : ''}" style="${avatarStyle}">${avatarContent}${!isGroup && chat.isVerified ? '<div class="verified-badge" style="bottom: -2px; right: -2px; width: 14px; height: 14px; font-size: 8px;"><i class="fas fa-check"></i></div>' : ''}</div><div class="chat-header-info"><div class="chat-header-name" ${!isGroup ? `data-user-id="${chat.id}"` : ''}>${isGroup ? escapeHtml(chat.name) : `${escapeHtml(chat.firstName)} ${escapeHtml(chat.lastName)}`}${!isGroup && chat.isVerified ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}</div>${isGroup && chat.members ? `<div class="chat-header-members" id="groupManageBtn">${chat.members.length} участников</div>` : ''}</div></div><div class="messages-area" id="messagesArea"></div><div class="input-area"><input type="text" id="messageInput" placeholder="Сообщение..."><button class="plus-btn" id="plusBtn"><i class="fas fa-plus"></i></button><button id="sendBtn"><i class="fas fa-paper-plane"></i></button></div></div>`;
         document.getElementById('backBtn').onclick = () => { if(isMobile) { const bn = document.querySelector('.mobile-bottom-nav'); if(bn) bn.classList.remove('hidden'); } currentChat = null; showChatsView(); };
         if (isGroup && document.getElementById('groupManageBtn')) document.getElementById('groupManageBtn').onclick = showGroupManage;
         if (!isGroup) { const nameEl = document.querySelector('.chat-header-name'); if (nameEl) nameEl.style.cursor = 'pointer'; nameEl?.addEventListener('click', () => showProfileView(chat.id)); }
         document.getElementById('sendBtn').onclick = sendTextMessage;
-        document.getElementById('attachBtn').onclick = openFilePicker;
-        document.getElementById('stickerBtn').onclick = () => showMyStickersModal();
+        document.getElementById('plusBtn').onclick = showPlusMenu;
+        document.getElementById('plusMenuAttach').onclick = () => { hidePlusMenu(); openFilePicker(); };
+        document.getElementById('plusMenuStickers').onclick = () => { hidePlusMenu(); showMyStickersModal(); };
         document.getElementById('messageInput').onkeypress = (e) => { if(e.key === 'Enter') sendTextMessage(); };
         loadMessages();
         setTimeout(() => { const ma = document.getElementById('messagesArea'); if(ma) ma.scrollTop = ma.scrollHeight; }, 100);
@@ -1924,6 +1934,7 @@
     window.addEventListener('resize', () => { isMobile = window.innerWidth <= 768; });
     document.addEventListener('click', () => hideContextMenu());
     document.getElementById('closeStickersModal')?.addEventListener('click', () => document.getElementById('stickersModal')?.classList.remove('active'));
+    document.getElementById('closePreviewModal')?.addEventListener('click', () => document.getElementById('previewModal')?.classList.remove('active'));
 </script>
 </body>
 </html>
