@@ -713,337 +713,411 @@
     let currentOpacity = 1;
     let currentShadow = 0.08;
     
-    // ========== WEBRTC ЗВОНКИ ==========
-    let peerConnection = null;
-    let localStream = null;
-    let remoteStream = null;
-    let callActive = false;
-    let currentCallUserId = null;
-    let callOfferDocId = null;
-    let callListenerUnsubscribe = null;
-    
-    const configuration = {
-        iceServers: [
-            { urls: 'stun:stun.l.google.com:19302' },
-            { urls: 'stun:stun1.l.google.com:19302' }
-        ]
-    };
-    
-    async function startCall(targetUserId, isVideo = true) {
-        if (callActive) {
-            showModal('Ошибка', 'У вас уже активен звонок');
-            return;
-        }
-        
-        currentCallUserId = targetUserId;
-        
-        try {
-            localStream = await navigator.mediaDevices.getUserMedia({ video: isVideo, audio: true });
-            
-            peerConnection = new RTCPeerConnection(configuration);
-            
-            localStream.getTracks().forEach(track => {
-                peerConnection.addTrack(track, localStream);
-            });
-            
-            peerConnection.ontrack = (event) => {
-                remoteStream = event.streams[0];
-                showCallUI(true, isVideo);
-                const remoteVideo = document.getElementById('remoteVideo');
-                if (remoteVideo && remoteStream) {
-                    remoteVideo.srcObject = remoteStream;
-                }
-            };
-            
-            peerConnection.onicecandidate = (event) => {
-                if (event.candidate) {
-                    sendCallSignal(targetUserId, 'candidate', { candidate: event.candidate });
-                }
-            };
-            
-            peerConnection.onconnectionstatechange = () => {
-                if (peerConnection.connectionState === 'disconnected' || 
-                    peerConnection.connectionState === 'failed' ||
-                    peerConnection.connectionState === 'closed') {
-                    endCall();
-                }
-            };
-            
-            const offer = await peerConnection.createOffer();
-            await peerConnection.setLocalDescription(offer);
-            
-            await sendCallSignal(targetUserId, 'offer', { sdp: offer });
-            
-            showModal('Звонок', 'Вызов...');
-            
-        } catch (error) {
-            console.error('Start call error:', error);
-            showModal('Ошибка', 'Не удалось начать звонок: ' + error.message);
-            endCall();
-        }
-    }
-    
-    async function acceptCall(offerData, fromUserId, callId) {
-        if (callActive) {
-            await rejectCall(fromUserId);
-            return;
-        }
-        
-        currentCallUserId = fromUserId;
-        callOfferDocId = callId;
-        
-        try {
-            localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-            
-            peerConnection = new RTCPeerConnection(configuration);
-            
-            localStream.getTracks().forEach(track => {
-                peerConnection.addTrack(track, localStream);
-            });
-            
-            peerConnection.ontrack = (event) => {
-                remoteStream = event.streams[0];
-                showCallUI(true, true);
-                const remoteVideo = document.getElementById('remoteVideo');
-                if (remoteVideo && remoteStream) {
-                    remoteVideo.srcObject = remoteStream;
-                }
-            };
-            
-            peerConnection.onicecandidate = (event) => {
-                if (event.candidate) {
-                    sendCallSignal(fromUserId, 'candidate', { candidate: event.candidate });
-                }
-            };
-            
-            peerConnection.onconnectionstatechange = () => {
-                if (peerConnection.connectionState === 'connected') {
-                    updateCallDocStatus(callId, 'active');
-                } else if (peerConnection.connectionState === 'disconnected' || 
-                           peerConnection.connectionState === 'failed') {
-                    endCall();
-                }
-            };
-            
-            await peerConnection.setRemoteDescription(new RTCSessionDescription(offerData.sdp));
-            const answer = await peerConnection.createAnswer();
-            await peerConnection.setLocalDescription(answer);
-            
-            await sendCallSignal(fromUserId, 'answer', { sdp: answer });
-            await updateCallDocStatus(callId, 'active');
-            
-        } catch (error) {
-            console.error('Accept call error:', error);
-            showModal('Ошибка', 'Не удалось принять звонок');
-            endCall();
-        }
-    }
-    
-    async function sendCallSignal(targetUserId, type, data) {
-        const callRef = db.collection('calls').doc();
-        await callRef.set({
-            from: currentUser.uid,
-            to: targetUserId,
-            type: type,
-            data: data,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            status: 'pending'
-        });
-        
-        if (type === 'offer') {
-            callOfferDocId = callRef.id;
-            setTimeout(() => {
-                checkCallTimeout(callRef.id);
-            }, 30000);
-        }
-    }
-    
-    async function updateCallDocStatus(callId, status) {
-        if (callId) {
-            await db.collection('calls').doc(callId).update({ status: status });
-        }
-    }
-    
-    async function checkCallTimeout(callId) {
-        const doc = await db.collection('calls').doc(callId).get();
-        if (doc.exists && doc.data().status === 'pending') {
-            await db.collection('calls').doc(callId).update({ status: 'timeout' });
-            if (callOfferDocId === callId) {
-                showModal('Звонок', 'Собеседник не ответил');
-                endCall();
-            }
-        }
-    }
-    
-    async function rejectCall(targetUserId) {
-        await sendCallSignal(targetUserId, 'reject', {});
-        endCall();
-    }
-    
-    function showCallUI(show, isVideo) {
-        const callContainer = document.getElementById('callContainer');
-        if (show) {
-            if (!callContainer) {
-                const container = document.createElement('div');
-                container.id = 'callContainer';
-                container.className = 'call-container';
-                container.innerHTML = `
-                    <div class="call-status" id="callStatus">Соединение...</div>
-                    <div class="call-video-container">
-                        <video id="remoteVideo" class="remote-video" autoplay playsinline></video>
-                        <video id="localVideo" class="local-video" autoplay playsinline muted></video>
-                    </div>
-                    <div class="call-controls">
-                        <button class="call-mute-btn" id="callMuteBtn"><i class="fas fa-microphone"></i></button>
-                        <button class="call-video-toggle-btn" id="callVideoToggleBtn"><i class="fas fa-video"></i></button>
-                        <button class="call-end-btn" id="callEndBtn"><i class="fas fa-phone-slash"></i></button>
-                    </div>
-                `;
-                document.body.appendChild(container);
-                
-                document.getElementById('callMuteBtn').onclick = toggleMute;
-                document.getElementById('callVideoToggleBtn').onclick = toggleVideo;
-                document.getElementById('callEndBtn').onclick = endCall;
-            }
-            if (localStream) {
-                const localVideo = document.getElementById('localVideo');
-                if (localVideo) localVideo.srcObject = localStream;
-            }
-            document.getElementById('callContainer').style.display = 'flex';
-            document.getElementById('callStatus').textContent = 'В звонке...';
-        } else {
-            if (callContainer) callContainer.remove();
-        }
-    }
-    
-    function toggleMute() {
-        if (localStream) {
-            const audioTrack = localStream.getAudioTracks()[0];
-            if (audioTrack) {
-                audioTrack.enabled = !audioTrack.enabled;
-                const btn = document.getElementById('callMuteBtn');
-                if (btn) {
-                    if (audioTrack.enabled) {
-                        btn.innerHTML = '<i class="fas fa-microphone"></i>';
-                    } else {
-                        btn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
-                    }
-                }
-            }
-        }
-    }
-    
-    function toggleVideo() {
-        if (localStream) {
-            const videoTrack = localStream.getVideoTracks()[0];
-            if (videoTrack) {
-                videoTrack.enabled = !videoTrack.enabled;
-                const btn = document.getElementById('callVideoToggleBtn');
-                if (btn) {
-                    if (videoTrack.enabled) {
-                        btn.innerHTML = '<i class="fas fa-video"></i>';
-                    } else {
-                        btn.innerHTML = '<i class="fas fa-video-slash"></i>';
-                    }
-                }
-            }
-        }
-    }
-    
-    async function endCall() {
-        callActive = false;
-        
-        if (peerConnection) {
-            peerConnection.close();
-            peerConnection = null;
-        }
-        
-        if (localStream) {
-            localStream.getTracks().forEach(track => track.stop());
-            localStream = null;
-        }
-        
-        remoteStream = null;
-        currentCallUserId = null;
-        
-        if (callOfferDocId) {
-            await db.collection('calls').doc(callOfferDocId).update({ status: 'ended' }).catch(() => {});
-            callOfferDocId = null;
-        }
-        
-        showCallUI(false);
-    }
-    
-    function listenForCalls() {
-        if (callListenerUnsubscribe) callListenerUnsubscribe();
-        
-        callListenerUnsubscribe = db.collection('calls')
-            .where('to', '==', currentUser.uid)
-            .where('status', '==', 'pending')
-            .onSnapshot((snapshot) => {
-                snapshot.docChanges().forEach((change) => {
-                    if (change.type === 'added') {
-                        const call = change.doc.data();
-                        if (call.type === 'offer' && !callActive) {
-                            showIncomingCallUI(change.doc.id, call.from, call.data);
-                        } else if (call.type === 'answer' && callActive && currentCallUserId === call.from) {
-                            handleAnswer(call.data);
-                        } else if (call.type === 'candidate' && peerConnection) {
-                            handleCandidate(call.data);
-                        } else if (call.type === 'reject') {
-                            showModal('Звонок', 'Собеседник отклонил вызов');
-                            endCall();
-                        }
-                    }
-                });
-            });
-    }
-    
-    function showIncomingCallUI(callId, fromUserId, offerData) {
-        const modal = document.getElementById('modal');
-        document.getElementById('modalTitle').textContent = 'Входящий звонок';
-        document.getElementById('modalMessage').innerHTML = `
-            <div style="text-align: center;">
-                <i class="fas fa-phone" style="font-size: 48px; color: var(--accent); margin-bottom: 16px; display: block;"></i>
-                <p>Вам звонят...</p>
-                <div style="display: flex; gap: 16px; justify-content: center; margin-top: 20px;">
-                    <button id="acceptCallBtn" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer;">Ответить</button>
-                    <button id="rejectCallBtn" style="background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer;">Отклонить</button>
-                </div>
-            </div>
-        `;
-        const confirmBtn = document.getElementById('modalConfirm');
-        confirmBtn.style.display = 'none';
-        
-        document.getElementById('acceptCallBtn').onclick = () => {
-            modal.classList.remove('active');
-            acceptCall(offerData, fromUserId, callId);
-        };
-        document.getElementById('rejectCallBtn').onclick = () => {
-            modal.classList.remove('active');
-            rejectCall(fromUserId);
-        };
-        
-        modal.classList.add('active');
-    }
-    
-    async function handleAnswer(data) {
-        if (peerConnection && data.sdp) {
-            await peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
-            callActive = true;
-            document.getElementById('callStatus').textContent = 'В звонке...';
-        }
-    }
-    
-    async function handleCandidate(data) {
-        if (peerConnection && data.candidate) {
-            try {
-                await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
-            } catch (e) {
-                console.error('Error adding ICE candidate:', e);
-            }
-        }
-    }
+	// ========== WEBRTC ЗВОНКИ (ИСПРАВЛЕННЫЕ) ==========
+	let peerConnection = null;
+	let localStream = null;
+	let remoteStream = null;
+	let callActive = false;
+	let currentCallUserId = null;
+	let callOfferDocId = null;
+	let callListenerUnsubscribe = null;
+
+	const configuration = {
+		iceServers: [
+			{ urls: 'stun:stun.l.google.com:19302' },
+			{ urls: 'stun:stun1.l.google.com:19302' },
+			{ urls: 'stun:stun2.l.google.com:19302' },
+			{ urls: 'stun:stun3.l.google.com:19302' },
+			{ urls: 'stun:stun4.l.google.com:19302' }
+		]
+	};
+
+	// Очистка старых звонков при старте
+	async function cleanupOldCalls() {
+		const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+		const oldCalls = await db.collection('calls')
+			.where('timestamp', '<', oneHourAgo)
+			.get();
+		const batch = db.batch();
+		oldCalls.forEach(doc => batch.delete(doc.ref));
+		await batch.commit();
+	}
+
+	async function startCall(targetUserId, isVideo = true) {
+		if (callActive) {
+			showModal('Ошибка', 'У вас уже активен звонок');
+			return;
+		}
+		
+		// Проверяем, нет ли уже активного вызова этому пользователю
+		const existingCall = await db.collection('calls')
+			.where('from', '==', currentUser.uid)
+			.where('to', '==', targetUserId)
+			.where('status', 'in', ['pending', 'active'])
+			.get();
+		if (!existingCall.empty) {
+			showModal('Ошибка', 'Звонок уже совершается');
+			return;
+		}
+		
+		currentCallUserId = targetUserId;
+		
+		try {
+			localStream = await navigator.mediaDevices.getUserMedia({ video: isVideo, audio: true });
+			
+			peerConnection = new RTCPeerConnection(configuration);
+			
+			// Добавляем треки
+			localStream.getTracks().forEach(track => {
+				peerConnection.addTrack(track, localStream);
+			});
+			
+			// Обработка входящих треков
+			peerConnection.ontrack = (event) => {
+				if (!remoteStream) {
+					remoteStream = new MediaStream();
+				}
+				remoteStream.addTrack(event.track);
+				showCallUI(true, isVideo);
+				const remoteVideo = document.getElementById('remoteVideo');
+				if (remoteVideo && remoteStream) {
+					remoteVideo.srcObject = remoteStream;
+				}
+			};
+			
+			// ICE кандидаты
+			peerConnection.onicecandidate = (event) => {
+				if (event.candidate) {
+					sendCallSignal(targetUserId, 'candidate', { candidate: event.candidate });
+				}
+			};
+			
+			// Состояние соединения
+			peerConnection.onconnectionstatechange = () => {
+				console.log('Connection state:', peerConnection.connectionState);
+				if (peerConnection.connectionState === 'connected') {
+					callActive = true;
+					updateCallDocStatus(callOfferDocId, 'active');
+					const statusEl = document.getElementById('callStatus');
+					if (statusEl) statusEl.textContent = 'В звонке...';
+				} else if (peerConnection.connectionState === 'disconnected' || 
+						   peerConnection.connectionState === 'failed' ||
+						   peerConnection.connectionState === 'closed') {
+					endCall();
+				}
+			};
+			
+			// Создаём оффер
+			const offer = await peerConnection.createOffer();
+			await peerConnection.setLocalDescription(offer);
+			
+			// Отправляем оффер
+			await sendCallSignal(targetUserId, 'offer', { sdp: offer });
+			
+			showModal('Звонок', 'Вызов...');
+			
+		} catch (error) {
+			console.error('Start call error:', error);
+			showModal('Ошибка', 'Не удалось начать звонок: ' + error.message);
+			endCall();
+		}
+	}
+
+	async function acceptCall(offerData, fromUserId, callId) {
+		if (callActive) {
+			await rejectCall(fromUserId);
+			return;
+		}
+		
+		// Проверяем, не завершён ли уже звонок
+		const callDoc = await db.collection('calls').doc(callId).get();
+		if (!callDoc.exists || callDoc.data().status !== 'pending') {
+			showModal('Ошибка', 'Звонок уже неактивен');
+			return;
+		}
+		
+		currentCallUserId = fromUserId;
+		callOfferDocId = callId;
+		
+		try {
+			localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+			
+			peerConnection = new RTCPeerConnection(configuration);
+			
+			localStream.getTracks().forEach(track => {
+				peerConnection.addTrack(track, localStream);
+			});
+			
+			peerConnection.ontrack = (event) => {
+				if (!remoteStream) {
+					remoteStream = new MediaStream();
+				}
+				remoteStream.addTrack(event.track);
+				showCallUI(true, true);
+				const remoteVideo = document.getElementById('remoteVideo');
+				if (remoteVideo && remoteStream) {
+					remoteVideo.srcObject = remoteStream;
+				}
+			};
+			
+			peerConnection.onicecandidate = (event) => {
+				if (event.candidate) {
+					sendCallSignal(fromUserId, 'candidate', { candidate: event.candidate });
+				}
+			};
+			
+			peerConnection.onconnectionstatechange = () => {
+				console.log('Connection state:', peerConnection.connectionState);
+				if (peerConnection.connectionState === 'connected') {
+					callActive = true;
+					updateCallDocStatus(callId, 'active');
+					const statusEl = document.getElementById('callStatus');
+					if (statusEl) statusEl.textContent = 'В звонке...';
+				} else if (peerConnection.connectionState === 'disconnected' || 
+						   peerConnection.connectionState === 'failed') {
+					endCall();
+				}
+			};
+			
+			await peerConnection.setRemoteDescription(new RTCSessionDescription(offerData.sdp));
+			const answer = await peerConnection.createAnswer();
+			await peerConnection.setLocalDescription(answer);
+			
+			await sendCallSignal(fromUserId, 'answer', { sdp: answer });
+			await updateCallDocStatus(callId, 'active');
+			
+		} catch (error) {
+			console.error('Accept call error:', error);
+			showModal('Ошибка', 'Не удалось принять звонок');
+			endCall();
+		}
+	}
+
+	async function sendCallSignal(targetUserId, type, data) {
+		const callData = {
+			from: currentUser.uid,
+			to: targetUserId,
+			type: type,
+			data: data,
+			timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+			status: type === 'reject' ? 'rejected' : 'pending'
+		};
+		
+		if (type === 'offer') {
+			const docRef = await db.collection('calls').add(callData);
+			callOfferDocId = docRef.id;
+			// Таймаут на ожидание ответа
+			setTimeout(async () => {
+				const doc = await db.collection('calls').doc(docRef.id).get();
+				if (doc.exists && doc.data().status === 'pending') {
+					await db.collection('calls').doc(docRef.id).update({ status: 'timeout' });
+					if (callOfferDocId === docRef.id) {
+						showModal('Звонок', 'Собеседник не ответил');
+						endCall();
+					}
+				}
+			}, 45000);
+		} else {
+			await db.collection('calls').add(callData);
+		}
+	}
+
+	async function updateCallDocStatus(callId, status) {
+		if (callId) {
+			await db.collection('calls').doc(callId).update({ status: status });
+		}
+	}
+
+	async function rejectCall(targetUserId) {
+		await sendCallSignal(targetUserId, 'reject', {});
+		endCall();
+	}
+
+	function showCallUI(show, isVideo) {
+		const callContainer = document.getElementById('callContainer');
+		if (show) {
+			if (!callContainer) {
+				const container = document.createElement('div');
+				container.id = 'callContainer';
+				container.className = 'call-container';
+				container.innerHTML = `
+					<div class="call-status" id="callStatus">Соединение...</div>
+					<div class="call-video-container">
+						<video id="remoteVideo" class="remote-video" autoplay playsinline></video>
+						<video id="localVideo" class="local-video" autoplay playsinline muted></video>
+					</div>
+					<div class="call-controls">
+						<button class="call-mute-btn" id="callMuteBtn"><i class="fas fa-microphone"></i></button>
+						<button class="call-video-toggle-btn" id="callVideoToggleBtn"><i class="fas fa-video"></i></button>
+						<button class="call-end-btn" id="callEndBtn"><i class="fas fa-phone-slash"></i></button>
+					</div>
+				`;
+				document.body.appendChild(container);
+				
+				document.getElementById('callMuteBtn').onclick = () => toggleMute();
+				document.getElementById('callVideoToggleBtn').onclick = () => toggleVideo();
+				document.getElementById('callEndBtn').onclick = () => endCall();
+			}
+			if (localStream) {
+				const localVideo = document.getElementById('localVideo');
+				if (localVideo) localVideo.srcObject = localStream;
+			}
+			document.getElementById('callContainer').style.display = 'flex';
+		} else {
+			if (callContainer) callContainer.remove();
+		}
+	}
+
+	function toggleMute() {
+		if (localStream) {
+			const audioTrack = localStream.getAudioTracks()[0];
+			if (audioTrack) {
+				audioTrack.enabled = !audioTrack.enabled;
+				const btn = document.getElementById('callMuteBtn');
+				if (btn) {
+					btn.innerHTML = audioTrack.enabled ? '<i class="fas fa-microphone"></i>' : '<i class="fas fa-microphone-slash"></i>';
+				}
+			}
+		}
+	}
+
+	function toggleVideo() {
+		if (localStream) {
+			const videoTrack = localStream.getVideoTracks()[0];
+			if (videoTrack) {
+				videoTrack.enabled = !videoTrack.enabled;
+				const btn = document.getElementById('callVideoToggleBtn');
+				if (btn) {
+					btn.innerHTML = videoTrack.enabled ? '<i class="fas fa-video"></i>' : '<i class="fas fa-video-slash"></i>';
+				}
+			}
+		}
+	}
+
+	async function endCall() {
+		callActive = false;
+		
+		if (peerConnection) {
+			peerConnection.close();
+			peerConnection = null;
+		}
+		
+		if (localStream) {
+			localStream.getTracks().forEach(track => track.stop());
+			localStream = null;
+		}
+		
+		remoteStream = null;
+		
+		// Обновляем статус звонка
+		if (callOfferDocId) {
+			await db.collection('calls').doc(callOfferDocId).update({ status: 'ended' }).catch(() => {});
+			callOfferDocId = null;
+		}
+		
+		currentCallUserId = null;
+		showCallUI(false);
+	}
+
+	function listenForCalls() {
+		if (callListenerUnsubscribe) callListenerUnsubscribe();
+		
+		callListenerUnsubscribe = db.collection('calls')
+			.where('to', '==', currentUser.uid)
+			.where('status', '==', 'pending')
+			.orderBy('timestamp', 'desc')
+			.onSnapshot((snapshot) => {
+				snapshot.docChanges().forEach((change) => {
+					if (change.type === 'added') {
+						const call = change.doc.data();
+						
+						// Игнорируем звонки от самого себя или если уже в звонке
+						if (call.from === currentUser.uid || callActive) return;
+						
+						// Проверяем, не было ли уже обработано
+						const processedCalls = JSON.parse(sessionStorage.getItem('processed_calls') || '[]');
+						if (processedCalls.includes(change.doc.id)) return;
+						
+						if (call.type === 'offer') {
+							processedCalls.push(change.doc.id);
+							sessionStorage.setItem('processed_calls', JSON.stringify(processedCalls));
+							showIncomingCallUI(change.doc.id, call.from, call.data);
+						} else if (call.type === 'answer' && callActive && currentCallUserId === call.from) {
+							handleAnswer(call.data);
+						} else if (call.type === 'candidate' && peerConnection) {
+							handleCandidate(call.data);
+						} else if (call.type === 'reject') {
+							showModal('Звонок', 'Собеседник отклонил вызов');
+							endCall();
+						}
+					}
+				});
+			});
+	}
+
+	function showIncomingCallUI(callId, fromUserId, offerData) {
+		// Сохраняем ID звонка в сессию, чтобы не показывать повторно
+		const processedCalls = JSON.parse(sessionStorage.getItem('incoming_calls') || '[]');
+		if (processedCalls.includes(callId)) return;
+		processedCalls.push(callId);
+		sessionStorage.setItem('incoming_calls', JSON.stringify(processedCalls));
+		
+		// Удаляем из сессии через минуту (чтобы можно было принять позже при перезагрузке)
+		setTimeout(() => {
+			const updated = JSON.parse(sessionStorage.getItem('incoming_calls') || '[]');
+			const index = updated.indexOf(callId);
+			if (index !== -1) updated.splice(index, 1);
+			sessionStorage.setItem('incoming_calls', JSON.stringify(updated));
+		}, 60000);
+		
+		const modal = document.getElementById('modal');
+		document.getElementById('modalTitle').textContent = 'Входящий звонок';
+		document.getElementById('modalMessage').innerHTML = `
+			<div style="text-align: center;">
+				<i class="fas fa-phone" style="font-size: 48px; color: var(--accent); margin-bottom: 16px; display: block;"></i>
+				<p>Вам звонят...</p>
+				<div style="display: flex; gap: 16px; justify-content: center; margin-top: 20px;">
+					<button id="acceptCallBtn" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer;">Ответить</button>
+					<button id="rejectCallBtn" style="background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer;">Отклонить</button>
+				</div>
+			</div>
+		`;
+		const confirmBtn = document.getElementById('modalConfirm');
+		confirmBtn.style.display = 'none';
+		
+		const acceptBtn = document.getElementById('acceptCallBtn');
+		const rejectBtn = document.getElementById('rejectCallBtn');
+		
+		acceptBtn.onclick = () => {
+			modal.classList.remove('active');
+			acceptCall(offerData, fromUserId, callId);
+		};
+		rejectBtn.onclick = () => {
+			modal.classList.remove('active');
+			rejectCall(fromUserId);
+		};
+		
+		modal.classList.add('active');
+	}
+
+	async function handleAnswer(data) {
+		if (peerConnection && data.sdp) {
+			await peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
+			callActive = true;
+			const statusEl = document.getElementById('callStatus');
+			if (statusEl) statusEl.textContent = 'В звонке...';
+		}
+	}
+
+	async function handleCandidate(data) {
+		if (peerConnection && data.candidate) {
+			try {
+				await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+			} catch (e) {
+				console.error('Error adding ICE candidate:', e);
+			}
+		}
+	}
     
     // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
     function showModal(title, message, onConfirm = null) {
