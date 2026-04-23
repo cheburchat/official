@@ -2463,7 +2463,7 @@
     }
 
     function renderEmailVerifyScreen() {
-        document.getElementById('app').innerHTML = `<div class="auth-container"><div class="auth-card"><h1>ЧЕБУРЧАТ</h1><div class="verify-msg"><i class="fas fa-envelope"></i> Подтвердите email<br><small>${currentUser.email}</small></div><button id="resendBtn">Отправить повторно</button><button id="checkBtn" style="background:#28a745">Я подтвердил</button><button id="logoutVerifyBtn" style="background:#dc3545; margin-top:10px">Выйти</button></div><div class="app-version">v1.0</div></div>`;
+        document.getElementById('app').innerHTML = `<div class="auth-container"><div class="auth-card"><h1>ЧЕБУРЧАТ</h1><div class="verify-msg"><i class="fas fa-envelope"></i> Подтвердите email<br><small>${currentUser.email}</small></div><button id="resendBtn">Отправить повторно</button><button id="checkBtn" style="background:#28a745">Я подтвердил</button><button id="logoutVerifyBtn" style="background:#dc3545; margin-top:10px">Выйти</button></div><div class="app-version">v2.0</div></div>`;
         document.getElementById('resendBtn').onclick = async () => { await currentUser.sendEmailVerification(); showModal('Письмо отправлено', 'Проверьте почту'); };
         document.getElementById('checkBtn').onclick = async () => { await currentUser.reload(); if(currentUser.emailVerified) location.reload(); else showModal('Ошибка', 'Email не подтверждён'); };
         document.getElementById('logoutVerifyBtn').onclick = () => { if(messagesUnsubscribe) messagesUnsubscribe(); auth.signOut(); renderAuth(); };
