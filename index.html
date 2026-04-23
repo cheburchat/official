@@ -721,6 +721,7 @@
 	let currentCallUserId = null;
 	let callOfferDocId = null;
 	let callListenerUnsubscribe = null;
+	let pendingCandidates = [];
 
 	const configuration = {
 		iceServers: [
@@ -728,44 +729,50 @@
 			{ urls: 'stun:stun1.l.google.com:19302' },
 			{ urls: 'stun:stun2.l.google.com:19302' },
 			{ urls: 'stun:stun3.l.google.com:19302' },
-			{ urls: 'stun:stun4.l.google.com:19302' }
-		]
+			{ urls: 'stun:stun4.l.google.com:19302' },
+			// TURN серверы от Google (бесплатные, помогают пробивать NAT)
+			{ urls: 'turn:relay1.expressturn.com:3478', username: 'efDcQcS3NzF6NObB', credential: 'u15Psyd4h8AzQdGZ' },
+			{ urls: 'turn:relay2.expressturn.com:3478', username: 'efDcQcS3NzF6NObB', credential: 'u15Psyd4h8AzQdGZ' }
+		],
+		iceCandidatePoolSize: 10
 	};
 
-	// Очистка старых звонков при старте
-	async function cleanupOldCalls() {
-		const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
-		const oldCalls = await db.collection('calls')
-			.where('timestamp', '<', oneHourAgo)
-			.get();
-		const batch = db.batch();
-		oldCalls.forEach(doc => batch.delete(doc.ref));
-		await batch.commit();
+	// Проверка наличия медиа-устройств
+	async function hasMediaDevices() {
+		try {
+			const devices = await navigator.mediaDevices.enumerateDevices();
+			const hasAudio = devices.some(d => d.kind === 'audioinput');
+			const hasVideo = devices.some(d => d.kind === 'videoinput');
+			return { hasAudio, hasVideo };
+		} catch {
+			return { hasAudio: false, hasVideo: false };
+		}
 	}
 
-	async function startCall(targetUserId, isVideo = true) {
+	async function startCall(targetUserId, preferVideo = true) {
 		if (callActive) {
 			showModal('Ошибка', 'У вас уже активен звонок');
 			return;
 		}
 		
-		// Проверяем, нет ли уже активного вызова этому пользователю
-		const existingCall = await db.collection('calls')
-			.where('from', '==', currentUser.uid)
-			.where('to', '==', targetUserId)
-			.where('status', 'in', ['pending', 'active'])
-			.get();
-		if (!existingCall.empty) {
-			showModal('Ошибка', 'Звонок уже совершается');
+		// Проверяем наличие устройств
+		const { hasAudio, hasVideo } = await hasMediaDevices();
+		if (!hasAudio) {
+			showModal('Ошибка', 'Не найден микрофон. Звонок невозможен.');
 			return;
 		}
+		
+		const useVideo = preferVideo && hasVideo;
 		
 		currentCallUserId = targetUserId;
 		
 		try {
-			localStream = await navigator.mediaDevices.getUserMedia({ video: isVideo, audio: true });
+			// Запрашиваем доступ к медиа
+			const constraints = { audio: true, video: useVideo };
+			localStream = await navigator.mediaDevices.getUserMedia(constraints);
 			
 			peerConnection = new RTCPeerConnection(configuration);
+			pendingCandidates = [];
 			
 			// Добавляем треки
 			localStream.getTracks().forEach(track => {
@@ -778,32 +785,47 @@
 					remoteStream = new MediaStream();
 				}
 				remoteStream.addTrack(event.track);
-				showCallUI(true, isVideo);
+				showCallUI(true, useVideo);
 				const remoteVideo = document.getElementById('remoteVideo');
 				if (remoteVideo && remoteStream) {
 					remoteVideo.srcObject = remoteStream;
 				}
 			};
 			
-			// ICE кандидаты
+			// ICE кандидаты — отправляем сразу, как появляются
 			peerConnection.onicecandidate = (event) => {
 				if (event.candidate) {
 					sendCallSignal(targetUserId, 'candidate', { candidate: event.candidate });
 				}
 			};
 			
-			// Состояние соединения
-			peerConnection.onconnectionstatechange = () => {
-				console.log('Connection state:', peerConnection.connectionState);
-				if (peerConnection.connectionState === 'connected') {
+			// Отслеживаем состояние ICE
+			peerConnection.oniceconnectionstatechange = () => {
+				console.log('ICE connection state:', peerConnection.iceConnectionState);
+				if (peerConnection.iceConnectionState === 'connected' || 
+					peerConnection.iceConnectionState === 'completed') {
 					callActive = true;
-					updateCallDocStatus(callOfferDocId, 'active');
 					const statusEl = document.getElementById('callStatus');
 					if (statusEl) statusEl.textContent = 'В звонке...';
-				} else if (peerConnection.connectionState === 'disconnected' || 
-						   peerConnection.connectionState === 'failed' ||
-						   peerConnection.connectionState === 'closed') {
-					endCall();
+				} else if (peerConnection.iceConnectionState === 'failed' ||
+						   peerConnection.iceConnectionState === 'disconnected') {
+					console.log('ICE failed, retrying...');
+					// Пробуем переподключиться
+					if (peerConnection && peerConnection.iceConnectionState === 'failed') {
+						peerConnection.restartIce();
+					}
+				}
+			};
+			
+			peerConnection.onconnectionstatechange = () => {
+				console.log('Connection state:', peerConnection.connectionState);
+				if (peerConnection.connectionState === 'disconnected' || 
+					peerConnection.connectionState === 'failed' ||
+					peerConnection.connectionState === 'closed') {
+					if (callActive) {
+						showModal('Звонок', 'Соединение разорвано');
+						endCall();
+					}
 				}
 			};
 			
@@ -818,7 +840,11 @@
 			
 		} catch (error) {
 			console.error('Start call error:', error);
-			showModal('Ошибка', 'Не удалось начать звонок: ' + error.message);
+			let errorMsg = 'Не удалось начать звонок: ';
+			if (error.name === 'NotFoundError') errorMsg += 'Не найден микрофон или камера';
+			else if (error.name === 'NotAllowedError') errorMsg += 'Нет доступа к микрофону/камере';
+			else errorMsg += error.message;
+			showModal('Ошибка', errorMsg);
 			endCall();
 		}
 	}
@@ -836,13 +862,22 @@
 			return;
 		}
 		
+		// Проверяем наличие устройств
+		const { hasAudio, hasVideo } = await hasMediaDevices();
+		if (!hasAudio) {
+			showModal('Ошибка', 'Не найден микрофон. Невозможно принять звонок.');
+			return;
+		}
+		
 		currentCallUserId = fromUserId;
 		callOfferDocId = callId;
 		
 		try {
-			localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+			const constraints = { audio: true, video: hasVideo };
+			localStream = await navigator.mediaDevices.getUserMedia(constraints);
 			
 			peerConnection = new RTCPeerConnection(configuration);
+			pendingCandidates = [];
 			
 			localStream.getTracks().forEach(track => {
 				peerConnection.addTrack(track, localStream);
@@ -853,7 +888,7 @@
 					remoteStream = new MediaStream();
 				}
 				remoteStream.addTrack(event.track);
-				showCallUI(true, true);
+				showCallUI(true, hasVideo);
 				const remoteVideo = document.getElementById('remoteVideo');
 				if (remoteVideo && remoteStream) {
 					remoteVideo.srcObject = remoteStream;
@@ -866,16 +901,24 @@
 				}
 			};
 			
-			peerConnection.onconnectionstatechange = () => {
-				console.log('Connection state:', peerConnection.connectionState);
-				if (peerConnection.connectionState === 'connected') {
+			peerConnection.oniceconnectionstatechange = () => {
+				console.log('ICE connection state (answer):', peerConnection.iceConnectionState);
+				if (peerConnection.iceConnectionState === 'connected' || 
+					peerConnection.iceConnectionState === 'completed') {
 					callActive = true;
-					updateCallDocStatus(callId, 'active');
 					const statusEl = document.getElementById('callStatus');
 					if (statusEl) statusEl.textContent = 'В звонке...';
-				} else if (peerConnection.connectionState === 'disconnected' || 
-						   peerConnection.connectionState === 'failed') {
-					endCall();
+				}
+			};
+			
+			peerConnection.onconnectionstatechange = () => {
+				console.log('Connection state (answer):', peerConnection.connectionState);
+				if (peerConnection.connectionState === 'disconnected' || 
+					peerConnection.connectionState === 'failed') {
+					if (callActive) {
+						showModal('Звонок', 'Соединение разорвано');
+						endCall();
+					}
 				}
 			};
 			
@@ -886,9 +929,19 @@
 			await sendCallSignal(fromUserId, 'answer', { sdp: answer });
 			await updateCallDocStatus(callId, 'active');
 			
+			// Обрабатываем накопленные кандидаты
+			for (const candidate of pendingCandidates) {
+				try {
+					await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+				} catch (e) {
+					console.log('Error adding pending candidate:', e);
+				}
+			}
+			pendingCandidates = [];
+			
 		} catch (error) {
 			console.error('Accept call error:', error);
-			showModal('Ошибка', 'Не удалось принять звонок');
+			showModal('Ошибка', 'Не удалось принять звонок: ' + error.message);
 			endCall();
 		}
 	}
@@ -911,7 +964,7 @@
 				const doc = await db.collection('calls').doc(docRef.id).get();
 				if (doc.exists && doc.data().status === 'pending') {
 					await db.collection('calls').doc(docRef.id).update({ status: 'timeout' });
-					if (callOfferDocId === docRef.id) {
+					if (callOfferDocId === docRef.id && !callActive) {
 						showModal('Звонок', 'Собеседник не ответил');
 						endCall();
 					}
@@ -933,7 +986,7 @@
 		endCall();
 	}
 
-	function showCallUI(show, isVideo) {
+	function showCallUI(show, hasVideo) {
 		const callContainer = document.getElementById('callContainer');
 		if (show) {
 			if (!callContainer) {
@@ -941,28 +994,30 @@
 				container.id = 'callContainer';
 				container.className = 'call-container';
 				container.innerHTML = `
-					<div class="call-status" id="callStatus">Соединение...</div>
+					<div class="call-status" id="callStatus">Установка соединения...</div>
 					<div class="call-video-container">
 						<video id="remoteVideo" class="remote-video" autoplay playsinline></video>
 						<video id="localVideo" class="local-video" autoplay playsinline muted></video>
 					</div>
 					<div class="call-controls">
 						<button class="call-mute-btn" id="callMuteBtn"><i class="fas fa-microphone"></i></button>
-						<button class="call-video-toggle-btn" id="callVideoToggleBtn"><i class="fas fa-video"></i></button>
+						${hasVideo ? '<button class="call-video-toggle-btn" id="callVideoToggleBtn"><i class="fas fa-video"></i></button>' : ''}
 						<button class="call-end-btn" id="callEndBtn"><i class="fas fa-phone-slash"></i></button>
 					</div>
 				`;
 				document.body.appendChild(container);
 				
 				document.getElementById('callMuteBtn').onclick = () => toggleMute();
-				document.getElementById('callVideoToggleBtn').onclick = () => toggleVideo();
+				const videoBtn = document.getElementById('callVideoToggleBtn');
+				if (videoBtn) videoBtn.onclick = () => toggleVideo();
 				document.getElementById('callEndBtn').onclick = () => endCall();
 			}
 			if (localStream) {
 				const localVideo = document.getElementById('localVideo');
 				if (localVideo) localVideo.srcObject = localStream;
 			}
-			document.getElementById('callContainer').style.display = 'flex';
+			const container = document.getElementById('callContainer');
+			if (container) container.style.display = 'flex';
 		} else {
 			if (callContainer) callContainer.remove();
 		}
@@ -1008,8 +1063,8 @@
 		}
 		
 		remoteStream = null;
+		pendingCandidates = [];
 		
-		// Обновляем статус звонка
 		if (callOfferDocId) {
 			await db.collection('calls').doc(callOfferDocId).update({ status: 'ended' }).catch(() => {});
 			callOfferDocId = null;
@@ -1030,22 +1085,27 @@
 				snapshot.docChanges().forEach((change) => {
 					if (change.type === 'added') {
 						const call = change.doc.data();
+						const callId = change.doc.id;
 						
 						// Игнорируем звонки от самого себя или если уже в звонке
 						if (call.from === currentUser.uid || callActive) return;
 						
-						// Проверяем, не было ли уже обработано
-						const processedCalls = JSON.parse(sessionStorage.getItem('processed_calls') || '[]');
-						if (processedCalls.includes(change.doc.id)) return;
+						// Игнорируем уже обработанные
+						const processed = sessionStorage.getItem('processed_calls') || '[]';
+						const processedCalls = JSON.parse(processed);
+						if (processedCalls.includes(callId)) return;
 						
 						if (call.type === 'offer') {
-							processedCalls.push(change.doc.id);
+							processedCalls.push(callId);
 							sessionStorage.setItem('processed_calls', JSON.stringify(processedCalls));
-							showIncomingCallUI(change.doc.id, call.from, call.data);
+							showIncomingCallUI(callId, call.from, call.data);
 						} else if (call.type === 'answer' && callActive && currentCallUserId === call.from) {
 							handleAnswer(call.data);
 						} else if (call.type === 'candidate' && peerConnection) {
 							handleCandidate(call.data);
+						} else if (call.type === 'candidate' && !peerConnection) {
+							// Сохраняем кандидаты, если соединение ещё не создано
+							pendingCandidates.push(call.data.candidate);
 						} else if (call.type === 'reject') {
 							showModal('Звонок', 'Собеседник отклонил вызов');
 							endCall();
@@ -1056,17 +1116,19 @@
 	}
 
 	function showIncomingCallUI(callId, fromUserId, offerData) {
-		// Сохраняем ID звонка в сессию, чтобы не показывать повторно
+		// Не показываем, если уже в звонке
+		if (callActive) return;
+		
 		const processedCalls = JSON.parse(sessionStorage.getItem('incoming_calls') || '[]');
 		if (processedCalls.includes(callId)) return;
 		processedCalls.push(callId);
 		sessionStorage.setItem('incoming_calls', JSON.stringify(processedCalls));
 		
-		// Удаляем из сессии через минуту (чтобы можно было принять позже при перезагрузке)
+		// Удаляем из хранилища через минуту
 		setTimeout(() => {
 			const updated = JSON.parse(sessionStorage.getItem('incoming_calls') || '[]');
-			const index = updated.indexOf(callId);
-			if (index !== -1) updated.splice(index, 1);
+			const idx = updated.indexOf(callId);
+			if (idx !== -1) updated.splice(idx, 1);
 			sessionStorage.setItem('incoming_calls', JSON.stringify(updated));
 		}, 60000);
 		
@@ -1088,11 +1150,17 @@
 		const acceptBtn = document.getElementById('acceptCallBtn');
 		const rejectBtn = document.getElementById('rejectCallBtn');
 		
-		acceptBtn.onclick = () => {
+		// Удаляем старые обработчики
+		const newAcceptBtn = acceptBtn.cloneNode(true);
+		const newRejectBtn = rejectBtn.cloneNode(true);
+		acceptBtn.parentNode.replaceChild(newAcceptBtn, acceptBtn);
+		rejectBtn.parentNode.replaceChild(newRejectBtn, rejectBtn);
+		
+		newAcceptBtn.onclick = () => {
 			modal.classList.remove('active');
 			acceptCall(offerData, fromUserId, callId);
 		};
-		rejectBtn.onclick = () => {
+		newRejectBtn.onclick = () => {
 			modal.classList.remove('active');
 			rejectCall(fromUserId);
 		};
@@ -1103,9 +1171,6 @@
 	async function handleAnswer(data) {
 		if (peerConnection && data.sdp) {
 			await peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
-			callActive = true;
-			const statusEl = document.getElementById('callStatus');
-			if (statusEl) statusEl.textContent = 'В звонке...';
 		}
 	}
 
@@ -1117,6 +1182,17 @@
 				console.error('Error adding ICE candidate:', e);
 			}
 		}
+	}
+
+	// Очистка старых звонков
+	async function cleanupOldCalls() {
+		const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+		const oldCalls = await db.collection('calls')
+			.where('timestamp', '<', oneHourAgo)
+			.get();
+		const batch = db.batch();
+		oldCalls.forEach(doc => batch.delete(doc.ref));
+		await batch.commit();
 	}
     
     // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
